@@ -1,0 +1,65 @@
+import React, { type PropsWithChildren } from 'react';
+import { Modal, StyleSheet, Text, View } from 'react-native';
+import Button from './button';
+
+type DialogProps = PropsWithChildren<{
+  visible: boolean;
+  title: string;
+  onClose: () => void;
+  isValid?: boolean;
+  onSubmit?: () => void;
+}>;
+
+export default function Dialog(props: DialogProps) {
+  const { visible, title, onClose, onSubmit, isValid = true, children } = props;
+
+  return (
+    <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
+      <View style={styles.overlay}>
+        <View style={styles.dialog}>
+          <Text style={styles.title}>{title}</Text>
+
+          <View style={styles.content}>{children}</View>
+
+          <View style={styles.actionButton}>
+            <Button variant="text" onPress={onClose}>
+              Hủy
+            </Button>
+
+            {onSubmit && (
+              <Button disabled={!isValid} onPress={onSubmit}>
+                Đồng ý
+              </Button>
+            )}
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  dialog: {
+    width: 300,
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    gap: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  content: {},
+  actionButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+  },
+});
