@@ -5,17 +5,22 @@ import InformationDialog from '@/components/information-dialog';
 import Loading from '@/components/loading';
 import TableData from '@/components/table';
 import Button from '@/components/ui/button';
-import { useGetData } from '@/hooks/queries';
+import { colors } from '@/constants/colors';
+import useContribution from '@/hooks/mutations/use-contribution';
+import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export default function Index() {
-  const { data, isLoading, isError, error } = useGetData();
+  const { isLoading: isLoadingInformation } = useGetInformation();
+  const { isLoading, isError, error } = useGetRound();
+
+  const { mutate: contribute } = useContribution();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
-  if (isLoading) return <Loading />;
+  if (isLoading || isLoadingInformation) return <Loading />;
 
   if (isError) return <Error message={error.message} />;
 
@@ -36,7 +41,7 @@ export default function Index() {
       </View>
 
       <View style={styles.tableContainer}>
-        <TableData data={data ?? []} />
+        <TableData />
       </View>
 
       <View style={styles.footerContainer}>
@@ -50,7 +55,7 @@ export default function Index() {
 
       <ContributionDialog
         visible={openDialog}
-        onSubmit={(value) => console.log('submit', value)}
+        onSubmit={contribute}
         onClose={() => setOpenDialog(false)}
       />
     </View>
@@ -61,6 +66,11 @@ const styles = StyleSheet.create({
   app: {
     flex: 1,
     paddingTop: 10,
+    backgroundColor: colors.white,
+  },
+  top: {
+    backgroundColor: colors.primary,
+    padding: 20,
   },
   buttonContainer: {
     flexShrink: 0,

@@ -15,7 +15,7 @@ export default function InformationDialog({ visible, onClose }: InformationDialo
   const listData = [
     {
       label: 'Số người',
-      value: information?.playerCount ?? 0,
+      value: information?.numberOfPlayers ?? 0,
     },
     {
       label: 'Số tiền đóng',
@@ -23,7 +23,7 @@ export default function InformationDialog({ visible, onClose }: InformationDialo
     },
     {
       label: 'Tối thiểu',
-      value: formatCurrency(information?.minBidAmount),
+      value: formatCurrency(information?.minimumBid),
     },
     {
       label: 'Tiền cò',

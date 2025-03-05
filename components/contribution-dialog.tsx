@@ -15,7 +15,7 @@ export default function ContributionDialog(props: ContributionDialogProps) {
   const { visible, onSubmit, onClose } = props;
 
   const { data: information } = useGetInformation();
-  const isPaidOut = !!information?.paidOut;
+  const isPayout = !!information?.payoutDate;
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -49,14 +49,14 @@ export default function ContributionDialog(props: ContributionDialogProps) {
       visible={visible}
       onClose={handleClose}
       onSubmit={handleSubmit}
-      isValid={isPaidOut || (!!input && !error)}
+      isValid={isPayout || (!!input && !error)}
     >
       <Input
         placeholder="Nhập số tiền kêu..."
         keyboardType="numeric"
         value={input}
         onChangeText={handleChangeText}
-        editable={!isPaidOut}
+        editable={!isPayout}
         error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
       />
       <View>

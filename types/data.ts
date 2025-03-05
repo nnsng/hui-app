@@ -4,15 +4,13 @@ export type Round = {
   bidAmount: number;
 };
 
-export type Information = {
+export type HuiPool = {
   id: string;
-  playerCount: number;
+  numberOfPlayers: number;
   monthlyContribution: number;
-  minBidAmount: number;
+  minimumBid: number;
   commission: number;
-  startedDate: string;
-  paidOut?: {
-    date: string;
-    amount: number;
-  };
+  startDate: string;
+  payoutDate?: string;
+  payoutAmount?: number;
 };

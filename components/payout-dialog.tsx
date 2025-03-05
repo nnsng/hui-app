@@ -1,4 +1,4 @@
-import { useGetData, useGetInformation } from '@/hooks/queries';
+import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -12,7 +12,7 @@ type PayoutDialogProps = {
 };
 
 export default function PayoutDialog({ visible, onSubmit, onClose }: PayoutDialogProps) {
-  const { data = [] } = useGetData();
+  const { data = [] } = useGetRound();
   const { data: information } = useGetInformation();
 
   const [input, setInput] = useState('');
@@ -23,12 +23,12 @@ export default function PayoutDialog({ visible, onSubmit, onClose }: PayoutDialo
   const totalContribution = useMemo(() => {
     if (!data || !information) return 0;
 
-    const { playerCount, monthlyContribution } = information;
+    const { numberOfPlayers, monthlyContribution } = information;
 
     const pastContribution = data.reduce((total, round) => {
       return total + (monthlyContribution - round.bidAmount);
     }, 0);
-    const remainingPlayers = playerCount - data.length - 1;
+    const remainingPlayers = numberOfPlayers - data.length - 1;
     const futureContribution = remainingPlayers * monthlyContribution;
 
     return pastContribution + futureContribution;
@@ -37,10 +37,10 @@ export default function PayoutDialog({ visible, onSubmit, onClose }: PayoutDialo
   const totalPayout = useMemo(() => {
     if (!data || !information) return 0;
 
-    const { playerCount, monthlyContribution, commission } = information;
+    const { numberOfPlayers, monthlyContribution, commission } = information;
 
     const pastPayout = data.length * monthlyContribution;
-    const remainingPlayers = playerCount - data.length - 1;
+    const remainingPlayers = numberOfPlayers - data.length - 1;
     const netContribution = monthlyContribution - bidAmount;
     const futurePayout = remainingPlayers * netContribution;
 
