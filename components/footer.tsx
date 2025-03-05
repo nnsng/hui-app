@@ -1,5 +1,5 @@
 import { usePayout } from '@/hooks/mutations';
-import { useGetData, useGetInformation } from '@/hooks/queries';
+import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -7,11 +7,11 @@ import PayoutDialog from './payout-dialog';
 import Button from './ui/button';
 
 export default function Footer() {
-  const { data } = useGetData();
+  const { data } = useGetRound();
   const { data: information } = useGetInformation();
   const { mutate: onPayout } = usePayout();
 
-  const isPaidOut = !!information?.paidOut;
+  const isPayout = !!information?.payoutDate;
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -26,13 +26,13 @@ export default function Footer() {
 
   return (
     <View style={styles.footer}>
-      <Button disabled={isPaidOut} onPress={() => setOpenDialog(true)}>
+      <Button disabled={isPayout} onPress={() => setOpenDialog(true)}>
         Hốt hụi
       </Button>
-      {isPaidOut ? (
+      {isPayout ? (
         <View>
           <Text style={styles.label}>Đã hốt hụi</Text>
-          <Text style={styles.value}>{formatCurrency(information.paidOut?.amount ?? 0)}</Text>
+          <Text style={styles.value}>{formatCurrency(information.payoutAmount ?? 0)}</Text>
         </View>
       ) : (
         <View>
@@ -53,6 +53,7 @@ export default function Footer() {
 const styles = StyleSheet.create({
   footer: {
     borderTopWidth: 1,
+    borderColor: '#ccc',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

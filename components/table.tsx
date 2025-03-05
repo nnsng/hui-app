@@ -1,18 +1,45 @@
-import type { Round } from '@/types/data';
+import { colors } from '@/constants/colors';
+import { useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import React, { useEffect, useRef } from 'react';
+import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-type TableDataProps = {
-  data: Round[];
-};
+export default function TableData() {
+  const { data = [], isRefetching, refetch } = useGetRound();
 
-export default function TableData({ data }: TableDataProps) {
+  const rotateValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isRefetching) {
+      Animated.loop(
+        Animated.timing(rotateValue, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ).start();
+    } else {
+      rotateValue.setValue(0);
+    }
+  }, [isRefetching, rotateValue]);
+
+  const spin = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
   return (
     <View style={styles.table}>
       <View style={[styles.row, styles.header]}>
-        <Text style={[styles.headerCell, styles.idCell]}></Text>
+        <Text style={[styles.headerCell, styles.idCell]}>
+          <TouchableOpacity onPress={() => refetch()}>
+            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+              <MaterialIcons name="sync" size={18} color={colors.primary} />
+            </Animated.View>
+          </TouchableOpacity>
+        </Text>
         <Text style={[styles.headerCell, styles.dateCell]}>Ngày</Text>
         <Text style={[styles.headerCell, styles.bidCell]}>Đấu giá</Text>
       </View>
@@ -59,6 +86,7 @@ const styles = StyleSheet.create({
   },
   idCell: {
     flex: 1,
+    textAlign: 'center',
   },
   dateCell: {
     flex: 3,

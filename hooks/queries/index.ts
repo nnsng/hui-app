@@ -1,2 +1,2 @@
-export * from './use-get-data';
-export * from './use-get-information';
+export * from './use-information';
+export * from './use-round';
