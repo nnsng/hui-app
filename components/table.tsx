@@ -1,13 +1,14 @@
-import type { HuyRound } from '@/types/data';
+import type { Round } from '@/types/data';
 import { formatCurrency } from '@/utils/currency';
+import { formatDate } from '@/utils/date';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-type TableProps = {
-  data: HuyRound[];
+type TableDataProps = {
+  data: Round[];
 };
 
-export default function Table({ data }: TableProps) {
+export default function TableData({ data }: TableDataProps) {
   return (
     <View style={styles.table}>
       <View style={[styles.row, styles.header]}>
@@ -20,7 +21,7 @@ export default function Table({ data }: TableProps) {
         {data.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.row}>
             <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
-            <Text style={[styles.cell, styles.dateCell]}>{row.date}</Text>
+            <Text style={[styles.cell, styles.dateCell]}>{formatDate(row.date)}</Text>
             <Text style={[styles.cell, styles.bidCell]}>{formatCurrency(row.bidAmount)}</Text>
           </View>
         ))}

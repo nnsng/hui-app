@@ -15,7 +15,7 @@ export default function InformationDialog({ visible, onClose }: InformationDialo
   const listData = [
     {
       label: 'Số người',
-      value: information?.playerCount,
+      value: information?.playerCount ?? 0,
     },
     {
       label: 'Số tiền đóng',

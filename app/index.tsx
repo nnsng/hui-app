@@ -3,7 +3,7 @@ import Error from '@/components/error';
 import Footer from '@/components/footer';
 import InformationDialog from '@/components/information-dialog';
 import Loading from '@/components/loading';
-import Table from '@/components/table';
+import TableData from '@/components/table';
 import Button from '@/components/ui/button';
 import { useGetData } from '@/hooks/queries';
 import { useState } from 'react';
@@ -36,7 +36,7 @@ export default function Index() {
       </View>
 
       <View style={styles.tableContainer}>
-        <Table data={data ?? []} />
+        <TableData data={data ?? []} />
       </View>
 
       <View style={styles.footerContainer}>
@@ -60,19 +60,20 @@ export default function Index() {
 const styles = StyleSheet.create({
   app: {
     flex: 1,
-    gap: 10,
-    padding: 10,
+    paddingTop: 10,
   },
   buttonContainer: {
     flexShrink: 0,
     flexDirection: 'row',
     gap: 10,
+    paddingInline: 10,
   },
   button: {
     flex: 1,
   },
   tableContainer: {
     flex: 1,
+    padding: 10,
   },
   footerContainer: {
     flexShrink: 0,

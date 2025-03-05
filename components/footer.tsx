@@ -52,10 +52,12 @@ export default function Footer() {
 
 const styles = StyleSheet.create({
   footer: {
+    borderTopWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 10,
+    padding: 10,
   },
   label: {
     fontSize: 12,

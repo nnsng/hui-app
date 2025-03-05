@@ -6,7 +6,7 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ title: 'Home' }} />
+      <Stack screenOptions={{ title: 'Hụi' }} />
     </QueryClientProvider>
   );
 }
