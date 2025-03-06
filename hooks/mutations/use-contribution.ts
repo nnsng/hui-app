@@ -1,5 +1,5 @@
+import { env } from '@/constants/env';
 import api from '@/utils/api';
-import env from '@/utils/env';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useGetInformation, useGetRound } from '../queries';
@@ -15,7 +15,7 @@ const createEntry = async ({ name, amount, informationId }: ContributePayload) =
     const url = '/pages';
     const payload = {
       parent: {
-        database_id: env.EXPO_PUBLIC_NOTION_ROUND_DATABASE_ID,
+        database_id: env.NOTION_ROUND_DATABASE_ID,
       },
       properties: {
         name: { title: [{ text: { content: name } }] },

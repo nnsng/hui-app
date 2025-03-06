@@ -1,12 +1,12 @@
+import { env } from '@/constants/env';
 import axios from 'axios';
-import env from './env';
 
 const api = axios.create({
-  baseURL: env.EXPO_PUBLIC_NOTION_API_URL,
+  baseURL: env.NOTION_API_URL,
   headers: {
-    Authorization: `Bearer ${env.EXPO_PUBLIC_NOTION_API_KEY}`,
+    Authorization: `Bearer ${env.NOTION_API_KEY}`,
     'Content-Type': 'application/json',
-    'Notion-Version': env.EXPO_PUBLIC_NOTION_VERSION,
+    'Notion-Version': env.NOTION_VERSION,
   },
 });
 
