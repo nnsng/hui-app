@@ -1,11 +1,11 @@
-import { env } from '@/constants/env';
 import api from '@/utils/api';
+import env from '@/utils/env';
 import { mapNotionRound } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 import { useGetInformation } from './use-information';
 
 const getData = async (informationId: string) => {
-  const url = `/databases/${env.NOTION_DATABASE_ID.ROUND}/query`;
+  const url = `/databases/${env.EXPO_PUBLIC_NOTION_ROUND_DATABASE_ID}/query`;
   const payload = {
     filter: {
       property: 'information',

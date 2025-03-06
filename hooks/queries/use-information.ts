@@ -1,6 +1,5 @@
-import { env } from '@/constants/env';
-import type { HuiPool } from '@/types/data';
 import api from '@/utils/api';
+import env from '@/utils/env';
 import { mapNotionInformation } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 
@@ -13,7 +12,7 @@ const getCurrentInformation = async () => {
       },
     },
   };
-  const url = `/databases/${env.NOTION_DATABASE_ID.INFORMATION}/query`;
+  const url = `/databases/${env.EXPO_PUBLIC_NOTION_INFORMATION_DATABASE_ID}/query`;
   const response = await api.post(url, payload);
   return mapNotionInformation(response);
 };
