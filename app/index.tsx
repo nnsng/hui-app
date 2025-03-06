@@ -1,4 +1,4 @@
-import { Error, Loading, TableData } from '@/components';
+import { Error, Loading, Table } from '@/components';
 import { ContributionDialog, InformationDialog } from '@/components/dialogs';
 import { Footer, Header } from '@/components/layouts';
 import { Button } from '@/components/ui';
@@ -38,7 +38,7 @@ export default function Index() {
         </View>
 
         <View style={styles.tableContainer}>
-          <TableData />
+          <Table />
         </View>
       </View>
 
