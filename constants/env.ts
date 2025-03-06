@@ -1,0 +1,7 @@
+export const env = {
+  NOTION_API_URL: '',
+  NOTION_VERSION: '',
+  NOTION_API_KEY: '',
+  NOTION_POOL_DATABASE_ID: '',
+  NOTION_ROUND_DATABASE_ID: '',
+};
