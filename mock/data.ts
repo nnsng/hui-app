@@ -1,10 +1,10 @@
 import type { HuiPool, Round } from '@/types/data';
 import { randomNumber } from '@/utils/temp';
 
-export const mockData: Round[] = new Array(10).fill(0).map((_, index) => ({
+export const mockData: Round[] = new Array(10).fill(0).map((_, index, arr) => ({
   id: String(index + 1),
   date: `2022-01-${String(index + 1).padStart(2, '0')}`,
-  bidAmount: randomNumber(400_000, 1_000_000),
+  bidAmount: index < arr.length / 2 ? randomNumber(400_000, 1_000_000) : 0,
 }));
 
 export const mockInformation: HuiPool = {
