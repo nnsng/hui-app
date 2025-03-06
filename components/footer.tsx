@@ -1,4 +1,3 @@
-import { usePayout } from '@/hooks/mutations';
 import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
@@ -8,10 +7,9 @@ import Button from './ui/button';
 
 export default function Footer() {
   const { data } = useGetRound();
-  const { data: information } = useGetInformation();
-  const { mutate: onPayout } = usePayout();
+  const { data: information, isLoading } = useGetInformation();
 
-  const isPayout = !!information?.payoutDate;
+  const isPayout = !isLoading && !!information?.payoutDate;
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -19,10 +17,6 @@ export default function Footer() {
     if (!data) return 0;
     return data.reduce((acc, item) => acc + item.bidAmount, 0);
   }, [data]);
-
-  const handleSubmit = (amount: number) => {
-    onPayout(amount);
-  };
 
   return (
     <View style={styles.footer}>
@@ -41,11 +35,7 @@ export default function Footer() {
         </View>
       )}
 
-      <PayoutDialog
-        visible={openDialog}
-        onSubmit={handleSubmit}
-        onClose={() => setOpenDialog(false)}
-      />
+      <PayoutDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
     </View>
   );
 }

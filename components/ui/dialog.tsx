@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react';
+import React, { type PropsWithChildren, type ReactNode } from 'react';
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import Button from './button';
 
@@ -6,12 +6,11 @@ type DialogProps = PropsWithChildren<{
   visible: boolean;
   title: string;
   onClose: () => void;
-  isValid?: boolean;
-  onSubmit?: () => void;
+  submitButton?: ReactNode;
 }>;
 
 export default function Dialog(props: DialogProps) {
-  const { visible, title, onClose, onSubmit, isValid = true, children } = props;
+  const { visible, title, onClose, submitButton, children } = props;
 
   return (
     <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
@@ -26,11 +25,7 @@ export default function Dialog(props: DialogProps) {
               Hủy
             </Button>
 
-            {onSubmit && (
-              <Button disabled={!isValid} onPress={onSubmit}>
-                Đồng ý
-              </Button>
-            )}
+            {submitButton}
           </View>
         </View>
       </View>

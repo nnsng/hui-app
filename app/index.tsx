@@ -15,8 +15,6 @@ export default function Index() {
   const { isLoading: isLoadingInformation } = useGetInformation();
   const { isLoading, isError, error } = useGetRound();
 
-  const { mutate: contribute } = useContribution();
-
   const [openDialog, setOpenDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
@@ -53,11 +51,7 @@ export default function Index() {
         onClose={() => setOpenInformationDialog(false)}
       />
 
-      <ContributionDialog
-        visible={openDialog}
-        onSubmit={contribute}
-        onClose={() => setOpenDialog(false)}
-      />
+      <ContributionDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
     </View>
   );
 }

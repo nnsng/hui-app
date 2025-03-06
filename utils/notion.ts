@@ -1,9 +1,19 @@
 import type { HuiPool, Round } from '@/types/data';
 
-export const mapNotionInformation = (data: any) => {
-  return data.results.map((result: any) => {
-    const { numberOfPlayers, monthlyContribution, minimumBid, commission, startDate } =
-      result.properties;
+export const mapNotionInformation = (data: any): HuiPool => {
+  try {
+    if (!Array.isArray(data?.results) || data.results.length === 0) return {} as HuiPool;
+
+    const result = data.results[0];
+    const {
+      numberOfPlayers,
+      monthlyContribution,
+      minimumBid,
+      commission,
+      startDate,
+      payoutDate,
+      payoutAmount,
+    } = result.properties;
 
     return {
       id: result.id,
@@ -11,19 +21,32 @@ export const mapNotionInformation = (data: any) => {
       monthlyContribution: monthlyContribution.number ?? 0,
       minimumBid: minimumBid.number ?? 0,
       commission: commission.number ?? 0,
-      startDate: startDate.date.start,
-    } satisfies HuiPool;
-  });
+      startDate: startDate.date?.start ?? '',
+      payoutDate: payoutDate.date?.start ?? '',
+      payoutAmount: payoutAmount.number ?? 0,
+    };
+  } catch (error) {
+    console.error('Error mapping notion information:', error);
+    return {} as HuiPool;
+  }
 };
 
 export const mapNotionRound = (data: any) => {
-  return data.results.map((result: any) => {
-    const { date, bidAmount } = result.properties;
+  try {
+    const results = data?.results;
+    if (!Array.isArray(results) || results.length === 0) return [];
 
-    return {
-      id: result.id,
-      date: date.date.start,
-      bidAmount: bidAmount.number ?? 0,
-    } satisfies Round;
-  });
+    return results.map((result: any): Round => {
+      const { date, bidAmount } = result.properties;
+
+      return {
+        id: result.id ?? '',
+        date: date.date?.start ?? '',
+        bidAmount: bidAmount.number ?? 0,
+      };
+    });
+  } catch (error) {
+    console.error('Error mapping notion round:', error);
+    return [];
+  }
 };

@@ -1,19 +1,21 @@
+import { usePayout } from '@/hooks/mutations';
 import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Button from './ui/button';
 import Dialog from './ui/dialog';
 import Input from './ui/input';
 
 type PayoutDialogProps = {
   visible: boolean;
-  onSubmit: (amount: number) => void;
   onClose: () => void;
 };
 
-export default function PayoutDialog({ visible, onSubmit, onClose }: PayoutDialogProps) {
+export default function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
   const { data = [] } = useGetRound();
   const { data: information } = useGetInformation();
+  const { mutateAsync: onPayout, isPending } = usePayout();
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -60,11 +62,11 @@ export default function PayoutDialog({ visible, onSubmit, onClose }: PayoutDialo
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (error) return;
 
     setError(false);
-    onSubmit(totalPayout);
+    await onPayout(totalPayout);
     setInput('');
     handleClose();
   };
@@ -74,8 +76,11 @@ export default function PayoutDialog({ visible, onSubmit, onClose }: PayoutDialo
       title="Hốt hụi"
       visible={visible}
       onClose={handleClose}
-      onSubmit={handleSubmit}
-      isValid={!!input && !error}
+      submitButton={
+        <Button loading={isPending} disabled={!input || error} onPress={handleSubmit}>
+          Đồng ý
+        </Button>
+      }
     >
       <View style={styles.container}>
         <View>

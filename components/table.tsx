@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { useGetRound } from '@/hooks/queries';
+import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,12 +7,14 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function TableData() {
-  const { data = [], isRefetching, refetch } = useGetRound();
+  const informationQuery = useGetInformation();
+  const roundQuery = useGetRound();
+  const isFetching = informationQuery.isRefetching || roundQuery.isRefetching;
 
   const rotateValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (isRefetching) {
+    if (isFetching) {
       Animated.loop(
         Animated.timing(rotateValue, {
           toValue: 1,
@@ -23,7 +25,12 @@ export default function TableData() {
     } else {
       rotateValue.setValue(0);
     }
-  }, [isRefetching, rotateValue]);
+  }, [isFetching, rotateValue]);
+
+  const refetch = async () => {
+    await informationQuery.refetch();
+    await roundQuery.refetch();
+  };
 
   const spin = rotateValue.interpolate({
     inputRange: [0, 1],
@@ -34,7 +41,7 @@ export default function TableData() {
     <View style={styles.table}>
       <View style={[styles.row, styles.header]}>
         <Text style={[styles.headerCell, styles.idCell]}>
-          <TouchableOpacity onPress={() => refetch()}>
+          <TouchableOpacity onPress={refetch}>
             <Animated.View style={{ transform: [{ rotate: spin }] }}>
               <MaterialIcons name="sync" size={18} color={colors.primary} />
             </Animated.View>
@@ -45,13 +52,17 @@ export default function TableData() {
       </View>
 
       <ScrollView style={styles.body}>
-        {data.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.row}>
-            <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
-            <Text style={[styles.cell, styles.dateCell]}>{formatDate(row.date)}</Text>
-            <Text style={[styles.cell, styles.bidCell]}>{formatCurrency(row.bidAmount)}</Text>
-          </View>
-        ))}
+        {roundQuery.data ? (
+          roundQuery.data.map((row, rowIndex) => (
+            <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
+              <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
+              <Text style={[styles.cell, styles.dateCell]}>{formatDate(row.date)}</Text>
+              <Text style={[styles.cell, styles.bidCell]}>{formatCurrency(row.bidAmount)}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={[styles.cell, styles.emptyCell]}>chưa đóng hụi</Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -70,6 +81,9 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  payout: {
+    backgroundColor: '#f1f1f1',
   },
   headerCell: {
     flex: 1,
@@ -93,5 +107,10 @@ const styles = StyleSheet.create({
   },
   bidCell: {
     flex: 3,
+  },
+  emptyCell: {
+    padding: 10,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 });

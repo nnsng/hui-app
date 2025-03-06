@@ -1,6 +1,7 @@
 import { colors } from '@/constants/colors';
 import React, { type PropsWithChildren } from 'react';
 import {
+  ActivityIndicator,
   GestureResponderEvent,
   StyleSheet,
   Text,
@@ -16,24 +17,31 @@ type ButtonProps = PropsWithChildren<{
   textStyle?: StyleProp<TextStyle>;
   variant?: 'contained' | 'outlined' | 'text';
   disabled?: boolean;
+  loading?: boolean;
 }>;
 
 export default function Button(props: ButtonProps) {
-  const { children, onPress, style, textStyle, variant = 'contained', disabled } = props;
+  const { children, onPress, style, textStyle, variant = 'contained', disabled, loading } = props;
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      disabled={disabled}
+      disabled={disabled || loading}
       style={[
         styles.button,
         variant === 'outlined' && styles.outlinedButton,
         variant === 'text' && styles.textButton,
-        disabled && styles.disabled,
+        (disabled || loading) && styles.disabled,
         style,
       ]}
-      onPress={disabled ? undefined : onPress}
+      onPress={disabled || loading ? undefined : onPress}
     >
+      {loading && (
+        <ActivityIndicator
+          color={variant === 'contained' ? colors.white : colors.primary}
+          size={15}
+        />
+      )}
       <Text
         style={[
           styles.text,
@@ -53,7 +61,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: 10,
     borderRadius: 5,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
   },
   outlinedButton: {
     backgroundColor: 'transparent',

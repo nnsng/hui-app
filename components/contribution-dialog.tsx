@@ -1,21 +1,23 @@
+import useContribution from '@/hooks/mutations/use-contribution';
 import { useGetInformation } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Button from './ui/button';
 import Dialog from './ui/dialog';
 import Input from './ui/input';
 
 type ContributionDialogProps = {
   visible: boolean;
-  onSubmit: (value: number) => void;
   onClose: () => void;
 };
 
 export default function ContributionDialog(props: ContributionDialogProps) {
-  const { visible, onSubmit, onClose } = props;
+  const { visible, onClose } = props;
 
-  const { data: information } = useGetInformation();
-  const isPayout = !!information?.payoutDate;
+  const { mutateAsync: onContribute, isPending } = useContribution();
+  const { data: information, isLoading } = useGetInformation();
+  const isPayout = !isLoading && !!information?.payoutDate;
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -34,22 +36,29 @@ export default function ContributionDialog(props: ContributionDialogProps) {
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (error) return;
 
     setError(false);
-    onSubmit(bidAmount);
+    await onContribute(bidAmount);
     setInput('');
     handleClose();
   };
 
   return (
     <Dialog
-      title="Đóng hụi"
+      title={isPayout ? 'Đóng hụi chết' : 'Đóng hụi'}
       visible={visible}
       onClose={handleClose}
-      onSubmit={handleSubmit}
-      isValid={isPayout || (!!input && !error)}
+      submitButton={
+        <Button
+          loading={isPending}
+          disabled={!isPayout && (!input || error)}
+          onPress={handleSubmit}
+        >
+          Đồng ý
+        </Button>
+      }
     >
       <Input
         placeholder="Nhập số tiền kêu..."

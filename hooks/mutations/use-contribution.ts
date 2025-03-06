@@ -18,30 +18,10 @@ const createEntry = async ({ name, amount, informationId }: ContributePayload) =
         database_id: env.NOTION_DATABASE_ID.ROUND,
       },
       properties: {
-        name: {
-          title: [
-            {
-              text: {
-                content: name,
-              },
-            },
-          ],
-        },
-        bidAmount: {
-          number: amount,
-        },
-        date: {
-          date: {
-            start: dayjs().format('YYYY-MM-DD'),
-          },
-        },
-        information: {
-          relation: [
-            {
-              id: informationId,
-            },
-          ],
-        },
+        name: { title: [{ text: { content: name } }] },
+        bidAmount: { number: amount },
+        date: { date: { start: dayjs().format('YYYY-MM-DD') } },
+        information: { relation: [{ id: informationId }] },
       },
     };
 
