@@ -1,6 +1,6 @@
 import { colors } from '@/constants/colors';
 import { usePayout } from '@/hooks/mutations';
-import { useGetInformation, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -15,7 +15,7 @@ type PayoutDialogProps = {
 
 export default function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
   const { data = [] } = useGetRound();
-  const { data: information } = useGetInformation();
+  const { data: information } = useGetPool();
   const { mutateAsync: onPayout, isPending } = usePayout();
 
   const [input, setInput] = useState('');

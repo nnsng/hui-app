@@ -7,12 +7,12 @@ import Loading from '@/components/loading';
 import TableData from '@/components/table';
 import Button from '@/components/ui/button';
 import { colors } from '@/constants/colors';
-import { useGetInformation, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRound } from '@/hooks/queries';
 import { useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 export default function Index() {
-  const { isLoading: isLoadingInformation } = useGetInformation();
+  const { isLoading: isLoadingInformation } = useGetPool();
   const { isLoading, isError, error } = useGetRound();
 
   const [openDialog, setOpenDialog] = useState(false);

@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { useGetInformation, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,9 +7,13 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function TableData() {
-  const informationQuery = useGetInformation();
-  const roundQuery = useGetRound();
-  const isFetching = informationQuery.isRefetching || roundQuery.isRefetching;
+  const { refetch: refetchPool, isRefetching: isRefetchingPool } = useGetPool();
+  const {
+    data: rounds = [],
+    refetch: refetchRounds,
+    isRefetching: isRefetchingRounds,
+  } = useGetRound();
+  const isFetching = isRefetchingPool || isRefetchingRounds;
 
   const rotateValue = useRef(new Animated.Value(0)).current;
 
@@ -28,8 +32,8 @@ export default function TableData() {
   }, [isFetching, rotateValue]);
 
   const refetch = async () => {
-    await informationQuery.refetch();
-    await roundQuery.refetch();
+    await refetchPool();
+    await refetchRounds();
   };
 
   const spin = rotateValue.interpolate({
@@ -54,8 +58,8 @@ export default function TableData() {
       </View>
 
       <ScrollView style={styles.body}>
-        {roundQuery.data ? (
-          roundQuery.data.map((row, rowIndex) => (
+        {rounds.length > 0 ? (
+          rounds.map((row, rowIndex) => (
             <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
               <Text style={[styles.cell, styles.dateCell]}>{formatDate(row.date)}</Text>
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#eef1f4',
+    backgroundColor: '#eef2ff',
     borderBottomWidth: 1,
     borderBottomColor: '#e9ecef',
   },

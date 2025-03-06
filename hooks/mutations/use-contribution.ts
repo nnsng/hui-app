@@ -2,7 +2,7 @@ import { env } from '@/constants/env';
 import api from '@/utils/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useGetInformation, useGetRound } from '../queries';
+import { useGetPool, useGetRound } from '../queries';
 
 type ContributePayload = {
   name: string;
@@ -35,7 +35,7 @@ export default function useContribution() {
   const queryClient = useQueryClient();
 
   const { data: rounds } = useGetRound();
-  const { data: information } = useGetInformation();
+  const { data: information } = useGetPool();
   const informationId = information?.id || '';
 
   return useMutation({

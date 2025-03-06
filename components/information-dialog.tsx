@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { useGetInformation } from '@/hooks/queries';
+import { useGetPool } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { StyleSheet, Text, View } from 'react-native';
 import Loading from './loading';
@@ -11,7 +11,7 @@ type InformationDialogProps = {
 };
 
 export default function InformationDialog({ visible, onClose }: InformationDialogProps) {
-  const { data: information, isLoading } = useGetInformation();
+  const { data: information, isLoading } = useGetPool();
 
   const listData = [
     {

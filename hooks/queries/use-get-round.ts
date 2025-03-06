@@ -1,11 +1,11 @@
+import { env } from '@/constants/env';
 import api from '@/utils/api';
-import env from '@/utils/env';
 import { mapNotionRound } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
-import { useGetInformation } from './use-information';
+import { useGetPool } from './use-get-pool';
 
-const getData = async (informationId: string) => {
-  const url = `/databases/${env.EXPO_PUBLIC_NOTION_ROUND_DATABASE_ID}/query`;
+const getRounds = async (informationId: string) => {
+  const url = `/databases/${env.NOTION_ROUND_DATABASE_ID}/query`;
   const payload = {
     filter: {
       property: 'information',
@@ -18,6 +18,10 @@ const getData = async (informationId: string) => {
         property: 'date',
         direction: 'ascending',
       },
+      {
+        timestamp: 'created_time',
+        direction: 'ascending',
+      },
     ],
   };
   const data = await api.post(url, payload);
@@ -25,12 +29,12 @@ const getData = async (informationId: string) => {
 };
 
 export function useGetRound() {
-  const { data: information } = useGetInformation();
+  const { data: information } = useGetPool();
   const informationId = information?.id || '';
 
   return useQuery({
     queryKey: ['data', informationId],
-    queryFn: () => getData(informationId),
+    queryFn: () => getRounds(informationId),
     enabled: !!informationId,
   });
 }

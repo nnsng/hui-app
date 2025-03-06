@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { useGetInformation, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
@@ -12,7 +12,7 @@ type FooterProps = {
 
 export default function Footer({ style }: FooterProps) {
   const { data } = useGetRound();
-  const { data: information, isLoading } = useGetInformation();
+  const { data: information, isLoading } = useGetPool();
 
   const isPayout = !isLoading && !!information?.payoutDate;
 
@@ -29,12 +29,12 @@ export default function Footer({ style }: FooterProps) {
         Hốt hụi
       </Button>
       {isPayout ? (
-        <View>
+        <View style={styles.content}>
           <Text style={styles.label}>Đã hốt hụi</Text>
           <Text style={styles.value}>{formatCurrency(information.payoutAmount ?? 0)}</Text>
         </View>
       ) : (
-        <View>
+        <View style={styles.content}>
           <Text style={styles.label}>Tiền lời ({data?.length} tháng)</Text>
           <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
         </View>
@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopWidth: 1,
     borderColor: colors.border,
+  },
+  content: {
+    // alignItems: 'flex-end',
   },
   label: {
     fontSize: 12,

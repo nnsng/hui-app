@@ -1,7 +1,7 @@
 import api from '@/utils/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useGetInformation } from '../queries';
+import { useGetPool } from '../queries';
 
 type PayoutPayload = {
   amount: number;
@@ -22,7 +22,7 @@ const payout = async ({ amount, informationId }: PayoutPayload) => {
 export function usePayout() {
   const queryClient = useQueryClient();
 
-  const { data: information } = useGetInformation();
+  const { data: information } = useGetPool();
   const informationId = information?.id || '';
 
   return useMutation({

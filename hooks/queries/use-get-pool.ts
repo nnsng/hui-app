@@ -1,9 +1,9 @@
+import { env } from '@/constants/env';
 import api from '@/utils/api';
-import env from '@/utils/env';
 import { mapNotionInformation } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 
-const getCurrentInformation = async () => {
+const getCurrentPool = async () => {
   const payload = {
     filter: {
       property: 'active',
@@ -12,14 +12,14 @@ const getCurrentInformation = async () => {
       },
     },
   };
-  const url = `/databases/${env.EXPO_PUBLIC_NOTION_INFORMATION_DATABASE_ID}/query`;
+  const url = `/databases/${env.NOTION_POOL_DATABASE_ID}/query`;
   const response = await api.post(url, payload);
   return mapNotionInformation(response);
 };
 
-export function useGetInformation() {
+export function useGetPool() {
   return useQuery({
     queryKey: ['information'],
-    queryFn: getCurrentInformation,
+    queryFn: getCurrentPool,
   });
 }
