@@ -1,4 +1,4 @@
-import type { HuiPool, Round } from '@/types/data';
+import type { HuiPool, Round } from '@/types';
 
 export const mapNotionInformation = (data: any): HuiPool => {
   try {

@@ -10,7 +10,7 @@ type ContributePayload = {
   informationId: string;
 };
 
-const createEntry = async ({ name, amount, informationId }: ContributePayload) => {
+const onContribute = async ({ name, amount, informationId }: ContributePayload) => {
   try {
     const url = '/pages';
     const payload = {
@@ -31,7 +31,7 @@ const createEntry = async ({ name, amount, informationId }: ContributePayload) =
   }
 };
 
-export default function useContribution() {
+export function useContribute() {
   const queryClient = useQueryClient();
 
   const { data: rounds } = useGetRound();
@@ -42,10 +42,10 @@ export default function useContribution() {
     mutationFn: (amount: number) => {
       const nextRoundNumber = rounds ? rounds.length + 1 : 1;
       const payload = { name: String(nextRoundNumber), amount, informationId };
-      return createEntry(payload);
+      return onContribute(payload);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['data', informationId] });
+      queryClient.invalidateQueries({ queryKey: ['rounds', informationId] });
     },
   });
 }

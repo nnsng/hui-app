@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function TableData() {
+export function TableData() {
   const { refetch: refetchPool, isRefetching: isRefetchingPool } = useGetPool();
   const {
     data: rounds = [],

@@ -7,7 +7,7 @@ type InputProps = TextInputProps & {
   error?: string;
 };
 
-export default function Input(props: InputProps) {
+export function Input(props: InputProps) {
   const { label, error, style, ...inputProps } = props;
 
   const [isFocused, setIsFocused] = useState(false);

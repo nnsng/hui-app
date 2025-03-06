@@ -1,2 +1,2 @@
-export * from './use-get-pool';
-export * from './use-get-round';
+export * from './useGetPool';
+export * from './useGetRounds';

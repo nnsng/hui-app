@@ -5,7 +5,7 @@ type ErrorProps = {
   message: string;
 };
 
-export default function Error({ message }: ErrorProps) {
+export function Error({ message }: ErrorProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.errorText}>{message}</Text>

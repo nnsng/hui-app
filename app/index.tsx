@@ -1,11 +1,7 @@
-import ContributionDialog from '@/components/contribution-dialog';
-import Error from '@/components/error';
-import Footer from '@/components/footer';
-import Header from '@/components/header';
-import InformationDialog from '@/components/information-dialog';
-import Loading from '@/components/loading';
-import TableData from '@/components/table';
-import Button from '@/components/ui/button';
+import { Error, Loading, TableData } from '@/components';
+import { ContributionDialog, InformationDialog } from '@/components/dialogs';
+import { Footer, Header } from '@/components/layouts';
+import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useGetPool, useGetRound } from '@/hooks/queries';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import Loading from '@/components/loading';
+import { Loading } from '@/components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';

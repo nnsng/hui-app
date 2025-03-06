@@ -19,7 +19,7 @@ const getCurrentPool = async () => {
 
 export function useGetPool() {
   return useQuery({
-    queryKey: ['information'],
+    queryKey: ['pool'],
     queryFn: getCurrentPool,
   });
 }

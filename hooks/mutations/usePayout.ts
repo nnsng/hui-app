@@ -8,7 +8,7 @@ type PayoutPayload = {
   informationId: string;
 };
 
-const payout = async ({ amount, informationId }: PayoutPayload) => {
+const onPayout = async ({ amount, informationId }: PayoutPayload) => {
   const url = `/pages/${informationId}`;
   const payload = {
     properties: {
@@ -26,9 +26,9 @@ export function usePayout() {
   const informationId = information?.id || '';
 
   return useMutation({
-    mutationFn: async (amount: number) => payout({ amount, informationId }),
+    mutationFn: async (amount: number) => onPayout({ amount, informationId }),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['information'] });
+      queryClient.invalidateQueries({ queryKey: ['pool'] });
     },
   });
 }

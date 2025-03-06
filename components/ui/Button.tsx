@@ -20,7 +20,7 @@ type ButtonProps = PropsWithChildren<{
   loading?: boolean;
 }>;
 
-export default function Button(props: ButtonProps) {
+export function Button(props: ButtonProps) {
   const { children, onPress, style, textStyle, variant = 'contained', disabled, loading } = props;
 
   const disabledState = disabled || loading;

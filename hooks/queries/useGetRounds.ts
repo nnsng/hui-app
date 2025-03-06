@@ -2,7 +2,7 @@ import { env } from '@/constants/env';
 import api from '@/utils/api';
 import { mapNotionRound } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
-import { useGetPool } from './use-get-pool';
+import { useGetPool } from './useGetPool';
 
 const getRounds = async (informationId: string) => {
   const url = `/databases/${env.NOTION_ROUND_DATABASE_ID}/query`;
@@ -33,7 +33,7 @@ export function useGetRound() {
   const informationId = information?.id || '';
 
   return useQuery({
-    queryKey: ['data', informationId],
+    queryKey: ['rounds', informationId],
     queryFn: () => getRounds(informationId),
     enabled: !!informationId,
   });

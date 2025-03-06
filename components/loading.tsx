@@ -6,7 +6,7 @@ type LoadingProps = {
   size?: 'small' | 'large';
 };
 
-export default function Loading({ size = 'large' }: LoadingProps) {
+export function Loading({ size = 'large' }: LoadingProps) {
   return (
     <View style={styles.container}>
       <ActivityIndicator size={size} color={colors.primary} />

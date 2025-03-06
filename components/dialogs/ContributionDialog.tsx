@@ -1,22 +1,20 @@
 import { colors } from '@/constants/colors';
-import useContribution from '@/hooks/mutations/use-contribution';
+import { useContribute } from '@/hooks/mutations';
 import { useGetPool } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Button from './ui/button';
-import Dialog from './ui/dialog';
-import Input from './ui/input';
+import { Button, Dialog, Input } from '../ui';
 
 type ContributionDialogProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export default function ContributionDialog(props: ContributionDialogProps) {
+export function ContributionDialog(props: ContributionDialogProps) {
   const { visible, onClose } = props;
 
-  const { mutateAsync: onContribute, isPending } = useContribution();
+  const { mutateAsync: onContribute, isPending } = useContribute();
   const { data: information, isLoading } = useGetPool();
   const isPayout = !isLoading && !!information?.payoutDate;
 

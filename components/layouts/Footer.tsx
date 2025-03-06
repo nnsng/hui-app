@@ -3,14 +3,14 @@ import { useGetPool, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
-import PayoutDialog from './payout-dialog';
-import Button from './ui/button';
+import { PayoutDialog } from '../dialogs';
+import { Button } from '../ui';
 
 type FooterProps = {
   style?: ViewStyle;
 };
 
-export default function Footer({ style }: FooterProps) {
+export function Footer({ style }: FooterProps) {
   const { data } = useGetRound();
   const { data: information, isLoading } = useGetPool();
 

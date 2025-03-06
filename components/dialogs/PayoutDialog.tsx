@@ -4,16 +4,14 @@ import { useGetPool, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Button from './ui/button';
-import Dialog from './ui/dialog';
-import Input from './ui/input';
+import { Button, Dialog, Input } from '../ui';
 
 type PayoutDialogProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export default function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
+export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
   const { data = [] } = useGetRound();
   const { data: information } = useGetPool();
   const { mutateAsync: onPayout, isPending } = usePayout();

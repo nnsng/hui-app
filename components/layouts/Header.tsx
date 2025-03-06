@@ -5,7 +5,7 @@ type HeaderProps = {
   style?: ViewStyle;
 };
 
-export default function Header({ style }: HeaderProps) {
+export function Header({ style }: HeaderProps) {
   return (
     <View style={[styles.header, style]}>
       <Text style={styles.title}>Hụi</Text>

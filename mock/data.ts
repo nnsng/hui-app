@@ -1,4 +1,4 @@
-import type { HuiPool, Round } from '@/types/data';
+import type { HuiPool, Round } from '@/types';
 import { randomNumber } from '@/utils/temp';
 
 export const mockData: Round[] = new Array(10).fill(0).map((_, index, arr) => ({

@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import Button from './button';
+import { Button } from './Button';
 
 type DialogProps = PropsWithChildren<{
   visible: boolean;
@@ -18,7 +18,7 @@ type DialogProps = PropsWithChildren<{
   submitButton?: ReactNode;
 }>;
 
-export default function Dialog(props: DialogProps) {
+export function Dialog(props: DialogProps) {
   const { visible, title, onClose, submitButton, children } = props;
 
   const scaleAnim = useRef(new Animated.Value(0.8)).current;

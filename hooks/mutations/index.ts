@@ -1,2 +1,2 @@
-export * from './use-contribution';
-export * from './use-payout';
+export * from './useContribute';
+export * from './usePayout';
