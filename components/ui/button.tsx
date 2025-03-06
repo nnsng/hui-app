@@ -23,23 +23,25 @@ type ButtonProps = PropsWithChildren<{
 export default function Button(props: ButtonProps) {
   const { children, onPress, style, textStyle, variant = 'contained', disabled, loading } = props;
 
+  const disabledState = disabled || loading;
+
   return (
     <TouchableOpacity
-      activeOpacity={0.5}
-      disabled={disabled || loading}
+      activeOpacity={variant === 'text' ? 0.7 : 0.85}
+      disabled={disabledState}
       style={[
         styles.button,
         variant === 'outlined' && styles.outlinedButton,
         variant === 'text' && styles.textButton,
-        (disabled || loading) && styles.disabled,
+        disabledState && styles.disabled,
         style,
       ]}
-      onPress={disabled || loading ? undefined : onPress}
+      onPress={disabledState ? undefined : onPress}
     >
       {loading && (
         <ActivityIndicator
           color={variant === 'contained' ? colors.white : colors.primary}
-          size={15}
+          size={16}
         />
       )}
       <Text
@@ -59,27 +61,41 @@ export default function Button(props: ButtonProps) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 5,
+    gap: 8,
+    elevation: 4,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   outlinedButton: {
     backgroundColor: 'transparent',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.primary,
+    elevation: 0,
+    shadowOpacity: 0,
   },
   textButton: {
     backgroundColor: 'transparent',
+    paddingHorizontal: 8,
+    elevation: 0,
+    shadowOpacity: 0,
   },
   disabled: {
     opacity: 0.5,
+    backgroundColor: '#d1d5db',
   },
   text: {
     color: colors.white,
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   outlinedText: {
     color: colors.primary,

@@ -1,12 +1,12 @@
 import ContributionDialog from '@/components/contribution-dialog';
 import Error from '@/components/error';
 import Footer from '@/components/footer';
+import Header from '@/components/header';
 import InformationDialog from '@/components/information-dialog';
 import Loading from '@/components/loading';
 import TableData from '@/components/table';
 import Button from '@/components/ui/button';
 import { colors } from '@/constants/colors';
-import useContribution from '@/hooks/mutations/use-contribution';
 import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -24,27 +24,29 @@ export default function Index() {
 
   return (
     <View style={styles.app}>
-      <View style={styles.buttonContainer}>
-        <Button
-          variant="outlined"
-          style={styles.button}
-          onPress={() => setOpenInformationDialog(true)}
-        >
-          Thông tin
-        </Button>
+      <Header />
 
-        <Button style={styles.button} onPress={() => setOpenDialog(true)}>
-          Đóng hụi
-        </Button>
+      <View style={styles.main}>
+        <View style={styles.buttonContainer}>
+          <Button
+            variant="outlined"
+            style={styles.button}
+            onPress={() => setOpenInformationDialog(true)}
+          >
+            Thông tin
+          </Button>
+
+          <Button style={styles.button} onPress={() => setOpenDialog(true)}>
+            Đóng hụi
+          </Button>
+        </View>
+
+        <View style={styles.tableContainer}>
+          <TableData />
+        </View>
       </View>
 
-      <View style={styles.tableContainer}>
-        <TableData />
-      </View>
-
-      <View style={styles.footerContainer}>
-        <Footer />
-      </View>
+      <Footer style={styles.footer} />
 
       <InformationDialog
         visible={openInformationDialog}
@@ -59,27 +61,27 @@ export default function Index() {
 const styles = StyleSheet.create({
   app: {
     flex: 1,
-    paddingTop: 10,
     backgroundColor: colors.white,
+    gap: 16,
   },
-  top: {
-    backgroundColor: colors.primary,
-    padding: 20,
+  main: {
+    flex: 1,
+    gap: 16,
   },
   buttonContainer: {
     flexShrink: 0,
     flexDirection: 'row',
     gap: 10,
-    paddingInline: 10,
+    paddingHorizontal: 16,
   },
   button: {
     flex: 1,
   },
   tableContainer: {
     flex: 1,
-    padding: 10,
+    paddingHorizontal: 16,
   },
-  footerContainer: {
+  footer: {
     flexShrink: 0,
   },
 });

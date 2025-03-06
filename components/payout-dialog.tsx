@@ -1,3 +1,4 @@
+import { colors } from '@/constants/colors';
 import { usePayout } from '@/hooks/mutations';
 import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
@@ -119,8 +120,11 @@ const styles = StyleSheet.create({
   currency: {
     marginTop: 5,
     fontSize: 12,
+    color: colors.text,
   },
-  text: {},
+  text: {
+    color: colors.text,
+  },
   boldText: {
     fontWeight: 'bold',
   },

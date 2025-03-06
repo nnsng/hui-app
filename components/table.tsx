@@ -42,7 +42,9 @@ export default function TableData() {
       <View style={[styles.row, styles.header]}>
         <Text style={[styles.headerCell, styles.idCell]}>
           <TouchableOpacity onPress={refetch}>
-            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <Animated.View
+              style={[{ transform: [{ rotate: spin }], opacity: isFetching ? 0.7 : 1 }]}
+            >
               <MaterialIcons name="sync" size={18} color={colors.primary} />
             </Animated.View>
           </TouchableOpacity>
@@ -71,32 +73,50 @@ export default function TableData() {
 const styles = StyleSheet.create({
   table: {
     flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   header: {
-    flexShrink: 0,
-  },
-  body: {
-    flex: 1,
-    overflow: 'scroll',
-  },
-  row: {
     flexDirection: 'row',
-  },
-  payout: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#eef1f4',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
   },
   headerCell: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#f1f1f1',
+    paddingVertical: 14,
+    paddingHorizontal: 12,
     fontWeight: 'bold',
-    borderWidth: 1,
-    borderColor: '#000',
+    color: colors.text,
+    fontSize: 14,
+  },
+  body: {
+    flex: 1,
+  },
+  row: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f3f5',
+  },
+  rowHighlighted: {
+    backgroundColor: '#f8f9fa',
+  },
+  payout: {
+    backgroundColor: '#f8f9fa',
   },
   cell: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#000',
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    color: colors.text,
+    fontSize: 14,
   },
   idCell: {
     flex: 1,
@@ -109,8 +129,10 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   emptyCell: {
-    padding: 10,
+    padding: 20,
     textAlign: 'center',
+    color: '#868e96',
+    fontSize: 14,
     fontStyle: 'italic',
   },
 });

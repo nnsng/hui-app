@@ -20,7 +20,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ title: 'Hụi' }} />
+      <Stack screenOptions={{ headerShown: false }} />
     </QueryClientProvider>
   );
 }

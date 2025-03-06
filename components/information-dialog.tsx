@@ -1,3 +1,4 @@
+import { colors } from '@/constants/colors';
 import { useGetInformation } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { StyleSheet, Text, View } from 'react-native';
@@ -39,8 +40,8 @@ export default function InformationDialog({ visible, onClose }: InformationDialo
         <View style={styles.list}>
           {listData.map((item, index) => (
             <View key={index} style={styles.item}>
-              <Text>{item.label}: </Text>
-              <Text>{item.value}</Text>
+              <Text style={styles.label}>{item.label}: </Text>
+              <Text style={styles.value}>{item.value}</Text>
             </View>
           ))}
         </View>
@@ -55,5 +56,11 @@ const styles = StyleSheet.create({
   },
   item: {
     flexDirection: 'row',
+  },
+  label: {
+    color: colors.text,
+  },
+  value: {
+    color: colors.text,
   },
 });

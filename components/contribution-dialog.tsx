@@ -1,3 +1,4 @@
+import { colors } from '@/constants/colors';
 import useContribution from '@/hooks/mutations/use-contribution';
 import { useGetInformation } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
@@ -80,5 +81,6 @@ const styles = StyleSheet.create({
   currency: {
     marginTop: 5,
     fontSize: 12,
+    color: colors.text,
   },
 });
