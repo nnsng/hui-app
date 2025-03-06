@@ -55,11 +55,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopWidth: 1,
     borderColor: colors.border,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 6,
   },
   label: {
     fontSize: 12,

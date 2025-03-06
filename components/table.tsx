@@ -76,11 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     overflow: 'hidden',
-    elevation: 3,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   header: {
     flexDirection: 'row',

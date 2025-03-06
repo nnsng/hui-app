@@ -8,6 +8,7 @@ export const colors = {
   white: '#fff',
   black: '#000',
   text: '#333',
+  textDisabled: '#9ca3af',
   border: '#ddd',
   shadow: '#000',
 };

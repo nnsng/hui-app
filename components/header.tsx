@@ -8,27 +8,23 @@ type HeaderProps = {
 export default function Header({ style }: HeaderProps) {
   return (
     <View style={[styles.header, style]}>
-      <Text style={styles.headerText}>Hụi</Text>
+      <Text style={styles.title}>Hụi</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    backgroundColor: colors.white,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderColor: colors.border,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 6,
+    alignItems: 'center',
   },
-  headerText: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: colors.primary,
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.text,
+    letterSpacing: 0.5,
   },
 });

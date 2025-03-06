@@ -53,10 +53,6 @@ const styles = StyleSheet.create({
   },
   inputFocused: {
     borderColor: colors.primary,
-    shadowColor: colors.primary,
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
   inputDisabled: {
     backgroundColor: '#f0f0f0',

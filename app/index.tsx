@@ -9,7 +9,7 @@ import Button from '@/components/ui/button';
 import { colors } from '@/constants/colors';
 import { useGetInformation, useGetRound } from '@/hooks/queries';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 export default function Index() {
   const { isLoading: isLoadingInformation } = useGetInformation();
@@ -23,7 +23,7 @@ export default function Index() {
   if (isError) return <Error message={error.message} />;
 
   return (
-    <View style={styles.app}>
+    <SafeAreaView style={styles.app}>
       <Header />
 
       <View style={styles.main}>
@@ -54,7 +54,7 @@ export default function Index() {
       />
 
       <ContributionDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
-    </View>
+    </SafeAreaView>
   );
 }
 

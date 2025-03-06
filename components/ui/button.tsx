@@ -38,17 +38,13 @@ export default function Button(props: ButtonProps) {
       ]}
       onPress={disabledState ? undefined : onPress}
     >
-      {loading && (
-        <ActivityIndicator
-          color={variant === 'contained' ? colors.white : colors.primary}
-          size={16}
-        />
-      )}
+      {loading && <ActivityIndicator color={colors.textDisabled} size={16} />}
       <Text
         style={[
           styles.text,
           variant === 'outlined' && styles.outlinedText,
           variant === 'text' && styles.textVariant,
+          disabledState && styles.disabledText,
           textStyle,
         ]}
       >
@@ -68,24 +64,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    elevation: 4,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
   },
   outlinedButton: {
     backgroundColor: 'transparent',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: colors.primary,
-    elevation: 0,
-    shadowOpacity: 0,
   },
   textButton: {
     backgroundColor: 'transparent',
     paddingHorizontal: 8,
-    elevation: 0,
-    shadowOpacity: 0,
   },
   disabled: {
     opacity: 0.5,
@@ -102,5 +89,8 @@ const styles = StyleSheet.create({
   },
   textVariant: {
     color: colors.primary,
+  },
+  disabledText: {
+    color: colors.textDisabled,
   },
 });

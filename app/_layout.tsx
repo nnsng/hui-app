@@ -1,3 +1,4 @@
+import Loading from '@/components/loading';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -16,7 +17,7 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) return null;
+  if (!loaded) return <Loading />;
 
   return (
     <QueryClientProvider client={queryClient}>
