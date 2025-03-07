@@ -2,15 +2,15 @@ import { env } from '@/constants/env';
 import api from '@/utils/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useGetPool, useGetRound } from '../queries';
+import { useGetPool, useGetRounds } from '../queries';
 
 type ContributePayload = {
   name: string;
   amount: number;
-  informationId: string;
+  poolId: string;
 };
 
-const onContribute = async ({ name, amount, informationId }: ContributePayload) => {
+const onContribute = async ({ name, amount, poolId }: ContributePayload) => {
   try {
     const url = '/pages';
     const payload = {
@@ -21,7 +21,7 @@ const onContribute = async ({ name, amount, informationId }: ContributePayload) 
         name: { title: [{ text: { content: name } }] },
         bidAmount: { number: amount },
         date: { date: { start: dayjs().format('YYYY-MM-DD') } },
-        information: { relation: [{ id: informationId }] },
+        information: { relation: [{ id: poolId }] },
       },
     };
 
@@ -34,18 +34,18 @@ const onContribute = async ({ name, amount, informationId }: ContributePayload) 
 export function useContribute() {
   const queryClient = useQueryClient();
 
-  const { data: rounds } = useGetRound();
-  const { data: information } = useGetPool();
-  const informationId = information?.id || '';
+  const { data: rounds } = useGetRounds();
+  const { data: pool } = useGetPool();
+  const poolId = pool?.id || '';
 
   return useMutation({
     mutationFn: (amount: number) => {
       const nextRoundNumber = rounds ? rounds.length + 1 : 1;
-      const payload = { name: String(nextRoundNumber), amount, informationId };
+      const payload = { name: String(nextRoundNumber), amount, poolId };
       return onContribute(payload);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['rounds', informationId] });
+      queryClient.invalidateQueries({ queryKey: ['rounds', poolId] });
     },
   });
 }

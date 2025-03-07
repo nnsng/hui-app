@@ -1,9 +1,9 @@
 import { colors } from '@/constants/colors';
 import { usePayout } from '@/hooks/mutations';
-import { useGetPool, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRounds } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
-import { useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet, Text, View, type TextInput } from 'react-native';
 import { Button, Dialog, Input } from '../ui';
 
 type PayoutDialogProps = {
@@ -12,43 +12,51 @@ type PayoutDialogProps = {
 };
 
 export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
-  const { data = [] } = useGetRound();
-  const { data: information } = useGetPool();
+  const { data: rounds = [] } = useGetRounds();
+  const { data: pool } = useGetPool();
   const { mutateAsync: onPayout, isPending } = usePayout();
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
 
+  const inputRef = useRef<TextInput>(null);
+
   const bidAmount = Number(input);
 
   const totalContribution = useMemo(() => {
-    if (!data || !information) return 0;
+    if (!rounds || !pool) return 0;
 
-    const { numberOfPlayers, monthlyContribution } = information;
+    const { numberOfPlayers, monthlyContribution } = pool;
 
-    const pastContribution = data.reduce((total, round) => {
+    const pastContribution = rounds.reduce((total, round) => {
       return total + (monthlyContribution - round.bidAmount);
     }, 0);
-    const remainingPlayers = numberOfPlayers - data.length - 1;
+    const remainingPlayers = numberOfPlayers - rounds.length - 1;
     const futureContribution = remainingPlayers * monthlyContribution;
 
     return pastContribution + futureContribution;
-  }, [data, information]);
+  }, [rounds, pool]);
 
   const totalPayout = useMemo(() => {
-    if (!data || !information) return 0;
+    if (!rounds || !pool) return 0;
 
-    const { numberOfPlayers, monthlyContribution, commission } = information;
+    const { numberOfPlayers, monthlyContribution, commission } = pool;
 
-    const pastPayout = data.length * monthlyContribution;
-    const remainingPlayers = numberOfPlayers - data.length - 1;
+    const pastPayout = rounds.length * monthlyContribution;
+    const remainingPlayers = numberOfPlayers - rounds.length - 1;
     const netContribution = monthlyContribution - bidAmount;
     const futurePayout = remainingPlayers * netContribution;
 
     return pastPayout + futurePayout - commission;
-  }, [data, information, bidAmount]);
+  }, [rounds, pool, bidAmount]);
 
   const difference = totalPayout - totalContribution;
+
+  useEffect(() => {
+    if (visible) {
+      inputRef.current?.focus();
+    }
+  }, [visible]);
 
   const handleChangeText = (text: string) => {
     setInput(text);
@@ -84,6 +92,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
       <View style={styles.container}>
         <View>
           <Input
+            inputRef={inputRef}
             placeholder="Nhập số tiền kêu..."
             keyboardType="numeric"
             value={input}

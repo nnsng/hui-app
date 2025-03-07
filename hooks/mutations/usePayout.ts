@@ -5,11 +5,11 @@ import { useGetPool } from '../queries';
 
 type PayoutPayload = {
   amount: number;
-  informationId: string;
+  poolId: string;
 };
 
-const onPayout = async ({ amount, informationId }: PayoutPayload) => {
-  const url = `/pages/${informationId}`;
+const onPayout = async ({ amount, poolId }: PayoutPayload) => {
+  const url = `/pages/${poolId}`;
   const payload = {
     properties: {
       payoutAmount: { number: amount },
@@ -22,11 +22,11 @@ const onPayout = async ({ amount, informationId }: PayoutPayload) => {
 export function usePayout() {
   const queryClient = useQueryClient();
 
-  const { data: information } = useGetPool();
-  const informationId = information?.id || '';
+  const { data: pool } = useGetPool();
+  const poolId = pool?.id || '';
 
   return useMutation({
-    mutationFn: async (amount: number) => onPayout({ amount, informationId }),
+    mutationFn: async (amount: number) => onPayout({ amount, poolId }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['pool'] });
     },

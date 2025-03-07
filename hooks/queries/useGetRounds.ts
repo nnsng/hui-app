@@ -4,13 +4,13 @@ import { mapNotionRound } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 import { useGetPool } from './useGetPool';
 
-const getRounds = async (informationId: string) => {
+const getRounds = async (poolId: string) => {
   const url = `/databases/${env.NOTION_ROUND_DATABASE_ID}/query`;
   const payload = {
     filter: {
       property: 'information',
       relation: {
-        contains: informationId,
+        contains: poolId,
       },
     },
     sorts: [
@@ -28,13 +28,13 @@ const getRounds = async (informationId: string) => {
   return mapNotionRound(data);
 };
 
-export function useGetRound() {
-  const { data: information } = useGetPool();
-  const informationId = information?.id || '';
+export function useGetRounds() {
+  const { data: pool } = useGetPool();
+  const poolId = pool?.id || '';
 
   return useQuery({
-    queryKey: ['rounds', informationId],
-    queryFn: () => getRounds(informationId),
-    enabled: !!informationId,
+    queryKey: ['rounds', poolId],
+    queryFn: () => getRounds(poolId),
+    enabled: !!poolId,
   });
 }

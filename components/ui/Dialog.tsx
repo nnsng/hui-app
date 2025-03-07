@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   dialog: {
-    width: 320,
+    width: '90%',
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderRadius: 12,
     shadowColor: colors.shadow,
     shadowOpacity: 0.25,

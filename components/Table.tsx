@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { useGetPool, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRounds } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ export function Table() {
     data: rounds = [],
     refetch: refetchRounds,
     isRefetching: isRefetchingRounds,
-  } = useGetRound();
+  } = useGetRounds();
   const isFetching = isRefetchingPool || isRefetchingRounds;
 
   const rotateValue = useRef(new Animated.Value(0)).current;
@@ -54,7 +54,7 @@ export function Table() {
           </TouchableOpacity>
         </Text>
         <Text style={[styles.headerCell, styles.dateCell]}>Ngày</Text>
-        <Text style={[styles.headerCell, styles.bidCell]}>Đấu giá</Text>
+        <Text style={[styles.headerCell, styles.bidCell]}>Tiền kêu</Text>
       </View>
 
       <ScrollView style={styles.body}>
@@ -77,7 +77,7 @@ export function Table() {
 const styles = StyleSheet.create({
   table: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: '#f1f3f5',
   },

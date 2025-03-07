@@ -5,10 +5,11 @@ import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-na
 type InputProps = TextInputProps & {
   label?: string;
   error?: string;
+  inputRef?: React.Ref<TextInput>;
 };
 
 export function Input(props: InputProps) {
-  const { label, error, style, ...inputProps } = props;
+  const { label, error, inputRef, style, ...inputProps } = props;
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -16,6 +17,7 @@ export function Input(props: InputProps) {
     <View style={styles.inputContainer}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
+        ref={inputRef}
         style={[
           styles.input,
           isFocused && styles.inputFocused,

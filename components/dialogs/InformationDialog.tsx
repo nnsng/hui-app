@@ -11,24 +11,24 @@ type InformationDialogProps = {
 };
 
 export function InformationDialog({ visible, onClose }: InformationDialogProps) {
-  const { data: information, isLoading } = useGetPool();
+  const { data: pool, isLoading } = useGetPool();
 
   const listData = [
     {
       label: 'Số người',
-      value: information?.numberOfPlayers ?? 0,
+      value: pool?.numberOfPlayers ?? 0,
     },
     {
       label: 'Số tiền đóng',
-      value: formatCurrency(information?.monthlyContribution),
+      value: formatCurrency(pool?.monthlyContribution),
     },
     {
       label: 'Tối thiểu',
-      value: formatCurrency(information?.minimumBid),
+      value: formatCurrency(pool?.minimumBid),
     },
     {
       label: 'Tiền cò',
-      value: formatCurrency(information?.commission),
+      value: formatCurrency(pool?.commission),
     },
   ];
 

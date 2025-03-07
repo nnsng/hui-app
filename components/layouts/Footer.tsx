@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { useGetPool, useGetRound } from '@/hooks/queries';
+import { useGetPool, useGetRounds } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
@@ -11,17 +11,17 @@ type FooterProps = {
 };
 
 export function Footer({ style }: FooterProps) {
-  const { data } = useGetRound();
-  const { data: information, isLoading } = useGetPool();
+  const { data: rounds } = useGetRounds();
+  const { data: pool, isLoading } = useGetPool();
 
-  const isPayout = !isLoading && !!information?.payoutDate;
+  const isPayout = !isLoading && !!pool?.payoutDate;
 
   const [openDialog, setOpenDialog] = useState(false);
 
   const totalProfit = useMemo(() => {
-    if (!data) return 0;
-    return data.reduce((acc, item) => acc + item.bidAmount, 0);
-  }, [data]);
+    if (!rounds) return 0;
+    return rounds.reduce((acc, item) => acc + item.bidAmount, 0);
+  }, [rounds]);
 
   return (
     <View style={[styles.footer, style]}>
@@ -31,11 +31,11 @@ export function Footer({ style }: FooterProps) {
       {isPayout ? (
         <View style={styles.content}>
           <Text style={styles.label}>Đã hốt hụi</Text>
-          <Text style={styles.value}>{formatCurrency(information.payoutAmount ?? 0)}</Text>
+          <Text style={styles.value}>{formatCurrency(pool.payoutAmount ?? 0)}</Text>
         </View>
       ) : (
         <View style={styles.content}>
-          <Text style={styles.label}>Tiền lời ({data?.length} tháng)</Text>
+          <Text style={styles.label}>Tiền lời ({rounds?.length} tháng)</Text>
           <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
         </View>
       )}

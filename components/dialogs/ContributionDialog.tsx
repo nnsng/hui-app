@@ -2,8 +2,8 @@ import { colors } from '@/constants/colors';
 import { useContribute } from '@/hooks/mutations';
 import { useGetPool } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View, type TextInput } from 'react-native';
 import { Button, Dialog, Input } from '../ui';
 
 type ContributionDialogProps = {
@@ -11,18 +11,24 @@ type ContributionDialogProps = {
   onClose: () => void;
 };
 
-export function ContributionDialog(props: ContributionDialogProps) {
-  const { visible, onClose } = props;
-
+export function ContributionDialog({ visible, onClose }: ContributionDialogProps) {
   const { mutateAsync: onContribute, isPending } = useContribute();
-  const { data: information, isLoading } = useGetPool();
-  const isPayout = !isLoading && !!information?.payoutDate;
+  const { data: pool, isLoading } = useGetPool();
+  const isPayout = !isLoading && !!pool?.payoutDate;
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
 
+  const inputRef = useRef<TextInput>(null);
+
   const bidAmount = Number(input);
-  const contributedAmount = (information?.monthlyContribution ?? 0) - bidAmount;
+  const contributedAmount = (pool?.monthlyContribution ?? 0) - bidAmount;
+
+  useEffect(() => {
+    if (visible && !isPayout) {
+      inputRef.current?.focus();
+    }
+  }, [visible]);
 
   const handleChangeText = (text: string) => {
     setInput(text);
@@ -60,6 +66,7 @@ export function ContributionDialog(props: ContributionDialogProps) {
       }
     >
       <Input
+        inputRef={inputRef}
         placeholder="Nhập số tiền kêu..."
         keyboardType="numeric"
         value={input}
