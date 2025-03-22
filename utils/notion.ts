@@ -32,24 +32,21 @@ export const mapNotionInformation = (data: any): HuiPool => {
   }
 };
 
-export const mapNotionRound = async (data: any) => {
+export const mapNotionRound = (data: any) => {
   try {
     const results = data?.results;
     if (!Array.isArray(results) || results.length === 0) return [];
 
-    const roundPromises = results.map(async (result: any): Promise<Round> => {
+    return results.map((result: any): Round => {
       const { date, bidAmount } = result.properties;
-      const sonarDate = date.date?.start ?? '';
 
       return {
         id: result.id ?? '',
-        date: sonarDate,
-        lunarDate: await getLunarDate(sonarDate),
+        date: date.date?.start ?? '',
+        lunarDate: '',
         bidAmount: bidAmount.number ?? 0,
       };
     });
-
-    return await Promise.all(roundPromises);
   } catch (error) {
     console.error('Error mapping notion round:', error);
     return [];

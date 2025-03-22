@@ -1,9 +1,10 @@
 import { colors } from '@/constants/colors';
 import { useGetPool, useGetRounds } from '@/hooks/queries';
+import type { Round } from '@/types';
 import { formatCurrency } from '@/utils/currency';
-import { formatDate } from '@/utils/date';
+import { formatDate, getLunarDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function Table() {
@@ -15,7 +16,20 @@ export function Table() {
   } = useGetRounds();
   const isFetching = isRefetchingPool || isRefetchingRounds;
 
+  const [fullDataRounds, setFullDataRounds] = useState<Round[]>(rounds);
+
   const rotateValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    (async () => {
+      const roundPromises = rounds.map(async (rounds) => ({
+        ...rounds,
+        lunarDate: await getLunarDate(rounds.date),
+      }));
+      const fullDataRounds = await Promise.all(roundPromises);
+      setFullDataRounds(fullDataRounds);
+    })();
+  }, [rounds]);
 
   useEffect(() => {
     if (isFetching) {
@@ -58,8 +72,8 @@ export function Table() {
       </View>
 
       <ScrollView style={styles.body}>
-        {rounds.length > 0 ? (
-          rounds.map((row, rowIndex) => (
+        {fullDataRounds.length > 0 ? (
+          fullDataRounds.map((row, rowIndex) => (
             <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
               <Text style={[styles.cell, styles.dateCell]}>
