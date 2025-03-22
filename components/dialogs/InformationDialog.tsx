@@ -19,11 +19,11 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
       value: pool?.numberOfPlayers ?? 0,
     },
     {
-      label: 'Số tiền đóng',
+      label: 'Tiền hụi',
       value: formatCurrency(pool?.monthlyContribution),
     },
     {
-      label: 'Tối thiểu',
+      label: 'Tiền dằn',
       value: formatCurrency(pool?.minimumBid),
     },
     {
