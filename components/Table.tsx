@@ -22,9 +22,9 @@ export function Table() {
 
   useEffect(() => {
     (async () => {
-      const roundPromises = rounds.map(async (rounds) => ({
-        ...rounds,
-        lunarDate: await getLunarDate(rounds.date),
+      const roundPromises = rounds.map(async (round) => ({
+        ...round,
+        lunarDate: await getLunarDate(round.date),
       }));
       const fullDataRounds = await Promise.all(roundPromises);
       setFullDataRounds(fullDataRounds);
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dateCell: {
-    flex: 3,
+    flex: 5,
   },
   bidCell: {
     flex: 3,
