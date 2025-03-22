@@ -1,5 +1,5 @@
 import { env } from '@/constants/env';
-import api from '@/utils/api';
+import { notionApi } from '@/utils/api';
 import { mapNotionRound } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 import { useGetPool } from './useGetPool';
@@ -24,8 +24,8 @@ const getRounds = async (poolId: string) => {
       },
     ],
   };
-  const data = await api.post(url, payload);
-  return mapNotionRound(data);
+  const data = await notionApi.post(url, payload);
+  return await mapNotionRound(data);
 };
 
 export function useGetRounds() {

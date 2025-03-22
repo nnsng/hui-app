@@ -1,4 +1,5 @@
 import type { HuiPool, Round } from '@/types';
+import { getLunarDate } from './date';
 
 export const mapNotionInformation = (data: any): HuiPool => {
   try {
@@ -31,20 +32,24 @@ export const mapNotionInformation = (data: any): HuiPool => {
   }
 };
 
-export const mapNotionRound = (data: any) => {
+export const mapNotionRound = async (data: any) => {
   try {
     const results = data?.results;
     if (!Array.isArray(results) || results.length === 0) return [];
 
-    return results.map((result: any): Round => {
+    const roundPromises = results.map(async (result: any): Promise<Round> => {
       const { date, bidAmount } = result.properties;
+      const sonarDate = date.date?.start ?? '';
 
       return {
         id: result.id ?? '',
-        date: date.date?.start ?? '',
+        date: sonarDate,
+        lunarDate: await getLunarDate(sonarDate),
         bidAmount: bidAmount.number ?? 0,
       };
     });
+
+    return await Promise.all(roundPromises);
   } catch (error) {
     console.error('Error mapping notion round:', error);
     return [];

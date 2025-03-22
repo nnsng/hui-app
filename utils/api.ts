@@ -1,7 +1,7 @@
 import { env } from '@/constants/env';
 import axios from 'axios';
 
-const api = axios.create({
+export const notionApi = axios.create({
   baseURL: env.NOTION_API_URL,
   headers: {
     Authorization: `Bearer ${env.NOTION_API_KEY}`,
@@ -10,8 +10,14 @@ const api = axios.create({
   },
 });
 
-api.interceptors.response.use((response) => {
+notionApi.interceptors.response.use((response) => {
   return response.data;
 });
 
-export default api;
+export const lunarApi = axios.create({
+  baseURL: env.LUNAR_API_URL,
+});
+
+lunarApi.interceptors.response.use((response) => {
+  return response.data;
+});

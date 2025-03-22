@@ -1,5 +1,5 @@
 import { env } from '@/constants/env';
-import api from '@/utils/api';
+import { notionApi } from '@/utils/api';
 import { mapNotionInformation } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 
@@ -13,7 +13,7 @@ const getCurrentPool = async () => {
     },
   };
   const url = `/databases/${env.NOTION_POOL_DATABASE_ID}/query`;
-  const response = await api.post(url, payload);
+  const response = await notionApi.post(url, payload);
   return mapNotionInformation(response);
 };
 

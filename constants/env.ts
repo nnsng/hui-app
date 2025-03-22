@@ -4,4 +4,6 @@ export const env = {
   NOTION_API_KEY: '',
   NOTION_POOL_DATABASE_ID: '',
   NOTION_ROUND_DATABASE_ID: '',
+
+  LUNAR_API_URL: '',
 };

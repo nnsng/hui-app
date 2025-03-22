@@ -1,6 +1,6 @@
-import api from '@/utils/api';
+import { notionApi } from '@/utils/api';
+import { formatNotionDate } from '@/utils/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import dayjs from 'dayjs';
 import { useGetPool } from '../queries';
 
 type PayoutPayload = {
@@ -13,10 +13,10 @@ const onPayout = async ({ amount, poolId }: PayoutPayload) => {
   const payload = {
     properties: {
       payoutAmount: { number: amount },
-      payoutDate: { date: { start: dayjs().format('YYYY-MM-DD') } },
+      payoutDate: { date: { start: formatNotionDate() } },
     },
   };
-  return api.patch(url, payload);
+  return notionApi.patch(url, payload);
 };
 
 export function usePayout() {

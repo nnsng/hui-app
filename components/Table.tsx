@@ -62,7 +62,11 @@ export function Table() {
           rounds.map((row, rowIndex) => (
             <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
-              <Text style={[styles.cell, styles.dateCell]}>{formatDate(row.date)}</Text>
+              <Text style={[styles.cell, styles.dateCell]}>
+                DL: {formatDate(row.date)}
+                {'\n'}
+                ÂL: {row.lunarDate}
+              </Text>
               <Text style={[styles.cell, styles.bidCell]}>{formatCurrency(row.bidAmount)}</Text>
             </View>
           ))
