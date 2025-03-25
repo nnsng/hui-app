@@ -1,6 +1,7 @@
 import { colors } from '@/constants/colors';
 import { useGetPool } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
+import dayjs from 'dayjs';
 import { StyleSheet, Text, View } from 'react-native';
 import { Loading } from '../Loading';
 import { Dialog } from '../ui';
@@ -12,6 +13,7 @@ type InformationDialogProps = {
 
 export function InformationDialog({ visible, onClose }: InformationDialogProps) {
   const { data: pool, isLoading } = useGetPool();
+  const isPayout = !isLoading && !!pool?.payoutDate;
 
   const listData = [
     {
@@ -32,6 +34,23 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
     },
   ];
 
+  const payoutData = isPayout
+    ? [
+        {
+          label: 'Ngày hốt hụi',
+          value: dayjs(pool.payoutDate).format('DD/MM/YYYY'),
+        },
+        {
+          label: 'Tiền hốt hụi',
+          value: formatCurrency(pool?.payoutAmount),
+        },
+        {
+          label: 'Chênh lệch',
+          value: formatCurrency(pool?.payoutDifference),
+        },
+      ]
+    : [];
+
   return (
     <Dialog title="Thông tin hụi" visible={visible} onClose={onClose}>
       {isLoading ? (
@@ -44,6 +63,23 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
               <Text style={styles.value}>{item.value}</Text>
             </View>
           ))}
+
+          {payoutData.length > 0 && (
+            <>
+              <View>
+                <Text>---</Text>
+              </View>
+
+              <View style={styles.list}>
+                {payoutData.map((item, index) => (
+                  <View key={index} style={styles.item}>
+                    <Text style={styles.label}>{item.label}: </Text>
+                    <Text style={styles.value}>{item.value}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          )}
         </View>
       )}
     </Dialog>

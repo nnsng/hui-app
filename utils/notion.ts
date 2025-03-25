@@ -1,5 +1,4 @@
 import type { HuiPool, Round } from '@/types';
-import { getLunarDate } from './date';
 
 export const mapNotionInformation = (data: any): HuiPool => {
   try {
@@ -14,6 +13,7 @@ export const mapNotionInformation = (data: any): HuiPool => {
       startDate,
       payoutDate,
       payoutAmount,
+      payoutDifference,
     } = result.properties;
 
     return {
@@ -25,6 +25,7 @@ export const mapNotionInformation = (data: any): HuiPool => {
       startDate: startDate.date?.start ?? '',
       payoutDate: payoutDate.date?.start ?? '',
       payoutAmount: payoutAmount.number ?? 0,
+      payoutDifference: payoutDifference.number ?? 0,
     };
   } catch (error) {
     console.error('Error mapping notion information:', error);

@@ -14,4 +14,5 @@ export type HuiPool = {
   startDate: string;
   payoutDate?: string;
   payoutAmount?: number;
+  payoutDifference?: number;
 };

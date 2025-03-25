@@ -73,7 +73,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
     if (error) return;
 
     setError(false);
-    await onPayout(totalPayout);
+    await onPayout({ amount: totalPayout, difference });
     setInput('');
     handleClose();
   };

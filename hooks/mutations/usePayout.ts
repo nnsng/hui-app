@@ -4,16 +4,18 @@ import dayjs from 'dayjs';
 import { useGetPool } from '../queries';
 
 type PayoutPayload = {
-  amount: number;
   poolId: string;
+  amount: number;
+  difference: number;
 };
 
-const onPayout = async ({ amount, poolId }: PayoutPayload) => {
+const onPayout = async ({ poolId, amount, difference }: PayoutPayload) => {
   const url = `/pages/${poolId}`;
   const payload = {
     properties: {
-      payoutAmount: { number: amount },
       payoutDate: { date: { start: dayjs().format('YYYY-MM-DD') } },
+      payoutAmount: { number: amount },
+      payoutDifference: { number: difference },
     },
   };
   return notionApi.patch(url, payload);
@@ -26,7 +28,7 @@ export function usePayout() {
   const poolId = pool?.id || '';
 
   return useMutation({
-    mutationFn: async (amount: number) => onPayout({ amount, poolId }),
+    mutationFn: async (payload: Omit<PayoutPayload, 'poolId'>) => onPayout({ ...payload, poolId }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['pool'] });
     },
