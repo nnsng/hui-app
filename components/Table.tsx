@@ -78,13 +78,16 @@ export function Table() {
         {fullDataRounds.length > 0 ? (
           fullDataRounds.map((row, rowIndex) => (
             <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
-              <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
-              <Text style={[styles.cell, styles.dateCell]}>
-                DL: {dayjs(row.date).format('DD/MM/YYYY')}
-                {'\n'}
-                ÂL: {row.lunarDate}
-              </Text>
-              <Text style={[styles.cell, styles.bidCell]}>{formatCurrency(row.bidAmount)}</Text>
+              <View style={[styles.cell, styles.idCell]}>
+                <Text style={styles.idCellText}>{rowIndex + 1}</Text>
+              </View>
+              <View style={[styles.cell, styles.dateCell]}>
+                <Text>DL: {dayjs(row.date).format('DD/MM/YYYY')}</Text>
+                <Text>ÂL: {row.lunarDate}</Text>
+              </View>
+              <View style={[styles.cell, styles.bidCell]}>
+                <Text>{formatCurrency(row.bidAmount)}</Text>
+              </View>
             </View>
           ))
         ) : (
@@ -139,9 +142,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     color: colors.text,
     fontSize: 14,
+    justifyContent: 'center',
   },
   idCell: {
     flex: 1,
+  },
+  idCellText: {
     textAlign: 'center',
   },
   dateCell: {
