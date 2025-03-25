@@ -1,9 +1,10 @@
 import { colors } from '@/constants/colors';
+import { useLunarDate } from '@/hooks/mutations';
 import { useGetPool, useGetRounds } from '@/hooks/queries';
 import type { Round } from '@/types';
 import { formatCurrency } from '@/utils/currency';
-import { formatDate, getLunarDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
+import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -16,16 +17,18 @@ export function Table() {
   } = useGetRounds();
   const isFetching = isRefetchingPool || isRefetchingRounds;
 
+  const { mutateAsync: convertToLunar } = useLunarDate();
+
   const [fullDataRounds, setFullDataRounds] = useState<Round[]>(rounds);
 
   const rotateValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     (async () => {
-      const roundPromises = rounds.map(async (round) => ({
-        ...round,
-        lunarDate: await getLunarDate(round.date),
-      }));
+      const roundPromises = rounds.map(async (round) => {
+        const lunarDate = await convertToLunar(round.date);
+        return { ...round, lunarDate };
+      });
       const fullDataRounds = await Promise.all(roundPromises);
       setFullDataRounds(fullDataRounds);
     })();
@@ -77,7 +80,7 @@ export function Table() {
             <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <Text style={[styles.cell, styles.idCell]}>{rowIndex + 1}</Text>
               <Text style={[styles.cell, styles.dateCell]}>
-                DL: {formatDate(row.date)}
+                DL: {dayjs(row.date).format('DD/MM/YYYY')}
                 {'\n'}
                 ÂL: {row.lunarDate}
               </Text>

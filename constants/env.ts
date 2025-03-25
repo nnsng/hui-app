@@ -5,5 +5,5 @@ export const env = {
   NOTION_POOL_DATABASE_ID: '',
   NOTION_ROUND_DATABASE_ID: '',
 
-  LUNAR_API_URL: '',
+  DATE_API_URL: '',
 };

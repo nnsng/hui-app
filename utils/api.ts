@@ -14,10 +14,10 @@ notionApi.interceptors.response.use((response) => {
   return response.data;
 });
 
-export const lunarApi = axios.create({
-  baseURL: env.LUNAR_API_URL,
+export const dateApi = axios.create({
+  baseURL: env.DATE_API_URL,
 });
 
-lunarApi.interceptors.response.use((response) => {
-  return response.data;
+dateApi.interceptors.response.use((response) => {
+  return response.data?.data || response.data;
 });

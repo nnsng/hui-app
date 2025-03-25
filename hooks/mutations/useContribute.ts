@@ -1,7 +1,7 @@
 import { env } from '@/constants/env';
 import { notionApi } from '@/utils/api';
-import { formatNotionDate } from '@/utils/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { useGetPool, useGetRounds } from '../queries';
 
 type ContributePayload = {
@@ -20,7 +20,7 @@ const onContribute = async ({ name, amount, poolId }: ContributePayload) => {
       properties: {
         name: { title: [{ text: { content: name } }] },
         bidAmount: { number: amount },
-        date: { date: { start: formatNotionDate() } },
+        date: { date: { start: dayjs().format('YYYY-MM-DD') } },
         information: { relation: [{ id: poolId }] },
       },
     };
