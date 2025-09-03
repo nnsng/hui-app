@@ -1,19 +1,22 @@
-export type Round = {
+export type HuiPeriod = {
   id: string;
   period: `${number}`;
-  date: string;
-  lunarDate: string;
+  contributionDateSolar: string;
+  contributionDateLunar: string;
   bidAmount: number;
 };
 
-export type HuiPool = {
+export type HuiGroup = {
   id: string;
-  numberOfPlayers: number;
-  monthlyContribution: number;
+  name: string;
+  totalMembers: number;
+  contributionAmount: number;
   minimumBid: number;
-  commission: number;
+  managerFee: number;
   startDate: string;
   payoutDate?: string;
   payoutAmount?: number;
-  payoutDifference?: number;
+  difference?: number;
+  status?: 'active' | 'finished' | 'test';
+  note?: string;
 };

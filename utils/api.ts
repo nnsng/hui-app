@@ -1,4 +1,4 @@
-import { env } from '@/constants/env';
+import { env } from '@/utils/env';
 import axios from 'axios';
 
 export const notionApi = axios.create({

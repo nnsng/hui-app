@@ -1,10 +1,10 @@
+import { Button, Dialog, Input } from '@/components/ui';
 import { colors } from '@/constants/colors';
-import { usePayout } from '@/hooks/mutations';
-import { useGetPool, useGetRounds } from '@/hooks/queries';
+import { usePayoutMutation } from '@/hooks/mutations';
+import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, View, type TextInput } from 'react-native';
-import { Button, Dialog, Input } from '../ui';
 
 type PayoutDialogProps = {
   visible: boolean;
@@ -12,9 +12,9 @@ type PayoutDialogProps = {
 };
 
 export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
-  const { data: rounds = [] } = useGetRounds();
-  const { data: pool } = useGetPool();
-  const { mutateAsync: onPayout, isPending } = usePayout();
+  const { data: periods = [] } = usePeriodsQuery();
+  const { data: group } = useActiveGroupQuery();
+  const { mutateAsync: onPayout, isPending } = usePayoutMutation();
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -24,31 +24,31 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
   const bidAmount = Number(input);
 
   const totalContribution = useMemo(() => {
-    if (!rounds || !pool) return 0;
+    if (!periods || !group) return 0;
 
-    const { numberOfPlayers, monthlyContribution } = pool;
+    const { totalMembers, contributionAmount } = group;
 
-    const pastContribution = rounds.reduce((total, round) => {
-      return total + (monthlyContribution - round.bidAmount);
+    const pastContribution = periods.reduce((total, round) => {
+      return total + (contributionAmount - round.bidAmount);
     }, 0);
-    const remainingPlayers = numberOfPlayers - rounds.length - 1;
-    const futureContribution = remainingPlayers * monthlyContribution;
+    const remainingPlayers = totalMembers - periods.length - 1;
+    const futureContribution = remainingPlayers * contributionAmount;
 
     return pastContribution + futureContribution;
-  }, [rounds, pool]);
+  }, [periods, group]);
 
   const totalPayout = useMemo(() => {
-    if (!rounds || !pool) return 0;
+    if (!periods || !group) return 0;
 
-    const { numberOfPlayers, monthlyContribution, commission } = pool;
+    const { totalMembers, contributionAmount, managerFee } = group;
 
-    const pastPayout = rounds.length * monthlyContribution;
-    const remainingPlayers = numberOfPlayers - rounds.length - 1;
-    const netContribution = monthlyContribution - bidAmount;
+    const pastPayout = periods.length * contributionAmount;
+    const remainingPlayers = totalMembers - periods.length - 1;
+    const netContribution = contributionAmount - bidAmount;
     const futurePayout = remainingPlayers * netContribution;
 
-    return pastPayout + futurePayout - commission;
-  }, [rounds, pool, bidAmount]);
+    return pastPayout + futurePayout - managerFee;
+  }, [periods, group, bidAmount]);
 
   const difference = totalPayout - totalContribution;
 
@@ -108,7 +108,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
 
         <View>
           <Text style={styles.text}>
-            Bạn sẽ nhận được: <Text style={styles.boldText}>{formatCurrency(totalPayout)}</Text>
+            Số tiền hốt hụi: <Text style={styles.boldText}>{formatCurrency(totalPayout)}</Text>
           </Text>
 
           <Text style={styles.text}>

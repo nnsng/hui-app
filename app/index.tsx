@@ -3,18 +3,18 @@ import { ContributionDialog, InformationDialog } from '@/components/dialogs';
 import { Footer, Header } from '@/components/layouts';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
-import { useGetPool, useGetRounds } from '@/hooks/queries';
+import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 export default function Index() {
-  const { isLoading: isLoadingPool } = useGetPool();
-  const { isLoading: isLoadingRounds, isError, error } = useGetRounds();
+  const { isLoading: isLoadingGroup } = useActiveGroupQuery();
+  const { isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
-  if (isLoadingRounds || isLoadingPool) return <Loading />;
+  if (isLoadingPeriods || isLoadingGroup) return <Loading />;
 
   if (isError) return <Error message={error.message} />;
 

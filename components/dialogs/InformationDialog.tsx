@@ -1,10 +1,10 @@
+import { Loading } from '@/components';
+import { Dialog } from '@/components/ui';
 import { colors } from '@/constants/colors';
-import { useGetPool } from '@/hooks/queries';
+import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import dayjs from 'dayjs';
 import { StyleSheet, Text, View } from 'react-native';
-import { Loading } from '../Loading';
-import { Dialog } from '../ui';
 
 type InformationDialogProps = {
   visible: boolean;
@@ -12,25 +12,25 @@ type InformationDialogProps = {
 };
 
 export function InformationDialog({ visible, onClose }: InformationDialogProps) {
-  const { data: pool, isLoading } = useGetPool();
-  const isPayout = !isLoading && !!pool?.payoutDate;
+  const { data: group, isLoading } = useActiveGroupQuery();
+  const isPayout = !isLoading && group?.status === 'finished';
 
   const listData = [
     {
       label: 'Số người',
-      value: pool?.numberOfPlayers ?? 0,
+      value: group?.totalMembers ?? 0,
     },
     {
       label: 'Tiền hụi',
-      value: formatCurrency(pool?.monthlyContribution),
+      value: formatCurrency(group?.contributionAmount),
     },
     {
       label: 'Tiền dằn',
-      value: formatCurrency(pool?.minimumBid),
+      value: formatCurrency(group?.minimumBid),
     },
     {
       label: 'Tiền cò',
-      value: formatCurrency(pool?.commission),
+      value: formatCurrency(group?.managerFee),
     },
   ];
 
@@ -38,15 +38,15 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
     ? [
         {
           label: 'Ngày hốt hụi',
-          value: dayjs(pool.payoutDate).format('DD/MM/YYYY'),
+          value: dayjs(group.payoutDate).format('DD/MM/YYYY'),
         },
         {
           label: 'Tiền hốt hụi',
-          value: formatCurrency(pool?.payoutAmount),
+          value: formatCurrency(group?.payoutAmount),
         },
         {
           label: 'Chênh lệch',
-          value: formatCurrency(pool?.payoutDifference),
+          value: formatCurrency(group?.difference),
         },
       ]
     : [];

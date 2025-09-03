@@ -1,10 +1,10 @@
+import { Button, Dialog, Input } from '@/components/ui';
 import { colors } from '@/constants/colors';
-import { useContribute } from '@/hooks/mutations';
-import { useGetPool } from '@/hooks/queries';
+import { useContributeMutation } from '@/hooks/mutations';
+import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, type TextInput } from 'react-native';
-import { Button, Dialog, Input } from '../ui';
 
 type ContributionDialogProps = {
   visible: boolean;
@@ -12,9 +12,9 @@ type ContributionDialogProps = {
 };
 
 export function ContributionDialog({ visible, onClose }: ContributionDialogProps) {
-  const { mutateAsync: onContribute, isPending } = useContribute();
-  const { data: pool, isLoading } = useGetPool();
-  const isPayout = !isLoading && !!pool?.payoutDate;
+  const { mutateAsync: onContribute, isPending } = useContributeMutation();
+  const { data: group, isLoading } = useActiveGroupQuery();
+  const isPayout = !isLoading && group?.status === 'finished';
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -22,7 +22,7 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
   const inputRef = useRef<TextInput>(null);
 
   const bidAmount = Number(input);
-  const contributedAmount = (pool?.monthlyContribution ?? 0) - bidAmount;
+  const contributedAmount = (group?.contributionAmount ?? 0) - bidAmount;
 
   useEffect(() => {
     if (visible && !isPayout) {
@@ -75,8 +75,14 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
         error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
       />
       <View>
-        {!error && <Text style={styles.currency}>Số tiền kêu: {formatCurrency(input)}</Text>}
-        <Text style={styles.currency}>Số tiền cần đóng: {formatCurrency(contributedAmount)}</Text>
+        {!error && (
+          <Text style={styles.currency}>
+            Số tiền kêu: <Text style={styles.boldText}>{formatCurrency(input)}</Text>
+          </Text>
+        )}
+        <Text style={styles.currency}>
+          Số tiền cần đóng: <Text style={styles.boldText}>{formatCurrency(contributedAmount)}</Text>
+        </Text>
       </View>
     </Dialog>
   );
@@ -87,5 +93,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     color: colors.text,
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
 });

@@ -1,7 +1,7 @@
 import { colors } from '@/constants/colors';
 import { useLunarDate } from '@/hooks/mutations';
-import { useGetPool, useGetRounds } from '@/hooks/queries';
-import type { Round } from '@/types';
+import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
+import type { HuiPeriod } from '@/types';
 import { formatCurrency } from '@/utils/currency';
 import { MaterialIcons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
@@ -9,30 +9,30 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function Table() {
-  const { refetch: refetchPool, isRefetching: isRefetchingPool } = useGetPool();
+  const { refetch: refetchGroup, isRefetching: isRefetchingGroup } = useActiveGroupQuery();
   const {
-    data: rounds = [],
-    refetch: refetchRounds,
-    isRefetching: isRefetchingRounds,
-  } = useGetRounds();
-  const isFetching = isRefetchingPool || isRefetchingRounds;
+    data: periods = [],
+    refetch: refetchPeriods,
+    isRefetching: isRefetchingPeriods,
+  } = usePeriodsQuery();
+  const isFetching = isRefetchingGroup || isRefetchingPeriods;
 
   const { mutateAsync: convertToLunar } = useLunarDate();
 
-  const [fullDataRounds, setFullDataRounds] = useState<Round[]>(rounds);
+  const [fullDataPeriods, setFullDataPeriods] = useState<HuiPeriod[]>(periods);
 
   const rotateValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     (async () => {
-      const roundPromises = rounds.map(async (round) => {
-        const lunarDate = await convertToLunar(round.date);
-        return { ...round, lunarDate };
+      const periodPromises = periods.map(async (period): Promise<HuiPeriod> => {
+        const lunarDate = await convertToLunar(period.contributionDateSolar);
+        return { ...period, contributionDateLunar: lunarDate };
       });
-      const fullDataRounds = await Promise.all(roundPromises);
-      setFullDataRounds(fullDataRounds);
+      const fullDataPeriods = await Promise.all(periodPromises);
+      setFullDataPeriods(fullDataPeriods);
     })();
-  }, [rounds]);
+  }, [periods]);
 
   useEffect(() => {
     if (isFetching) {
@@ -49,8 +49,8 @@ export function Table() {
   }, [isFetching, rotateValue]);
 
   const refetch = async () => {
-    await refetchPool();
-    await refetchRounds();
+    await refetchGroup();
+    await refetchPeriods();
   };
 
   const spin = rotateValue.interpolate({
@@ -75,15 +75,15 @@ export function Table() {
       </View>
 
       <ScrollView style={styles.body}>
-        {fullDataRounds.length > 0 ? (
-          fullDataRounds.map((row) => (
+        {fullDataPeriods.length > 0 ? (
+          fullDataPeriods.map((row) => (
             <View key={row.id} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <View style={[styles.cell, styles.idCell]}>
                 <Text style={styles.idCellText}>{row.period}</Text>
               </View>
               <View style={[styles.cell, styles.dateCell]}>
-                <Text>DL: {dayjs(row.date).format('DD/MM/YYYY')}</Text>
-                <Text>ÂL: {row.lunarDate}</Text>
+                <Text>DL: {dayjs(row.contributionDateSolar).format('DD/MM/YYYY')}</Text>
+                <Text>ÂL: {row.contributionDateLunar}</Text>
               </View>
               <View style={[styles.cell, styles.bidCell]}>
                 <Text>{formatCurrency(row.bidAmount)}</Text>
