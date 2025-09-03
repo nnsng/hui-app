@@ -5,12 +5,12 @@ import dayjs from 'dayjs';
 import { useGetPool, useGetRounds } from '../queries';
 
 type ContributePayload = {
-  name: string;
+  period: string;
   amount: number;
   poolId: string;
 };
 
-const onContribute = async ({ name, amount, poolId }: ContributePayload) => {
+const onContribute = async ({ period, amount, poolId }: ContributePayload) => {
   try {
     const url = '/pages';
     const payload = {
@@ -18,7 +18,7 @@ const onContribute = async ({ name, amount, poolId }: ContributePayload) => {
         database_id: env.NOTION_ROUND_DATABASE_ID,
       },
       properties: {
-        name: { title: [{ text: { content: name } }] },
+        period: { title: [{ text: { content: period } }] },
         bidAmount: { number: amount },
         date: { date: { start: dayjs().format('YYYY-MM-DD') } },
         information: { relation: [{ id: poolId }] },
@@ -41,7 +41,7 @@ export function useContribute() {
   return useMutation({
     mutationFn: (amount: number) => {
       const nextRoundNumber = rounds ? rounds.length + 1 : 1;
-      const payload = { name: String(nextRoundNumber), amount, poolId };
+      const payload = { period: String(nextRoundNumber), amount, poolId };
       return onContribute(payload);
     },
     onSuccess: (data) => {

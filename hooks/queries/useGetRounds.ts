@@ -16,11 +16,7 @@ const getRounds = async (poolId: string) => {
     sorts: [
       {
         property: 'date',
-        direction: 'ascending',
-      },
-      {
-        timestamp: 'created_time',
-        direction: 'ascending',
+        direction: 'descending',
       },
     ],
   };

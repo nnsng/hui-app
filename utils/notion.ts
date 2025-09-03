@@ -39,10 +39,11 @@ export const mapNotionRound = (data: any) => {
     if (!Array.isArray(results) || results.length === 0) return [];
 
     return results.map((result: any): Round => {
-      const { date, bidAmount } = result.properties;
+      const { period, date, bidAmount } = result.properties;
 
       return {
         id: result.id ?? '',
+        period: period.title?.[0]?.plain_text ?? '0',
         date: date.date?.start ?? '',
         lunarDate: '',
         bidAmount: bidAmount.number ?? 0,

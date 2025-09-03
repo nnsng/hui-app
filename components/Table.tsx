@@ -76,10 +76,10 @@ export function Table() {
 
       <ScrollView style={styles.body}>
         {fullDataRounds.length > 0 ? (
-          fullDataRounds.map((row, rowIndex) => (
-            <View key={rowIndex} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
+          fullDataRounds.map((row) => (
+            <View key={row.id} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <View style={[styles.cell, styles.idCell]}>
-                <Text style={styles.idCellText}>{rowIndex + 1}</Text>
+                <Text style={styles.idCellText}>{row.period}</Text>
               </View>
               <View style={[styles.cell, styles.dateCell]}>
                 <Text>DL: {dayjs(row.date).format('DD/MM/YYYY')}</Text>
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   },
   idCell: {
     flex: 1,
+    textAlign: 'center',
   },
   idCellText: {
     textAlign: 'center',

@@ -1,5 +1,6 @@
 export type Round = {
   id: string;
+  period: `${number}`;
   date: string;
   lunarDate: string;
   bidAmount: number;
