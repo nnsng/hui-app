@@ -1,5 +1,5 @@
 import type { HuiGroup, HuiPeriod } from '@/types';
-import dayjs from 'dayjs';
+import { formatDate } from '@/utils/date';
 
 export const mapNotionHuiGroup = (data: any): HuiGroup => {
   try {
@@ -29,7 +29,7 @@ export const mapNotionHuiGroup = (data: any): HuiGroup => {
       minimumBid: minimum_bid.number ?? 0,
       managerFee: manager_fee.number ?? 0,
       startDate: start_date.date?.start ?? '',
-      payoutDate: dayjs(payoutDate, { format: 'YYYY-MM-DD' }).format('DD/MM/YYYY'),
+      payoutDate: formatDate(payoutDate),
       payoutAmount: payout_amount.number ?? 0,
       difference: difference.number ?? 0,
       status: status.select?.name ?? '',
@@ -53,7 +53,7 @@ export const mapNotionHuiPeriods = (data: any) => {
       return {
         id: result.id ?? '',
         period: period.title?.[0]?.plain_text ?? '0',
-        contributionDate: dayjs(contributionDate, { format: 'YYYY-MM-DD' }).format('DD/MM/YYYY'),
+        contributionDate: formatDate(contributionDate),
         bidAmount: bid_amount.number ?? 0,
       };
     });
