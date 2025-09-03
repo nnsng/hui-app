@@ -27,7 +27,7 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
     if (visible && !isPayout) {
       inputRef.current?.focus();
     }
-  }, [visible]);
+  }, [visible, isPayout]);
 
   const handleChangeText = (text: string) => {
     setInput(text);

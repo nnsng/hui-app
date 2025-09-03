@@ -34,7 +34,7 @@ export function Dialog(props: DialogProps) {
     } else {
       scaleAnim.setValue(0.8);
     }
-  }, [visible]);
+  }, [visible, scaleAnim]);
 
   return (
     <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
