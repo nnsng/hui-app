@@ -50,8 +50,7 @@ export const mapNotionHuiPeriods = (data: any) => {
       return {
         id: result.id ?? '',
         period: period.title?.[0]?.plain_text ?? '0',
-        contributionDateSolar: contribution_date.date?.start ?? '',
-        contributionDateLunar: '',
+        contributionDate: contribution_date.date?.start ?? '',
         bidAmount: bid_amount.number ?? 0,
       };
     });

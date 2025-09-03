@@ -1,38 +1,18 @@
 import { colors } from '@/constants/colors';
-import { useLunarDate } from '@/hooks/mutations';
-import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
-import type { HuiPeriod } from '@/types';
+import { useActiveGroupQuery, usePeriodsQuery, usePeriodsWithLunar } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { MaterialIcons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function Table() {
   const { refetch: refetchGroup, isRefetching: isRefetchingGroup } = useActiveGroupQuery();
-  const {
-    data: periods = [],
-    refetch: refetchPeriods,
-    isRefetching: isRefetchingPeriods,
-  } = usePeriodsQuery();
+  const { refetch: refetchPeriods, isRefetching: isRefetchingPeriods } = usePeriodsQuery();
+  const { data: periodsWithLunar } = usePeriodsWithLunar();
   const isFetching = isRefetchingGroup || isRefetchingPeriods;
 
-  const { mutateAsync: convertToLunar } = useLunarDate();
-
-  const [fullDataPeriods, setFullDataPeriods] = useState<HuiPeriod[]>(periods);
-
   const rotateValue = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    (async () => {
-      const periodPromises = periods.map(async (period): Promise<HuiPeriod> => {
-        const lunarDate = await convertToLunar(period.contributionDateSolar);
-        return { ...period, contributionDateLunar: lunarDate };
-      });
-      const fullDataPeriods = await Promise.all(periodPromises);
-      setFullDataPeriods(fullDataPeriods);
-    })();
-  }, [periods]);
 
   useEffect(() => {
     if (isFetching) {
@@ -75,14 +55,14 @@ export function Table() {
       </View>
 
       <ScrollView style={styles.body}>
-        {fullDataPeriods.length > 0 ? (
-          fullDataPeriods.map((row) => (
+        {periodsWithLunar.length > 0 ? (
+          periodsWithLunar.map((row) => (
             <View key={row.id} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
               <View style={[styles.cell, styles.idCell]}>
                 <Text style={styles.idCellText}>{row.period}</Text>
               </View>
               <View style={[styles.cell, styles.dateCell]}>
-                <Text>DL: {dayjs(row.contributionDateSolar).format('DD/MM/YYYY')}</Text>
+                <Text>DL: {dayjs(row.contributionDate).format('DD/MM/YYYY')}</Text>
                 <Text>ÂL: {row.contributionDateLunar}</Text>
               </View>
               <View style={[styles.cell, styles.bidCell]}>

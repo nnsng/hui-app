@@ -1,8 +1,8 @@
 export type HuiPeriod = {
   id: string;
   period: `${number}`;
-  contributionDateSolar: string;
-  contributionDateLunar: string;
+  contributionDate: string;
+  contributionDateLunar?: string;
   bidAmount: number;
 };
 
