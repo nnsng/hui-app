@@ -33,7 +33,7 @@ export function usePeriodsWithLunar() {
   const { data: periods = [] } = usePeriodsQuery();
 
   return useQuery({
-    queryKey: [queryKeys.periodsLunar, periods],
+    queryKey: [queryKeys.periods, queryKeys.lunar, JSON.stringify(periods)],
     queryFn: () => getPeriodsWithLunar(periods),
     initialData: periods,
   });

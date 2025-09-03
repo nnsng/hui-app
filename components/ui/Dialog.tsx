@@ -1,3 +1,4 @@
+import { Button, Divider } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import React, { useEffect, useRef, type PropsWithChildren, type ReactNode } from 'react';
 import {
@@ -9,7 +10,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { Button } from './Button';
 
 type DialogProps = PropsWithChildren<{
   visible: boolean;
@@ -44,11 +44,13 @@ export function Dialog(props: DialogProps) {
             <Animated.View style={[styles.dialog, { transform: [{ scale: scaleAnim }] }]}>
               <Text style={styles.title}>{title}</Text>
 
+              <Divider style={styles.divider} />
+
               <View style={styles.content}>{children}</View>
 
               <View style={styles.actionButton}>
                 <Button variant="text" onPress={onClose}>
-                  Hủy
+                  Đóng
                 </Button>
 
                 {submitButton}
@@ -84,6 +86,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
     textAlign: 'center',
+  },
+  divider: {
+    marginTop: 5,
+    marginBottom: -5,
   },
   content: {
     marginVertical: 10,

@@ -1,10 +1,9 @@
-import { Button, Dialog, Input } from '@/components/ui';
-import { colors } from '@/constants/colors';
+import { Button, Dialog, Input, List } from '@/components/ui';
 import { useContributeMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View, type TextInput } from 'react-native';
+import { StyleSheet, type TextInput } from 'react-native';
 
 type ContributionDialogProps = {
   visible: boolean;
@@ -14,7 +13,7 @@ type ContributionDialogProps = {
 export function ContributionDialog({ visible, onClose }: ContributionDialogProps) {
   const { mutateAsync: onContribute, isPending } = useContributeMutation();
   const { data: group, isLoading } = useActiveGroupQuery();
-  const isPayout = !isLoading && group?.status === 'finished';
+  const isPayout = !isLoading && !!group?.payoutDate;
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -50,6 +49,18 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
     handleClose();
   };
 
+  const listData = [
+    {
+      label: 'Số tiền kêu',
+      value: formatCurrency(input),
+      enabled: !isPayout && !error,
+    },
+    {
+      label: 'Số tiền cần đóng',
+      value: formatCurrency(contributedAmount),
+    },
+  ];
+
   return (
     <Dialog
       title={isPayout ? 'Đóng hụi chết' : 'Đóng hụi'}
@@ -65,36 +76,27 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
         </Button>
       }
     >
-      <Input
-        inputRef={inputRef}
-        placeholder="Nhập số tiền kêu..."
-        keyboardType="numeric"
-        value={input}
-        onChangeText={handleChangeText}
-        editable={!isPayout}
-        error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
-      />
-      <View>
-        {!error && (
-          <Text style={styles.currency}>
-            Số tiền kêu: <Text style={styles.boldText}>{formatCurrency(input)}</Text>
-          </Text>
-        )}
-        <Text style={styles.currency}>
-          Số tiền cần đóng: <Text style={styles.boldText}>{formatCurrency(contributedAmount)}</Text>
-        </Text>
-      </View>
+      {!isPayout && (
+        <Input
+          inputRef={inputRef}
+          placeholder="Nhập số tiền kêu..."
+          keyboardType="numeric"
+          value={input}
+          onChangeText={handleChangeText}
+          error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
+        />
+      )}
+      <List data={listData} style={isPayout ? styles.listPayout : styles.list} />
     </Dialog>
   );
 }
 
 const styles = StyleSheet.create({
-  currency: {
-    marginTop: 5,
-    fontSize: 12,
-    color: colors.text,
+  list: {
+    gap: 6,
+    marginTop: 10,
   },
-  boldText: {
-    fontWeight: 'bold',
+  listPayout: {
+    marginTop: 0,
   },
 });

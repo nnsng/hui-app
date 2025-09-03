@@ -17,7 +17,6 @@ const onPayout = async ({ groupId, amount, difference }: PayoutPayload) => {
       payout_date: { date: { start: dayjs().format('YYYY-MM-DD') } },
       payout_amount: { number: amount },
       difference: { number: difference },
-      status: { select: { name: 'finished' } },
     },
   };
   return notionApi.patch(url, payload);

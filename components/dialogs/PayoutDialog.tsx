@@ -1,10 +1,9 @@
-import { Button, Dialog, Input } from '@/components/ui';
-import { colors } from '@/constants/colors';
+import { Button, Dialog, Input, List } from '@/components/ui';
 import { usePayoutMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, View, type TextInput } from 'react-native';
+import { StyleSheet, View, type TextInput } from 'react-native';
 
 type PayoutDialogProps = {
   visible: boolean;
@@ -78,6 +77,22 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
     handleClose();
   };
 
+  const listData = [
+    {
+      label: 'Số tiền kêu',
+      value: formatCurrency(input),
+      enabled: !error,
+    },
+    {
+      label: 'Số tiền hốt hụi',
+      value: formatCurrency(totalPayout),
+    },
+    {
+      label: 'Chênh lệch',
+      value: formatCurrency(difference),
+    },
+  ];
+
   return (
     <Dialog
       title="Hốt hụi"
@@ -90,31 +105,16 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
       }
     >
       <View style={styles.container}>
-        <View>
-          <Input
-            inputRef={inputRef}
-            placeholder="Nhập số tiền kêu..."
-            keyboardType="numeric"
-            value={input}
-            onChangeText={handleChangeText}
-            error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
-          />
-          {!error && (
-            <View>
-              <Text style={styles.currency}>Số tiền kêu: {formatCurrency(input)}</Text>
-            </View>
-          )}
-        </View>
+        <Input
+          inputRef={inputRef}
+          placeholder="Nhập số tiền kêu..."
+          keyboardType="numeric"
+          value={input}
+          onChangeText={handleChangeText}
+          error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
+        />
 
-        <View>
-          <Text style={styles.text}>
-            Số tiền hốt hụi: <Text style={styles.boldText}>{formatCurrency(totalPayout)}</Text>
-          </Text>
-
-          <Text style={styles.text}>
-            Chênh lệch: <Text style={styles.boldText}>{formatCurrency(difference)}</Text>
-          </Text>
-        </View>
+        <List data={listData} style={styles.list} />
       </View>
     </Dialog>
   );
@@ -124,15 +124,8 @@ const styles = StyleSheet.create({
   container: {
     gap: 10,
   },
-  currency: {
-    marginTop: 5,
-    fontSize: 12,
-    color: colors.text,
-  },
-  text: {
-    color: colors.text,
-  },
-  boldText: {
-    fontWeight: 'bold',
+  list: {
+    gap: 6,
+    marginTop: 10,
   },
 });

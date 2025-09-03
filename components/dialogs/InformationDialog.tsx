@@ -1,10 +1,9 @@
 import { Loading } from '@/components';
-import { Dialog } from '@/components/ui';
-import { colors } from '@/constants/colors';
+import { Dialog, Divider, List } from '@/components/ui';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import dayjs from 'dayjs';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 type InformationDialogProps = {
   visible: boolean;
@@ -13,7 +12,7 @@ type InformationDialogProps = {
 
 export function InformationDialog({ visible, onClose }: InformationDialogProps) {
   const { data: group, isLoading } = useActiveGroupQuery();
-  const isPayout = !isLoading && group?.status === 'finished';
+  const isPayout = !isLoading && !!group?.payoutDate;
 
   const listData = [
     {
@@ -56,31 +55,16 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
       {isLoading ? (
         <Loading size="small" />
       ) : (
-        <View style={styles.list}>
-          {listData.map((item, index) => (
-            <View key={index} style={styles.item}>
-              <Text style={styles.label}>{item.label}: </Text>
-              <Text style={styles.value}>{item.value}</Text>
-            </View>
-          ))}
+        <>
+          <List data={listData} style={styles.list} />
 
           {payoutData.length > 0 && (
             <>
-              <View>
-                <Text>---</Text>
-              </View>
-
-              <View style={styles.list}>
-                {payoutData.map((item, index) => (
-                  <View key={index} style={styles.item}>
-                    <Text style={styles.label}>{item.label}: </Text>
-                    <Text style={styles.value}>{item.value}</Text>
-                  </View>
-                ))}
-              </View>
+              <Divider />
+              <List data={payoutData} />
             </>
           )}
-        </View>
+        </>
       )}
     </Dialog>
   );
@@ -88,15 +72,6 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
 
 const styles = StyleSheet.create({
   list: {
-    gap: 5,
-  },
-  item: {
-    flexDirection: 'row',
-  },
-  label: {
-    color: colors.text,
-  },
-  value: {
-    color: colors.text,
+    marginTop: -5,
   },
 });

@@ -36,12 +36,14 @@ export function useContributeMutation() {
   const queryClient = useQueryClient();
 
   const { data: periods } = usePeriodsQuery();
-  const { data: group } = useActiveGroupQuery();
+  const { data: group, isLoading } = useActiveGroupQuery();
   const groupId = group?.id || '';
+  const isPayout = !isLoading && !!group?.payoutDate;
 
   return useMutation({
     mutationFn: (amount: number) => {
-      const nextPeriod = periods ? periods.length + 1 : 1;
+      let nextPeriod = periods ? periods.length + 1 : 1;
+      if (isPayout) nextPeriod += 1;
       const payload = { period: String(nextPeriod), amount, groupId };
       return onContribute(payload);
     },
