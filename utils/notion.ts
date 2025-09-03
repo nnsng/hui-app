@@ -1,4 +1,5 @@
 import type { HuiGroup, HuiPeriod } from '@/types';
+import dayjs from 'dayjs';
 
 export const mapNotionHuiGroup = (data: any): HuiGroup => {
   try {
@@ -18,6 +19,7 @@ export const mapNotionHuiGroup = (data: any): HuiGroup => {
       status,
       note,
     } = result.properties;
+    const payoutDate = payout_date.date?.start ?? '';
 
     return {
       id: result.id,
@@ -27,10 +29,10 @@ export const mapNotionHuiGroup = (data: any): HuiGroup => {
       minimumBid: minimum_bid.number ?? 0,
       managerFee: manager_fee.number ?? 0,
       startDate: start_date.date?.start ?? '',
-      payoutDate: payout_date.date?.start ?? '',
+      payoutDate: dayjs(payoutDate, { format: 'YYYY-MM-DD' }).format('DD/MM/YYYY'),
       payoutAmount: payout_amount.number ?? 0,
       difference: difference.number ?? 0,
-      status: status ?? '',
+      status: status.select?.name ?? '',
       note: note.rich_text?.[0]?.plain_text ?? '',
     };
   } catch (error) {
@@ -46,11 +48,12 @@ export const mapNotionHuiPeriods = (data: any) => {
 
     return results.map((result: any): HuiPeriod => {
       const { period, contribution_date, bid_amount } = result.properties;
+      const contributionDate = contribution_date.date?.start ?? '';
 
       return {
         id: result.id ?? '',
         period: period.title?.[0]?.plain_text ?? '0',
-        contributionDate: contribution_date.date?.start ?? '',
+        contributionDate: dayjs(contributionDate, { format: 'YYYY-MM-DD' }).format('DD/MM/YYYY'),
         bidAmount: bid_amount.number ?? 0,
       };
     });

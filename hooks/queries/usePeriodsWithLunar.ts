@@ -1,9 +1,9 @@
 import { queryKeys } from '@/constants/query-keys';
+import { usePeriodsQuery } from '@/hooks/queries';
 import type { HuiPeriod } from '@/types';
 import { dateApi } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { usePeriodsQuery } from '.';
 
 type ConvertToLunarResponse = {
   day: number;
@@ -13,10 +13,9 @@ type ConvertToLunarResponse = {
 };
 
 const getLunarDate = async (sonarDate: string) => {
-  const [year, month, day] = sonarDate.split('-').map(Number);
-  const url = '/convert-to-lunar';
+  const [day, month, year] = sonarDate.split('/').map(Number);
   const payload = { year, month, day };
-  const response: ConvertToLunarResponse = await dateApi.post(url, payload);
+  const response: ConvertToLunarResponse = await dateApi.post('/convert-to-lunar', payload);
   const lunarDate = response.date;
   return dayjs(lunarDate, { format: 'YYY-MM-DD' }).format('DD/MM/YYYY');
 };

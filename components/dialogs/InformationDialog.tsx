@@ -2,7 +2,6 @@ import { Loading } from '@/components';
 import { Dialog, Divider, List } from '@/components/ui';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
-import dayjs from 'dayjs';
 import { StyleSheet } from 'react-native';
 
 type InformationDialogProps = {
@@ -33,22 +32,20 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
     },
   ];
 
-  const payoutData = isPayout
-    ? [
-        {
-          label: 'Ngày hốt hụi',
-          value: dayjs(group.payoutDate).format('DD/MM/YYYY'),
-        },
-        {
-          label: 'Tiền hốt hụi',
-          value: formatCurrency(group?.payoutAmount),
-        },
-        {
-          label: 'Chênh lệch',
-          value: formatCurrency(group?.difference),
-        },
-      ]
-    : [];
+  const payoutData = [
+    {
+      label: 'Ngày hốt hụi',
+      value: group?.payoutDate ?? '',
+    },
+    {
+      label: 'Tiền hốt hụi',
+      value: formatCurrency(group?.payoutAmount),
+    },
+    {
+      label: 'Chênh lệch',
+      value: formatCurrency(group?.difference),
+    },
+  ];
 
   return (
     <Dialog title="Thông tin hụi" visible={visible} onClose={onClose}>
@@ -58,7 +55,7 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
         <>
           <List data={listData} style={styles.list} />
 
-          {payoutData.length > 0 && (
+          {isPayout && (
             <>
               <Divider />
               <List data={payoutData} />

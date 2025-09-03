@@ -2,7 +2,6 @@ import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery, usePeriodsWithLunar } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { MaterialIcons } from '@expo/vector-icons';
-import dayjs from 'dayjs';
 import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -62,7 +61,7 @@ export function Table() {
                 <Text style={styles.idCellText}>{row.period}</Text>
               </View>
               <View style={[styles.cell, styles.dateCell]}>
-                <Text>DL: {dayjs(row.contributionDate).format('DD/MM/YYYY')}</Text>
+                <Text>DL: {row.contributionDate}</Text>
                 <Text>ÂL: {row.contributionDateLunar}</Text>
               </View>
               <View style={[styles.cell, styles.bidCell]}>
