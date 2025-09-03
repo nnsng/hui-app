@@ -17,6 +17,6 @@ export type HuiGroup = {
   payoutDate?: string;
   payoutAmount?: number;
   difference?: number;
-  status?: 'active' | 'finished' | 'test';
+  status?: 'active' | 'finished';
   note?: string;
 };
