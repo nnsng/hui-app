@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+    paddingVertical: 12,
   },
   tableContainer: {
     flex: 1,

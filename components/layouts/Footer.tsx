@@ -25,19 +25,29 @@ export function Footer({ style }: FooterProps) {
 
   return (
     <View style={[styles.footer, style]}>
-      <Button disabled={isPayout} onPress={() => setOpenDialog(true)}>
-        Hốt hụi
-      </Button>
       {isPayout ? (
-        <View style={styles.content}>
-          <Text style={styles.label}>Đã hốt hụi</Text>
-          <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
-        </View>
+        <>
+          <View style={styles.content}>
+            <Text style={styles.label}>Đã hốt hụi</Text>
+            <Text style={styles.value}>{group.payoutDate}</Text>
+          </View>
+
+          <View style={styles.content}>
+            <Text style={styles.label}>Số tiền</Text>
+            <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
+          </View>
+        </>
       ) : (
-        <View style={styles.content}>
-          <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
-          <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
-        </View>
+        <>
+          <Button disabled={isPayout} onPress={() => setOpenDialog(true)}>
+            Hốt hụi
+          </Button>
+
+          <View style={styles.content}>
+            <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
+            <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
+          </View>
+        </>
       )}
 
       <PayoutDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
@@ -56,9 +66,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: colors.border,
   },
-  content: {
-    // alignItems: 'flex-end',
-  },
+  content: {},
   label: {
     fontSize: 12,
     color: colors.text,

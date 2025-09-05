@@ -1,9 +1,9 @@
-import { Button, Dialog, Input, List } from '@/components/ui';
+import { Dialog, Input, List } from '@/components/ui';
 import { usePayoutMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, type TextInput } from 'react-native';
+import { StyleSheet, type TextInput } from 'react-native';
 
 type PayoutDialogProps = {
   visible: boolean;
@@ -81,7 +81,6 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
     {
       label: 'Số tiền kêu',
       value: formatCurrency(input),
-      enabled: !error,
     },
     {
       label: 'Số tiền hốt hụi',
@@ -98,34 +97,29 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
       title="Hốt hụi"
       visible={visible}
       onClose={handleClose}
-      submitButton={
-        <Button loading={isPending} disabled={!input || error} onPress={handleSubmit}>
-          Đồng ý
-        </Button>
-      }
+      submitButtonProps={{
+        children: 'Hốt hụi',
+        loading: isPending,
+        disabled: !input || error,
+        onPress: handleSubmit,
+      }}
     >
-      <View style={styles.container}>
-        <Input
-          inputRef={inputRef}
-          placeholder="Nhập số tiền kêu..."
-          keyboardType="numeric"
-          value={input}
-          onChangeText={handleChangeText}
-          error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
-        />
+      <Input
+        inputRef={inputRef}
+        placeholder="Số tiền kêu"
+        keyboardType="numeric"
+        value={input}
+        onChangeText={handleChangeText}
+        error={error ? 'Số tiền không hợp lệ' : ''}
+      />
 
-        <List data={listData} style={styles.list} />
-      </View>
+      {!error && <List data={listData} style={styles.list} />}
     </Dialog>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 10,
-  },
   list: {
-    gap: 6,
     marginTop: 10,
   },
 });

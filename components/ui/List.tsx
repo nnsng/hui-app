@@ -13,30 +13,27 @@ type ListProps = {
 };
 
 export function List({ data, style }: ListProps) {
-  if (data.length === 0) return null;
+  const filtered = data.filter((item) => item.enabled !== false);
+  if (filtered.length === 0) return null;
 
   return (
-    <View style={[styles.list, style]}>
-      {data
-        .filter((item) => item.enabled !== false)
-        .map((item, index) => (
-          <View key={index} style={styles.item}>
-            <Text style={styles.label}>{item.label}</Text>
-            <Text style={styles.value}>{item.value}</Text>
-          </View>
-        ))}
+    <View style={style}>
+      {filtered.map((item, index) => (
+        <View key={index} style={styles.item}>
+          <Text style={styles.label}>{item.label}</Text>
+          <Text style={styles.value}>{item.value}</Text>
+        </View>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  list: {
-    gap: 10,
-  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingVertical: 6,
   },
   label: {
     color: colors.text,
@@ -45,5 +42,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 16,
     fontWeight: 'bold',
+    fontVariant: ['tabular-nums'],
+    includeFontPadding: false,
   },
 });

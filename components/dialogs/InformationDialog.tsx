@@ -1,5 +1,6 @@
 import { Loading } from '@/components';
-import { Dialog, Divider, List } from '@/components/ui';
+import { Dialog, List } from '@/components/ui';
+import { colors } from '@/constants/colors';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { StyleSheet } from 'react-native';
@@ -54,13 +55,7 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
       ) : (
         <>
           <List data={listData} style={styles.list} />
-
-          {isPayout && (
-            <>
-              <Divider />
-              <List data={payoutData} />
-            </>
-          )}
+          {isPayout && <List data={payoutData} style={styles.payoutList} />}
         </>
       )}
     </Dialog>
@@ -68,7 +63,11 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
 }
 
 const styles = StyleSheet.create({
-  list: {
-    marginTop: -5,
+  list: {},
+  payoutList: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderColor: colors.border,
   },
 });

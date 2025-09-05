@@ -11,7 +11,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-type ButtonProps = PropsWithChildren<{
+export type ButtonProps = PropsWithChildren<{
   onPress?: (event: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -57,8 +57,8 @@ export function Button(props: ButtonProps) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',

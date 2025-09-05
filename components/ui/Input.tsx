@@ -1,20 +1,29 @@
 import { colors } from '@/constants/colors';
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  type StyleProp,
+  type TextInputProps,
+  type ViewStyle,
+} from 'react-native';
 
 type InputProps = TextInputProps & {
   label?: string;
   error?: string;
   inputRef?: React.Ref<TextInput>;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export function Input(props: InputProps) {
-  const { label, error, inputRef, style, ...inputProps } = props;
+  const { label, error, inputRef, containerStyle, style, ...inputProps } = props;
 
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={styles.inputContainer}>
+    <View style={[styles.inputContainer, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         ref={inputRef}
@@ -47,7 +56,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 8,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 14,
     fontSize: 16,
     backgroundColor: 'white',
