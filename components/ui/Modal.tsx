@@ -1,25 +1,25 @@
-import { Button, Divider } from '@/components/ui';
+import { Button, type ButtonProps } from '@/components/ui/Button';
 import { colors } from '@/constants/colors';
-import React, { useEffect, useRef, type PropsWithChildren, type ReactNode } from 'react';
+import React, { useEffect, useRef, type PropsWithChildren } from 'react';
 import {
   Animated,
   Keyboard,
-  Modal,
+  Modal as ReactNativeModel,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 
-type DialogProps = PropsWithChildren<{
+type ModalProps = PropsWithChildren<{
   visible: boolean;
   title: string;
   onClose: () => void;
-  submitButton?: ReactNode;
+  submitButtonProps?: ButtonProps;
 }>;
 
-export function Dialog(props: DialogProps) {
-  const { visible, title, onClose, submitButton, children } = props;
+export function Modal(props: ModalProps) {
+  const { visible, title, onClose, submitButtonProps, children } = props;
 
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -37,29 +37,40 @@ export function Dialog(props: DialogProps) {
   }, [visible, scaleAnim]);
 
   return (
-    <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
+    <ReactNativeModel
+      transparent
+      statusBarTranslucent
+      animationType="fade"
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <TouchableWithoutFeedback onPress={onClose} accessible={false}>
         <View style={styles.overlay}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <Animated.View style={[styles.dialog, { transform: [{ scale: scaleAnim }] }]}>
-              <Text style={styles.title}>{title}</Text>
-
-              <Divider style={styles.divider} />
+              <View style={styles.header}>
+                <Text style={styles.title}>{title}</Text>
+              </View>
 
               <View style={styles.content}>{children}</View>
 
-              <View style={styles.actionButton}>
-                <Button variant="text" onPress={onClose}>
+              <View style={styles.footer}>
+                <Button variant="outlined" style={styles.button} onPress={onClose}>
                   Đóng
                 </Button>
 
-                {submitButton}
+                {submitButtonProps && (
+                  <Button
+                    {...submitButtonProps}
+                    style={[styles.button, submitButtonProps?.style]}
+                  />
+                )}
               </View>
             </Animated.View>
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    </ReactNativeModel>
   );
 }
 
@@ -72,31 +83,36 @@ const styles = StyleSheet.create({
   },
   dialog: {
     width: '90%',
-    padding: 20,
     backgroundColor: colors.white,
     borderRadius: 12,
     shadowColor: colors.shadow,
     shadowOpacity: 0.25,
     shadowRadius: 5,
     elevation: 5,
-    gap: 12,
+  },
+  header: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderColor: colors.border,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
     textAlign: 'center',
   },
-  divider: {
-    marginTop: 5,
-    marginBottom: -5,
-  },
   content: {
-    marginVertical: 10,
+    padding: 16,
   },
-  actionButton: {
+  footer: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderColor: colors.border,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     gap: 10,
+  },
+  button: {
+    flex: 1,
   },
 });

@@ -1,19 +1,20 @@
-import { Button, Dialog, Input, List } from '@/components/ui';
+import { Input, List, Modal } from '@/components/ui';
 import { usePayoutMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, type TextInput } from 'react-native';
+import { StyleSheet, type TextInput } from 'react-native';
 
-type PayoutDialogProps = {
+type PayoutModalProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
+export function PayoutModal({ visible, onClose }: PayoutModalProps) {
   const { data: periods = [] } = usePeriodsQuery();
   const { data: group } = useActiveGroupQuery();
   const { mutateAsync: onPayout, isPending } = usePayoutMutation();
+  const isLastPeriod = (periods?.length ?? 0) + 1 >= (group?.totalMembers ?? 0);
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -72,7 +73,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
     if (error) return;
 
     setError(false);
-    await onPayout({ amount: totalPayout, difference });
+    await onPayout({ bidAmount, payoutAmount: totalPayout, difference });
     setInput('');
     handleClose();
   };
@@ -81,7 +82,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
     {
       label: 'Số tiền kêu',
       value: formatCurrency(input),
-      enabled: !error,
+      enabled: !isLastPeriod,
     },
     {
       label: 'Số tiền hốt hụi',
@@ -94,38 +95,35 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
   ];
 
   return (
-    <Dialog
+    <Modal
       title="Hốt hụi"
       visible={visible}
       onClose={handleClose}
-      submitButton={
-        <Button loading={isPending} disabled={!input || error} onPress={handleSubmit}>
-          Đồng ý
-        </Button>
-      }
+      submitButtonProps={{
+        children: 'Hốt hụi',
+        loading: isPending,
+        disabled: (!input && !isLastPeriod) || error,
+        onPress: handleSubmit,
+      }}
     >
-      <View style={styles.container}>
+      {!isLastPeriod && (
         <Input
           inputRef={inputRef}
-          placeholder="Nhập số tiền kêu..."
+          placeholder="Số tiền kêu"
           keyboardType="numeric"
           value={input}
           onChangeText={handleChangeText}
-          error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
+          error={error ? 'Số tiền không hợp lệ' : ''}
         />
+      )}
 
-        <List data={listData} style={styles.list} />
-      </View>
-    </Dialog>
+      {!error && <List data={listData} style={isLastPeriod ? {} : styles.list} />}
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 10,
-  },
   list: {
-    gap: 6,
     marginTop: 10,
   },
 });

@@ -7,7 +7,6 @@ export const colors = {
   info: '#17a2b8',
   white: '#fff',
   black: '#000',
-  text: '#333',
   textDisabled: '#9ca3af',
   border: '#ddd',
   shadow: '#000',

@@ -1,16 +1,16 @@
-import { Button, Dialog, Input, List } from '@/components/ui';
+import { Input, List, Modal } from '@/components/ui';
 import { useContributeMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, type TextInput } from 'react-native';
 
-type ContributionDialogProps = {
+type ContributionModalProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function ContributionDialog({ visible, onClose }: ContributionDialogProps) {
+export function ContributionModal({ visible, onClose }: ContributionModalProps) {
   const { mutateAsync: onContribute, isPending } = useContributeMutation();
   const { data: group, isLoading } = useActiveGroupQuery();
   const isPayout = !isLoading && !!group?.payoutDate;
@@ -44,7 +44,7 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
     if (error) return;
 
     setError(false);
-    await onContribute(bidAmount);
+    await onContribute({ bidAmount, isPayout: bidAmount === 0 });
     setInput('');
     handleClose();
   };
@@ -53,7 +53,7 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
     {
       label: 'Số tiền kêu',
       value: formatCurrency(input),
-      enabled: !isPayout && !error,
+      enabled: !isPayout,
     },
     {
       label: 'Số tiền cần đóng',
@@ -62,41 +62,35 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
   ];
 
   return (
-    <Dialog
+    <Modal
       title={isPayout ? 'Đóng hụi chết' : 'Đóng hụi'}
       visible={visible}
       onClose={handleClose}
-      submitButton={
-        <Button
-          loading={isPending}
-          disabled={!isPayout && (!input || error)}
-          onPress={handleSubmit}
-        >
-          Đồng ý
-        </Button>
-      }
+      submitButtonProps={{
+        children: 'Đóng hụi',
+        loading: isPending,
+        disabled: !isPayout && (!input || error),
+        onPress: handleSubmit,
+      }}
     >
       {!isPayout && (
         <Input
           inputRef={inputRef}
-          placeholder="Nhập số tiền kêu..."
+          placeholder="Số tiền kêu"
           keyboardType="numeric"
           value={input}
           onChangeText={handleChangeText}
-          error={error ? 'Vui lòng nhập số tiền hợp lệ' : ''}
+          error={error ? 'Số tiền không hợp lệ' : ''}
         />
       )}
-      <List data={listData} style={isPayout ? styles.listPayout : styles.list} />
-    </Dialog>
+
+      {!error && <List data={listData} style={isPayout ? {} : styles.list} />}
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   list: {
-    gap: 6,
     marginTop: 10,
-  },
-  listPayout: {
-    marginTop: 0,
   },
 });

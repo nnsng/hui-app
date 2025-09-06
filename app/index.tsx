@@ -1,22 +1,25 @@
 import { Error, Loading, Table } from '@/components';
-import { ContributionDialog, InformationDialog } from '@/components/dialogs';
 import { Footer, Header } from '@/components/layouts';
+import { ContributionModal, InfoModal } from '@/components/modals';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
-  const { isLoading: isLoadingGroup } = useActiveGroupQuery();
-  const { isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
+  const { data: group, isLoading: isLoadingGroup } = useActiveGroupQuery();
+  const { data: periods, isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
-  if (isLoadingPeriods || isLoadingGroup) return <Loading />;
+  if (isLoadingGroup || isLoadingPeriods) return <Loading />;
 
   if (isError) return <Error message={error.message} />;
+
+  const isLastPeriod = (periods?.length ?? 0) + 1 >= (group?.totalMembers ?? 0);
 
   return (
     <SafeAreaView style={styles.app}>
@@ -32,7 +35,7 @@ export default function Index() {
             Thông tin
           </Button>
 
-          <Button style={styles.button} onPress={() => setOpenDialog(true)}>
+          <Button disabled={isLastPeriod} style={styles.button} onPress={() => setOpenDialog(true)}>
             Đóng hụi
           </Button>
         </View>
@@ -42,14 +45,11 @@ export default function Index() {
         </View>
       </View>
 
-      <Footer style={styles.footer} />
+      <Footer />
 
-      <InformationDialog
-        visible={openInformationDialog}
-        onClose={() => setOpenInformationDialog(false)}
-      />
+      <InfoModal visible={openInformationDialog} onClose={() => setOpenInformationDialog(false)} />
 
-      <ContributionDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
+      <ContributionModal visible={openDialog} onClose={() => setOpenDialog(false)} />
     </SafeAreaView>
   );
 }
@@ -72,12 +72,10 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+    paddingVertical: 12,
   },
   tableContainer: {
     flex: 1,
     paddingHorizontal: 16,
-  },
-  footer: {
-    flexShrink: 0,
   },
 });

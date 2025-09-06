@@ -47,14 +47,16 @@ export const mapNotionHuiPeriods = (data: any) => {
     if (!Array.isArray(results) || results.length === 0) return [];
 
     return results.map((result: any): HuiPeriod => {
-      const { period, contribution_date, bid_amount } = result.properties;
+      const { period, contribution_date, bid_amount, is_payout } = result.properties;
       const contributionDate = contribution_date.date?.start ?? '';
 
       return {
         id: result.id ?? '',
         period: period.title?.[0]?.plain_text ?? '0',
         contributionDate: formatDate(contributionDate),
+        contributionDateLunar: '',
         bidAmount: bid_amount.number ?? 0,
+        isPayout: is_payout.checkbox ?? false,
       };
     });
   } catch (error) {

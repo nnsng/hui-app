@@ -2,8 +2,9 @@ export type HuiPeriod = {
   id: string;
   period: `${number}`;
   contributionDate: string;
-  contributionDateLunar?: string;
+  contributionDateLunar: string;
   bidAmount: number;
+  isPayout: boolean;
 };
 
 export type HuiGroup = {

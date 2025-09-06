@@ -1,5 +1,5 @@
 import { queryKeys } from '@/constants/query-keys';
-import { useActiveGroupQuery } from '@/hooks/queries';
+import { useActiveGroupQuery } from '@/hooks/queries/useActiveGroupQuery';
 import { notionApi } from '@/utils/api';
 import { env } from '@/utils/env';
 import { mapNotionHuiPeriods } from '@/utils/notion';
@@ -22,7 +22,7 @@ const getPeriods = async (groupId: string) => {
     ],
   };
   const data = await notionApi.post(url, payload);
-  return await mapNotionHuiPeriods(data);
+  return mapNotionHuiPeriods(data);
 };
 
 export function usePeriodsQuery() {

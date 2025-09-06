@@ -1,15 +1,16 @@
 import { Loading } from '@/components';
-import { Dialog, Divider, List } from '@/components/ui';
+import { List, Modal } from '@/components/ui';
+import { colors } from '@/constants/colors';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { StyleSheet } from 'react-native';
 
-type InformationDialogProps = {
+type InfoModalProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function InformationDialog({ visible, onClose }: InformationDialogProps) {
+export function InfoModal({ visible, onClose }: InfoModalProps) {
   const { data: group, isLoading } = useActiveGroupQuery();
   const isPayout = !isLoading && !!group?.payoutDate;
 
@@ -48,27 +49,25 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
   ];
 
   return (
-    <Dialog title="Thông tin hụi" visible={visible} onClose={onClose}>
+    <Modal title="Thông tin hụi" visible={visible} onClose={onClose}>
       {isLoading ? (
         <Loading size="small" />
       ) : (
         <>
           <List data={listData} style={styles.list} />
-
-          {isPayout && (
-            <>
-              <Divider />
-              <List data={payoutData} />
-            </>
-          )}
+          {isPayout && <List data={payoutData} style={styles.payoutList} />}
         </>
       )}
-    </Dialog>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  list: {
-    marginTop: -5,
+  list: {},
+  payoutList: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderColor: colors.border,
   },
 });

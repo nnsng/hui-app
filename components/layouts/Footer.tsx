@@ -1,16 +1,12 @@
-import { PayoutDialog } from '@/components/dialogs';
+import { PayoutModal } from '@/components/modals';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
-import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-type FooterProps = {
-  style?: ViewStyle;
-};
-
-export function Footer({ style }: FooterProps) {
+export function Footer() {
   const { data: periods } = usePeriodsQuery();
   const { data: group, isLoading } = useActiveGroupQuery();
 
@@ -24,30 +20,39 @@ export function Footer({ style }: FooterProps) {
   }, [periods]);
 
   return (
-    <View style={[styles.footer, style]}>
-      <Button disabled={isPayout} onPress={() => setOpenDialog(true)}>
-        Hốt hụi
-      </Button>
+    <View style={styles.footer}>
       {isPayout ? (
-        <View style={styles.content}>
-          <Text style={styles.label}>Đã hốt hụi</Text>
-          <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
-        </View>
+        <>
+          <View style={styles.content}>
+            <Text style={styles.label}>Đã hốt hụi</Text>
+            <Text style={styles.value}>{group.payoutDate}</Text>
+          </View>
+
+          <View style={styles.content}>
+            <Text style={styles.label}>Số tiền</Text>
+            <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
+          </View>
+        </>
       ) : (
-        <View style={styles.content}>
-          <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
-          <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
-        </View>
+        <>
+          <Button disabled={isPayout} onPress={() => setOpenDialog(true)}>
+            Hốt hụi
+          </Button>
+
+          <View style={styles.content}>
+            <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
+            <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
+          </View>
+        </>
       )}
 
-      <PayoutDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
+      <PayoutModal visible={openDialog} onClose={() => setOpenDialog(false)} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   footer: {
-    backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -56,16 +61,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: colors.border,
   },
-  content: {
-    // alignItems: 'flex-end',
-  },
+  content: {},
   label: {
     fontSize: 12,
-    color: colors.text,
   },
   value: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.text,
   },
 });

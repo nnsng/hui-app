@@ -56,7 +56,7 @@ export function Table() {
       <ScrollView style={styles.body}>
         {periodsWithLunar.length > 0 ? (
           periodsWithLunar.map((row) => (
-            <View key={row.id} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
+            <View key={row.id} style={[styles.row, row.isPayout ? styles.payout : {}]}>
               <View style={[styles.cell, styles.idCell]}>
                 <Text style={styles.idCellText}>{row.period}</Text>
               </View>
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 12,
     fontWeight: 'bold',
-    color: colors.text,
     fontSize: 14,
   },
   body: {
@@ -119,7 +118,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 12,
-    color: colors.text,
     fontSize: 14,
     justifyContent: 'center',
   },
