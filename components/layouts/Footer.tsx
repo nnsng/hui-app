@@ -69,11 +69,9 @@ const styles = StyleSheet.create({
   content: {},
   label: {
     fontSize: 12,
-    color: colors.text,
   },
   value: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.text,
   },
 });

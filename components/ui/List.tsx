@@ -1,4 +1,3 @@
-import { colors } from '@/constants/colors';
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 type ListItem = {
@@ -35,11 +34,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 6,
   },
-  label: {
-    color: colors.text,
-  },
+  label: {},
   value: {
-    color: colors.text,
     fontSize: 16,
     fontWeight: 'bold',
     fontVariant: ['tabular-nums'],

@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: colors.text,
   },
   input: {
     borderWidth: 1,
@@ -60,7 +59,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     fontSize: 16,
     backgroundColor: 'white',
-    color: colors.text,
   },
   inputFocused: {
     borderColor: colors.primary,

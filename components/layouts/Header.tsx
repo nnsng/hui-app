@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.text,
     letterSpacing: 0.5,
   },
 });
