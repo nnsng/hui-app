@@ -1,4 +1,4 @@
+export * from './AppModel';
 export * from './Button';
-export * from './Dialog';
 export * from './Input';
 export * from './List';

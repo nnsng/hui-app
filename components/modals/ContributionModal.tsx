@@ -1,16 +1,16 @@
-import { Dialog, Input, List } from '@/components/ui';
+import { AppModel, Input, List } from '@/components/ui';
 import { useContributeMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, type TextInput } from 'react-native';
 
-type ContributionDialogProps = {
+type ContributionModalProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function ContributionDialog({ visible, onClose }: ContributionDialogProps) {
+export function ContributionModal({ visible, onClose }: ContributionModalProps) {
   const { mutateAsync: onContribute, isPending } = useContributeMutation();
   const { data: group, isLoading } = useActiveGroupQuery();
   const isPayout = !isLoading && !!group?.payoutDate;
@@ -62,7 +62,7 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
   ];
 
   return (
-    <Dialog
+    <AppModel
       title={isPayout ? 'Đóng hụi chết' : 'Đóng hụi'}
       visible={visible}
       onClose={handleClose}
@@ -85,7 +85,7 @@ export function ContributionDialog({ visible, onClose }: ContributionDialogProps
       )}
 
       {!error && <List data={listData} style={isPayout ? {} : styles.list} />}
-    </Dialog>
+    </AppModel>
   );
 }
 

@@ -1,6 +1,6 @@
 import { Error, Loading, Table } from '@/components';
-import { ContributionDialog, InformationDialog } from '@/components/dialogs';
 import { Footer, Header } from '@/components/layouts';
+import { ContributionModal, InfoModal } from '@/components/modals';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
@@ -45,12 +45,9 @@ export default function Index() {
 
       <Footer />
 
-      <InformationDialog
-        visible={openInformationDialog}
-        onClose={() => setOpenInformationDialog(false)}
-      />
+      <InfoModal visible={openInformationDialog} onClose={() => setOpenInformationDialog(false)} />
 
-      <ContributionDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
+      <ContributionModal visible={openDialog} onClose={() => setOpenDialog(false)} />
     </SafeAreaView>
   );
 }

@@ -1,4 +1,4 @@
-import { PayoutDialog } from '@/components/dialogs';
+import { PayoutModal } from '@/components/modals';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
@@ -46,7 +46,7 @@ export function Footer() {
         </>
       )}
 
-      <PayoutDialog visible={openDialog} onClose={() => setOpenDialog(false)} />
+      <PayoutModal visible={openDialog} onClose={() => setOpenDialog(false)} />
     </View>
   );
 }

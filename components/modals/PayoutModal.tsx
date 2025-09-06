@@ -1,16 +1,16 @@
-import { Dialog, Input, List } from '@/components/ui';
+import { AppModel, Input, List } from '@/components/ui';
 import { usePayoutMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, type TextInput } from 'react-native';
 
-type PayoutDialogProps = {
+type PayoutModalProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
+export function PayoutModal({ visible, onClose }: PayoutModalProps) {
   const { data: periods = [] } = usePeriodsQuery();
   const { data: group } = useActiveGroupQuery();
   const { mutateAsync: onPayout, isPending } = usePayoutMutation();
@@ -93,7 +93,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
   ];
 
   return (
-    <Dialog
+    <AppModel
       title="Hốt hụi"
       visible={visible}
       onClose={handleClose}
@@ -114,7 +114,7 @@ export function PayoutDialog({ visible, onClose }: PayoutDialogProps) {
       />
 
       {!error && <List data={listData} style={styles.list} />}
-    </Dialog>
+    </AppModel>
   );
 }
 

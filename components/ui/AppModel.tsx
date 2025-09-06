@@ -11,14 +11,14 @@ import {
   View,
 } from 'react-native';
 
-type DialogProps = PropsWithChildren<{
+type AppModelProps = PropsWithChildren<{
   visible: boolean;
   title: string;
   onClose: () => void;
   submitButtonProps?: ButtonProps;
 }>;
 
-export function Dialog(props: DialogProps) {
+export function AppModel(props: AppModelProps) {
   const { visible, title, onClose, submitButtonProps, children } = props;
 
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -37,7 +37,13 @@ export function Dialog(props: DialogProps) {
   }, [visible, scaleAnim]);
 
   return (
-    <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
+    <Modal
+      transparent
+      statusBarTranslucent
+      animationType="fade"
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <TouchableWithoutFeedback onPress={onClose} accessible={false}>
         <View style={styles.overlay}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

@@ -1,16 +1,16 @@
 import { Loading } from '@/components';
-import { Dialog, List } from '@/components/ui';
+import { AppModel, List } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { StyleSheet } from 'react-native';
 
-type InformationDialogProps = {
+type InfoModalProps = {
   visible: boolean;
   onClose: () => void;
 };
 
-export function InformationDialog({ visible, onClose }: InformationDialogProps) {
+export function InfoModal({ visible, onClose }: InfoModalProps) {
   const { data: group, isLoading } = useActiveGroupQuery();
   const isPayout = !isLoading && !!group?.payoutDate;
 
@@ -49,7 +49,7 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
   ];
 
   return (
-    <Dialog title="Thông tin hụi" visible={visible} onClose={onClose}>
+    <AppModel title="Thông tin hụi" visible={visible} onClose={onClose}>
       {isLoading ? (
         <Loading size="small" />
       ) : (
@@ -58,7 +58,7 @@ export function InformationDialog({ visible, onClose }: InformationDialogProps) 
           {isPayout && <List data={payoutData} style={styles.payoutList} />}
         </>
       )}
-    </Dialog>
+    </AppModel>
   );
 }
 
