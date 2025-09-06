@@ -6,16 +6,17 @@ import dayjs from 'dayjs';
 
 type PayoutPayload = {
   groupId: string;
-  amount: number;
+  bidAmount: number;
+  payoutAmount: number;
   difference: number;
 };
 
-const onPayout = async ({ groupId, amount, difference }: PayoutPayload) => {
+const onPayout = async ({ groupId, payoutAmount, difference }: PayoutPayload) => {
   const url = `/pages/${groupId}`;
   const payload = {
     properties: {
       payout_date: { date: { start: dayjs().format('YYYY-MM-DD') } },
-      payout_amount: { number: amount },
+      payout_amount: { number: payoutAmount },
       difference: { number: difference },
     },
   };
@@ -30,7 +31,7 @@ export function usePayoutMutation() {
 
   return useMutation({
     mutationFn: async (payload: Omit<PayoutPayload, 'groupId'>) => {
-      onPayout({ ...payload, groupId });
+      await onPayout({ ...payload, groupId });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.group] });

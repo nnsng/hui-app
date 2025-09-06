@@ -44,7 +44,7 @@ export function ContributionModal({ visible, onClose }: ContributionModalProps) 
     if (error) return;
 
     setError(false);
-    await onContribute(bidAmount);
+    await onContribute({ bidAmount, isPayout: bidAmount === 0 });
     setInput('');
     handleClose();
   };

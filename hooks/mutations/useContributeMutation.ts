@@ -7,11 +7,12 @@ import dayjs from 'dayjs';
 
 type ContributePayload = {
   period: string;
-  amount: number;
+  bidAmount: number;
   groupId: string;
+  isPayout: boolean;
 };
 
-const onContribute = async ({ period, amount, groupId }: ContributePayload) => {
+const addNewPeriod = async ({ period, bidAmount, isPayout, groupId }: ContributePayload) => {
   try {
     const url = '/pages';
     const payload = {
@@ -20,8 +21,9 @@ const onContribute = async ({ period, amount, groupId }: ContributePayload) => {
       },
       properties: {
         period: { title: [{ text: { content: period } }] },
-        bid_amount: { number: amount },
+        bid_amount: { number: bidAmount },
         contribution_date: { date: { start: dayjs().format('YYYY-MM-DD') } },
+        is_payout: { checkbox: isPayout },
         group_name: { relation: [{ id: groupId }] },
       },
     };
@@ -36,16 +38,17 @@ export function useContributeMutation() {
   const queryClient = useQueryClient();
 
   const { data: periods } = usePeriodsQuery();
-  const { data: group, isLoading } = useActiveGroupQuery();
+  const { data: group } = useActiveGroupQuery();
   const groupId = group?.id || '';
-  const isPayout = !isLoading && !!group?.payoutDate;
 
   return useMutation({
-    mutationFn: (amount: number) => {
-      let nextPeriod = periods ? periods.length + 1 : 1;
-      if (isPayout) nextPeriod += 1;
-      const payload = { period: String(nextPeriod), amount, groupId };
-      return onContribute(payload);
+    mutationFn: async (payload: Pick<ContributePayload, 'bidAmount' | 'isPayout'>) => {
+      const nextPeriod = (periods?.length ?? 0) + 1;
+      await addNewPeriod({
+        ...payload,
+        period: String(nextPeriod),
+        groupId,
+      });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.periods, groupId] });

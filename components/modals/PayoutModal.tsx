@@ -72,7 +72,7 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
     if (error) return;
 
     setError(false);
-    await onPayout({ amount: totalPayout, difference });
+    await onPayout({ bidAmount, payoutAmount: totalPayout, difference });
     setInput('');
     handleClose();
   };

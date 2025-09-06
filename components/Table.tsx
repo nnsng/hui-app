@@ -56,7 +56,7 @@ export function Table() {
       <ScrollView style={styles.body}>
         {periodsWithLunar.length > 0 ? (
           periodsWithLunar.map((row) => (
-            <View key={row.id} style={[styles.row, row.bidAmount === 0 ? styles.payout : {}]}>
+            <View key={row.id} style={[styles.row, row.isPayout ? styles.payout : {}]}>
               <View style={[styles.cell, styles.idCell]}>
                 <Text style={styles.idCellText}>{row.period}</Text>
               </View>
