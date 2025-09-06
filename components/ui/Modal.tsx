@@ -4,21 +4,21 @@ import React, { useEffect, useRef, type PropsWithChildren } from 'react';
 import {
   Animated,
   Keyboard,
-  Modal,
+  Modal as ReactNativeModel,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 
-type AppModelProps = PropsWithChildren<{
+type ModalProps = PropsWithChildren<{
   visible: boolean;
   title: string;
   onClose: () => void;
   submitButtonProps?: ButtonProps;
 }>;
 
-export function AppModel(props: AppModelProps) {
+export function Modal(props: ModalProps) {
   const { visible, title, onClose, submitButtonProps, children } = props;
 
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -37,7 +37,7 @@ export function AppModel(props: AppModelProps) {
   }, [visible, scaleAnim]);
 
   return (
-    <Modal
+    <ReactNativeModel
       transparent
       statusBarTranslucent
       animationType="fade"
@@ -70,7 +70,7 @@ export function AppModel(props: AppModelProps) {
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    </ReactNativeModel>
   );
 }
 
@@ -104,7 +104,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   footer: {
-    padding: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderTopWidth: 1,
     borderColor: colors.border,
     flexDirection: 'row',

@@ -1,5 +1,5 @@
 import { Loading } from '@/components';
-import { AppModel, List } from '@/components/ui';
+import { List, Modal } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
@@ -49,7 +49,7 @@ export function InfoModal({ visible, onClose }: InfoModalProps) {
   ];
 
   return (
-    <AppModel title="Thông tin hụi" visible={visible} onClose={onClose}>
+    <Modal title="Thông tin hụi" visible={visible} onClose={onClose}>
       {isLoading ? (
         <Loading size="small" />
       ) : (
@@ -58,7 +58,7 @@ export function InfoModal({ visible, onClose }: InfoModalProps) {
           {isPayout && <List data={payoutData} style={styles.payoutList} />}
         </>
       )}
-    </AppModel>
+    </Modal>
   );
 }
 

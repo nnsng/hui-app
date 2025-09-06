@@ -1,4 +1,4 @@
-import { AppModel, Input, List } from '@/components/ui';
+import { Input, List, Modal } from '@/components/ui';
 import { usePayoutMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
@@ -93,7 +93,7 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
   ];
 
   return (
-    <AppModel
+    <Modal
       title="Hốt hụi"
       visible={visible}
       onClose={handleClose}
@@ -114,7 +114,7 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
       />
 
       {!error && <List data={listData} style={styles.list} />}
-    </AppModel>
+    </Modal>
   );
 }
 

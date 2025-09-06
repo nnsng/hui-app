@@ -1,4 +1,4 @@
-import { AppModel, Input, List } from '@/components/ui';
+import { Input, List, Modal } from '@/components/ui';
 import { useContributeMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
@@ -62,7 +62,7 @@ export function ContributionModal({ visible, onClose }: ContributionModalProps) 
   ];
 
   return (
-    <AppModel
+    <Modal
       title={isPayout ? 'Đóng hụi chết' : 'Đóng hụi'}
       visible={visible}
       onClose={handleClose}
@@ -85,7 +85,7 @@ export function ContributionModal({ visible, onClose }: ContributionModalProps) 
       )}
 
       {!error && <List data={listData} style={isPayout ? {} : styles.list} />}
-    </AppModel>
+    </Modal>
   );
 }
 
