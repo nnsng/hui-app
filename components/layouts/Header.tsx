@@ -1,28 +1,24 @@
+import { appName } from '@/constants/app';
 import { colors } from '@/constants/colors';
-import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-type HeaderProps = {
-  style?: ViewStyle;
-};
-
-export function Header({ style }: HeaderProps) {
+export function Header() {
   return (
-    <View style={[styles.header, style]}>
-      <Text style={styles.title}>Hụi</Text>
+    <View style={styles.header}>
+      <Text style={styles.title}>{appName}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: colors.white,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderColor: colors.border,
     alignItems: 'center',
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     letterSpacing: 0.5,
   },

@@ -5,7 +5,8 @@ import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
   const { isLoading: isLoadingGroup } = useActiveGroupQuery();
@@ -42,7 +43,7 @@ export default function Index() {
         </View>
       </View>
 
-      <Footer style={styles.footer} />
+      <Footer />
 
       <InformationDialog
         visible={openInformationDialog}
@@ -77,8 +78,5 @@ const styles = StyleSheet.create({
   tableContainer: {
     flex: 1,
     paddingHorizontal: 16,
-  },
-  footer: {
-    flexShrink: 0,
   },
 });

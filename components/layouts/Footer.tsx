@@ -4,13 +4,9 @@ import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
-import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-type FooterProps = {
-  style?: ViewStyle;
-};
-
-export function Footer({ style }: FooterProps) {
+export function Footer() {
   const { data: periods } = usePeriodsQuery();
   const { data: group, isLoading } = useActiveGroupQuery();
 
@@ -24,7 +20,7 @@ export function Footer({ style }: FooterProps) {
   }, [periods]);
 
   return (
-    <View style={[styles.footer, style]}>
+    <View style={styles.footer}>
       {isPayout ? (
         <>
           <View style={styles.content}>
@@ -57,7 +53,6 @@ export function Footer({ style }: FooterProps) {
 
 const styles = StyleSheet.create({
   footer: {
-    backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
