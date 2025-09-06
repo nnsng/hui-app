@@ -3,6 +3,7 @@ import { useActiveGroupQuery } from '@/hooks/queries';
 import { notionApi } from '@/utils/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useContributeMutation } from './useContributeMutation';
 
 type PayoutPayload = {
   groupId: string;
@@ -11,7 +12,7 @@ type PayoutPayload = {
   difference: number;
 };
 
-const onPayout = async ({ groupId, payoutAmount, difference }: PayoutPayload) => {
+const payout = async ({ groupId, payoutAmount, difference }: PayoutPayload) => {
   const url = `/pages/${groupId}`;
   const payload = {
     properties: {
@@ -26,14 +27,18 @@ const onPayout = async ({ groupId, payoutAmount, difference }: PayoutPayload) =>
 export function usePayoutMutation() {
   const queryClient = useQueryClient();
 
+  const { mutate: onContribute } = useContributeMutation();
   const { data: group } = useActiveGroupQuery();
   const groupId = group?.id || '';
 
   return useMutation({
     mutationFn: async (payload: Omit<PayoutPayload, 'groupId'>) => {
-      await onPayout({ ...payload, groupId });
+      await payout({ ...payload, groupId });
     },
-    onSuccess: (data) => {
+    onMutate: ({ bidAmount }) => {
+      onContribute({ bidAmount, isPayout: true });
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.group] });
     },
   });

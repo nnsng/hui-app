@@ -22,7 +22,7 @@ const getPeriods = async (groupId: string) => {
     ],
   };
   const data = await notionApi.post(url, payload);
-  return await mapNotionHuiPeriods(data);
+  return mapNotionHuiPeriods(data);
 };
 
 export function usePeriodsQuery() {

@@ -14,6 +14,7 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
   const { data: periods = [] } = usePeriodsQuery();
   const { data: group } = useActiveGroupQuery();
   const { mutateAsync: onPayout, isPending } = usePayoutMutation();
+  const isLastPeriod = (periods?.length ?? 0) + 1 >= (group?.totalMembers ?? 0);
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -81,6 +82,7 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
     {
       label: 'Số tiền kêu',
       value: formatCurrency(input),
+      enabled: !isLastPeriod,
     },
     {
       label: 'Số tiền hốt hụi',
@@ -100,20 +102,22 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
       submitButtonProps={{
         children: 'Hốt hụi',
         loading: isPending,
-        disabled: !input || error,
+        disabled: (!input && !isLastPeriod) || error,
         onPress: handleSubmit,
       }}
     >
-      <Input
-        inputRef={inputRef}
-        placeholder="Số tiền kêu"
-        keyboardType="numeric"
-        value={input}
-        onChangeText={handleChangeText}
-        error={error ? 'Số tiền không hợp lệ' : ''}
-      />
+      {!isLastPeriod && (
+        <Input
+          inputRef={inputRef}
+          placeholder="Số tiền kêu"
+          keyboardType="numeric"
+          value={input}
+          onChangeText={handleChangeText}
+          error={error ? 'Số tiền không hợp lệ' : ''}
+        />
+      )}
 
-      {!error && <List data={listData} style={styles.list} />}
+      {!error && <List data={listData} style={isLastPeriod ? {} : styles.list} />}
     </Modal>
   );
 }

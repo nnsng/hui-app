@@ -12,7 +12,7 @@ type ContributePayload = {
   isPayout: boolean;
 };
 
-const addNewPeriod = async ({ period, bidAmount, isPayout, groupId }: ContributePayload) => {
+const contribute = async ({ period, bidAmount, isPayout, groupId }: ContributePayload) => {
   try {
     const url = '/pages';
     const payload = {
@@ -44,13 +44,13 @@ export function useContributeMutation() {
   return useMutation({
     mutationFn: async (payload: Pick<ContributePayload, 'bidAmount' | 'isPayout'>) => {
       const nextPeriod = (periods?.length ?? 0) + 1;
-      await addNewPeriod({
+      await contribute({
         ...payload,
         period: String(nextPeriod),
         groupId,
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.periods, groupId] });
     },
   });

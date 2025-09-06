@@ -9,15 +9,17 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
-  const { isLoading: isLoadingGroup } = useActiveGroupQuery();
-  const { isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
+  const { data: group, isLoading: isLoadingGroup } = useActiveGroupQuery();
+  const { data: periods, isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
-  if (isLoadingPeriods || isLoadingGroup) return <Loading />;
+  if (isLoadingGroup || isLoadingPeriods) return <Loading />;
 
   if (isError) return <Error message={error.message} />;
+
+  const isLastPeriod = (periods?.length ?? 0) + 1 >= (group?.totalMembers ?? 0);
 
   return (
     <SafeAreaView style={styles.app}>
@@ -33,7 +35,7 @@ export default function Index() {
             Thông tin
           </Button>
 
-          <Button style={styles.button} onPress={() => setOpenDialog(true)}>
+          <Button disabled={isLastPeriod} style={styles.button} onPress={() => setOpenDialog(true)}>
             Đóng hụi
           </Button>
         </View>
