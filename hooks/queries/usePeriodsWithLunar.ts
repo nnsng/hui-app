@@ -1,5 +1,5 @@
 import { queryKeys } from '@/constants/query-keys';
-import { usePeriodsQuery } from '@/hooks/queries';
+import { usePeriodsQuery } from '@/hooks/queries/usePeriodsQuery';
 import type { HuiPeriod } from '@/types';
 import { getLunarDate } from '@/utils/date';
 import { useQuery } from '@tanstack/react-query';

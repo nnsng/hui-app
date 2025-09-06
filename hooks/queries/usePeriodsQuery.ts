@@ -1,5 +1,5 @@
 import { queryKeys } from '@/constants/query-keys';
-import { useActiveGroupQuery } from '@/hooks/queries';
+import { useActiveGroupQuery } from '@/hooks/queries/useActiveGroupQuery';
 import { notionApi } from '@/utils/api';
 import { env } from '@/utils/env';
 import { mapNotionHuiPeriods } from '@/utils/notion';
