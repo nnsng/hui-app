@@ -114,6 +114,7 @@ export function PayoutModal({ visible, onClose }: PayoutModalProps) {
           value={input}
           onChangeText={handleChangeText}
           error={error ? 'Số tiền không hợp lệ' : ''}
+          autoFocus
         />
       )}
 

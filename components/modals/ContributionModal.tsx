@@ -81,6 +81,7 @@ export function ContributionModal({ visible, onClose }: ContributionModalProps) 
           value={input}
           onChangeText={handleChangeText}
           error={error ? 'Số tiền không hợp lệ' : ''}
+          autoFocus
         />
       )}
 
