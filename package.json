@@ -1,7 +1,7 @@
 {
   "name": "hui-app",
   "main": "expo-router/entry",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "start": "expo start",
@@ -9,8 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "build:android": "eas build -p android --profile preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:android": "eas build -p android --profile preview"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
