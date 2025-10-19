@@ -1,10 +1,10 @@
 import { Error, Loading, Table } from '@/components';
 import { Footer, Header } from '@/components/layouts';
-import { ContributionModal, InfoModal } from '@/components/modals';
+import { ContributionModal, InfoModal, PayoutModal } from '@/components/modals';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
+import { useModal } from '@/contexts/ModalContext';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -12,8 +12,8 @@ export default function Index() {
   const { data: group, isLoading: isLoadingGroup } = useActiveGroupQuery();
   const { data: periods, isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const { onOpen: onOpenInformationModal } = useModal('info');
+  const { onOpen: onOpenContribution } = useModal('contribution');
 
   if (isLoadingGroup || isLoadingPeriods) return <Loading />;
 
@@ -27,15 +27,11 @@ export default function Index() {
 
       <View style={styles.main}>
         <View style={styles.buttonContainer}>
-          <Button
-            variant="outlined"
-            style={styles.button}
-            onPress={() => setOpenInformationDialog(true)}
-          >
+          <Button variant="outlined" style={styles.button} onPress={onOpenInformationModal}>
             Thông tin
           </Button>
 
-          <Button disabled={isLastPeriod} style={styles.button} onPress={() => setOpenDialog(true)}>
+          <Button disabled={isLastPeriod} style={styles.button} onPress={onOpenContribution}>
             Đóng hụi
           </Button>
         </View>
@@ -47,9 +43,10 @@ export default function Index() {
 
       <Footer />
 
-      <InfoModal visible={openInformationDialog} onClose={() => setOpenInformationDialog(false)} />
-
-      <ContributionModal visible={openDialog} onClose={() => setOpenDialog(false)} />
+      {/* Modals */}
+      <InfoModal />
+      <ContributionModal />
+      <PayoutModal />
     </SafeAreaView>
   );
 }

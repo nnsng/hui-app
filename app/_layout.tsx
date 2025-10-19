@@ -1,4 +1,5 @@
 import { Loading } from '@/components';
+import ModalProvider from '@/contexts/ModalContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -21,7 +22,9 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false, statusBarStyle: 'dark' }} />
+      <ModalProvider>
+        <Stack screenOptions={{ headerShown: false, statusBarStyle: 'dark' }} />
+      </ModalProvider>
     </QueryClientProvider>
   );
 }

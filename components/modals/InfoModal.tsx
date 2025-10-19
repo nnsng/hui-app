@@ -1,16 +1,14 @@
 import { Loading } from '@/components';
 import { List, Modal } from '@/components/ui';
 import { colors } from '@/constants/colors';
+import { useModal } from '@/contexts/ModalContext';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { StyleSheet } from 'react-native';
 
-type InfoModalProps = {
-  visible: boolean;
-  onClose: () => void;
-};
+export function InfoModal() {
+  const { visible, onClose } = useModal('info');
 
-export function InfoModal({ visible, onClose }: InfoModalProps) {
   const { data: group, isLoading } = useActiveGroupQuery();
   const isPayout = !isLoading && !!group?.payoutDate;
 

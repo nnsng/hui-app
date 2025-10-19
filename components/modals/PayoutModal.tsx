@@ -1,16 +1,14 @@
 import { Input, List, Modal } from '@/components/ui';
+import { useModal } from '@/contexts/ModalContext';
 import { usePayoutMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, type TextInput } from 'react-native';
 
-type PayoutModalProps = {
-  visible: boolean;
-  onClose: () => void;
-};
+export function PayoutModal() {
+  const { visible, onClose } = useModal('payout');
 
-export function PayoutModal({ visible, onClose }: PayoutModalProps) {
   const { data: periods = [] } = usePeriodsQuery();
   const { data: group } = useActiveGroupQuery();
   const { mutateAsync: onPayout, isPending } = usePayoutMutation();

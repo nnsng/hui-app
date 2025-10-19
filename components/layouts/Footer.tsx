@@ -1,9 +1,9 @@
-import { PayoutModal } from '@/components/modals';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
+import { useModal } from '@/contexts/ModalContext';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export function Footer() {
@@ -12,41 +12,39 @@ export function Footer() {
 
   const isPayout = !isLoading && !!group?.payoutDate;
 
-  const [openDialog, setOpenDialog] = useState(false);
+  const { onOpen: onOpenPayoutModal } = useModal('payout');
 
   const totalProfit = useMemo(() => {
     if (!periods) return 0;
     return periods.reduce((acc, item) => acc + item.bidAmount, 0);
   }, [periods]);
 
+  if (isPayout) {
+    return (
+      <View style={styles.footer}>
+        <View style={styles.content}>
+          <Text style={styles.label}>Đã hốt hụi</Text>
+          <Text style={styles.value}>{group.payoutDate}</Text>
+        </View>
+
+        <View style={styles.content}>
+          <Text style={styles.label}>Số tiền</Text>
+          <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.footer}>
-      {isPayout ? (
-        <>
-          <View style={styles.content}>
-            <Text style={styles.label}>Đã hốt hụi</Text>
-            <Text style={styles.value}>{group.payoutDate}</Text>
-          </View>
+      <Button disabled={isPayout} onPress={onOpenPayoutModal}>
+        Hốt hụi
+      </Button>
 
-          <View style={styles.content}>
-            <Text style={styles.label}>Số tiền</Text>
-            <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
-          </View>
-        </>
-      ) : (
-        <>
-          <Button disabled={isPayout} onPress={() => setOpenDialog(true)}>
-            Hốt hụi
-          </Button>
-
-          <View style={styles.content}>
-            <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
-            <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
-          </View>
-        </>
-      )}
-
-      <PayoutModal visible={openDialog} onClose={() => setOpenDialog(false)} />
+      <View style={styles.content}>
+        <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
+        <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
+      </View>
     </View>
   );
 }

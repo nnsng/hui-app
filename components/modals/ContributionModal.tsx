@@ -1,16 +1,14 @@
 import { Input, List, Modal } from '@/components/ui';
+import { useModal } from '@/contexts/ModalContext';
 import { useContributeMutation } from '@/hooks/mutations';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, type TextInput } from 'react-native';
 
-type ContributionModalProps = {
-  visible: boolean;
-  onClose: () => void;
-};
+export function ContributionModal() {
+  const { visible, onClose } = useModal('contribution');
 
-export function ContributionModal({ visible, onClose }: ContributionModalProps) {
   const { mutateAsync: onContribute, isPending } = useContributeMutation();
   const { data: group, isLoading } = useActiveGroupQuery();
   const isPayout = !isLoading && !!group?.payoutDate;
