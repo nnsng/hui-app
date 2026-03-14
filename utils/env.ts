@@ -1,9 +1,12 @@
-export const env = {
-  NOTION_API_URL: '',
-  NOTION_VERSION: '',
-  NOTION_API_KEY: '',
-  NOTION_GROUP_DATABASE_ID: '',
-  NOTION_PERIOD_DATABASE_ID: '',
+import { z } from 'zod';
 
-  DATE_API_URL: '',
-};
+const envSchema = z.object({
+  EXPO_PUBLIC_NOTION_API_URL: z.string(),
+  EXPO_PUBLIC_NOTION_VERSION: z.string(),
+  EXPO_PUBLIC_NOTION_API_KEY: z.string(),
+  EXPO_PUBLIC_NOTION_GROUP_DATABASE_ID: z.string(),
+  EXPO_PUBLIC_NOTION_PERIOD_DATABASE_ID: z.string(),
+  EXPO_PUBLIC_DATE_API_URL: z.string(),
+});
+
+export const env = envSchema.parse(process.env);

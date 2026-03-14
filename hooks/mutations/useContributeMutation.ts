@@ -17,7 +17,7 @@ const contribute = async ({ period, bidAmount, isPayout, groupId }: ContributePa
     const url = '/pages';
     const payload = {
       parent: {
-        database_id: env.NOTION_PERIOD_DATABASE_ID,
+        database_id: env.EXPO_PUBLIC_NOTION_PERIOD_DATABASE_ID,
       },
       properties: {
         period: { title: [{ text: { content: period } }] },

@@ -6,7 +6,7 @@ import { mapNotionHuiPeriods } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 
 const getPeriods = async (groupId: string) => {
-  const url = `/databases/${env.NOTION_PERIOD_DATABASE_ID}/query`;
+  const url = `/databases/${env.EXPO_PUBLIC_NOTION_PERIOD_DATABASE_ID}/query`;
   const payload = {
     filter: {
       property: 'group_name',
