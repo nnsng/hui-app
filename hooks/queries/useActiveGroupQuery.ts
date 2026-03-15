@@ -13,7 +13,7 @@ const getActiveGroup = async () => {
       },
     },
   };
-  const url = `/databases/${env.EXPO_PUBLIC_NOTION_GROUP_DATABASE_ID}/query`;
+  const url = `/data_sources/${env.EXPO_PUBLIC_NOTION_GROUP_DATA_SOURCE_ID}/query`;
   const response = await notionApi.post(url, payload);
   return mapNotionHuiGroup(response);
 };
