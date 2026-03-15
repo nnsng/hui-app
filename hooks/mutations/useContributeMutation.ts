@@ -1,7 +1,6 @@
 import { queryKeys } from '@/constants/query-keys';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
 import { notionApi } from '@/utils/api';
-import { env } from '@/utils/env';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
@@ -17,7 +16,7 @@ const contribute = async ({ period, bidAmount, isPayout, groupId }: ContributePa
     const url = '/pages';
     const payload = {
       parent: {
-        data_source_id: env.EXPO_PUBLIC_NOTION_PERIOD_DATA_SOURCE_ID,
+        data_source_id: process.env.EXPO_PUBLIC_NOTION_PERIOD_DATA_SOURCE_ID,
       },
       properties: {
         period: { title: [{ text: { content: period } }] },

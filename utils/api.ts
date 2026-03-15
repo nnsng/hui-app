@@ -1,12 +1,11 @@
-import { env } from '@/utils/env';
 import axios from 'axios';
 
 export const notionApi = axios.create({
-  baseURL: env.EXPO_PUBLIC_NOTION_API_URL,
+  baseURL: process.env.EXPO_PUBLIC_NOTION_API_URL,
   headers: {
-    Authorization: `Bearer ${env.EXPO_PUBLIC_NOTION_API_KEY}`,
+    Authorization: `Bearer ${process.env.EXPO_PUBLIC_NOTION_API_KEY}`,
     'Content-Type': 'application/json',
-    'Notion-Version': env.EXPO_PUBLIC_NOTION_VERSION,
+    'Notion-Version': process.env.EXPO_PUBLIC_NOTION_VERSION,
   },
 });
 
@@ -15,7 +14,7 @@ notionApi.interceptors.response.use((response) => {
 });
 
 export const dateApi = axios.create({
-  baseURL: env.EXPO_PUBLIC_DATE_API_URL,
+  baseURL: process.env.EXPO_PUBLIC_DATE_API_URL,
 });
 
 dateApi.interceptors.response.use((response) => {

@@ -1,12 +1,11 @@
 import { queryKeys } from '@/constants/query-keys';
 import { useActiveGroupQuery } from '@/hooks/queries/useActiveGroupQuery';
 import { notionApi } from '@/utils/api';
-import { env } from '@/utils/env';
 import { mapNotionHuiPeriods } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 
 const getPeriods = async (groupId: string) => {
-  const url = `/data_sources/${env.EXPO_PUBLIC_NOTION_PERIOD_DATA_SOURCE_ID}/query`;
+  const url = `/data_sources/${process.env.EXPO_PUBLIC_NOTION_PERIOD_DATA_SOURCE_ID}/query`;
   const payload = {
     filter: {
       property: 'group_name',
