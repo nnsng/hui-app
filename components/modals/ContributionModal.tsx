@@ -10,8 +10,8 @@ export function ContributionModal() {
   const { visible, onClose } = useModal('contribution');
 
   const { mutateAsync: onContribute, isPending } = useContributeMutation();
-  const { data: group, isLoading } = useActiveGroupQuery();
-  const isPayout = !isLoading && !!group?.payoutDate;
+  const { data: group } = useActiveGroupQuery();
+  const isPayout = !!group?.isPayout;
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);

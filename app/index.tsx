@@ -10,16 +10,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
   const { data: group, isLoading: isLoadingGroup } = useActiveGroupQuery();
-  const { data: periods, isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
+  const { data: periods = [], isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
 
   const { onOpen: onOpenInformationModal } = useModal('info');
-  const { onOpen: onOpenContribution } = useModal('contribution');
+  const { onOpen: onOpenContributionModal } = useModal('contribution');
 
   if (isLoadingGroup || isLoadingPeriods) return <Loading />;
 
   if (isError) return <Error message={error.message} />;
 
-  const isLastPeriod = (periods?.length ?? 0) + 1 >= (group?.totalMembers ?? 0);
+  const canContribute = periods.length < Number(group?.totalMembers) - (group?.isPayout ? 0 : 1);
 
   return (
     <SafeAreaView style={styles.app}>
@@ -31,7 +31,7 @@ export default function Index() {
             Thông tin
           </Button>
 
-          <Button disabled={isLastPeriod} style={styles.button} onPress={onOpenContribution}>
+          <Button disabled={!canContribute} style={styles.button} onPress={onOpenContributionModal}>
             Đóng hụi
           </Button>
         </View>

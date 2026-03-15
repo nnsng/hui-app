@@ -7,7 +7,7 @@ type ModalItemState = {
   onClose: () => void;
 };
 type ModalState = {
-  [key in ModalKey]: ModalItemState;
+  [K in ModalKey]: ModalItemState;
 };
 type ContextValue = {
   state: ModalState;
@@ -46,9 +46,7 @@ const reducer = (state: ModalState, action: { modal: ModalKey; value: boolean })
 export default function ModalProvider(props: PropsWithChildren) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  return (
-    <ModalContext.Provider value={{ state, dispatch }}>{props.children}</ModalContext.Provider>
-  );
+  return <ModalContext value={{ state, dispatch }}>{props.children}</ModalContext>;
 }
 
 export function useModal(modal: ModalKey): ModalItemState {

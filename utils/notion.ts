@@ -1,11 +1,11 @@
 import type { HuiGroup, HuiPeriod } from '@/types';
 import { formatDate } from '@/utils/date';
 
-export const mapNotionHuiGroup = (data: any): HuiGroup => {
+export const mapNotionHuiGroup = (data: any[]): HuiGroup => {
   try {
-    if (!Array.isArray(data?.results) || data.results.length === 0) return {} as HuiGroup;
+    if (!Array.isArray(data) || data.length === 0) return {} as HuiGroup;
 
-    const result = data.results[0];
+    const { id, properties } = data[0];
     const {
       name,
       total_members,
@@ -18,18 +18,19 @@ export const mapNotionHuiGroup = (data: any): HuiGroup => {
       difference,
       status,
       note,
-    } = result.properties;
-    const payoutDate = payout_date.date?.start ?? '';
+    } = properties;
+    const payoutDate = formatDate(payout_date.date?.start ?? '');
 
     return {
-      id: result.id,
+      id: id,
       name: name.title?.[0]?.plain_text ?? '',
       totalMembers: total_members.number ?? 0,
       contributionAmount: contribution_amount.number ?? 0,
       minimumBid: minimum_bid.number ?? 0,
       managerFee: manager_fee.number ?? 0,
       startDate: start_date.date?.start ?? '',
-      payoutDate: formatDate(payoutDate),
+      isPayout: !!payoutDate,
+      payoutDate: payoutDate,
       payoutAmount: payout_amount.number ?? 0,
       difference: difference.number ?? 0,
       status: status.select?.name ?? '',
@@ -41,17 +42,16 @@ export const mapNotionHuiGroup = (data: any): HuiGroup => {
   }
 };
 
-export const mapNotionHuiPeriods = (data: any) => {
+export const mapNotionHuiPeriods = (data: any[]) => {
   try {
-    const results = data?.results;
-    if (!Array.isArray(results) || results.length === 0) return [];
+    if (!Array.isArray(data) || data.length === 0) return [];
 
-    return results.map((result: any): HuiPeriod => {
-      const { period, contribution_date, bid_amount, is_payout } = result.properties;
+    return data.map((item): HuiPeriod => {
+      const { period, contribution_date, bid_amount, is_payout } = item.properties;
       const contributionDate = contribution_date.date?.start ?? '';
 
       return {
-        id: result.id ?? '',
+        id: item.id ?? '',
         period: period.title?.[0]?.plain_text ?? '0',
         contributionDate: formatDate(contributionDate),
         contributionDateLunar: '',

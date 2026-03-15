@@ -7,15 +7,13 @@ import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export function Footer() {
-  const { data: periods } = usePeriodsQuery();
-  const { data: group, isLoading } = useActiveGroupQuery();
-
-  const isPayout = !isLoading && !!group?.payoutDate;
+  const { data: periods = [] } = usePeriodsQuery();
+  const { data: group } = useActiveGroupQuery();
+  const isPayout = !!group?.isPayout;
 
   const { onOpen: onOpenPayoutModal } = useModal('payout');
 
   const totalProfit = useMemo(() => {
-    if (!periods) return 0;
     return periods.reduce((acc, item) => acc + item.bidAmount, 0);
   }, [periods]);
 
@@ -28,7 +26,7 @@ export function Footer() {
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.label}>Số tiền</Text>
+          <Text style={styles.label}>Số tiền hốt hụi</Text>
           <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
         </View>
       </View>

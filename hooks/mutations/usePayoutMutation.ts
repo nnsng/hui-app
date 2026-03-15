@@ -12,6 +12,8 @@ type PayoutPayload = {
   difference: number;
 };
 
+type PayoutPayloadWithoutGroupId = Omit<PayoutPayload, 'groupId'>;
+
 const payout = async ({ groupId, payoutAmount, difference }: PayoutPayload) => {
   const url = `/pages/${groupId}`;
   const payload = {
@@ -27,16 +29,16 @@ const payout = async ({ groupId, payoutAmount, difference }: PayoutPayload) => {
 export function usePayoutMutation() {
   const queryClient = useQueryClient();
 
-  const { mutate: onContribute } = useContributeMutation();
+  const { mutateAsync: onContribute } = useContributeMutation();
   const { data: group } = useActiveGroupQuery();
   const groupId = group?.id || '';
 
   return useMutation({
-    mutationFn: async (payload: Omit<PayoutPayload, 'groupId'>) => {
+    mutationFn: async (payload: PayoutPayloadWithoutGroupId) => {
       await payout({ ...payload, groupId });
     },
-    onMutate: ({ bidAmount }) => {
-      onContribute({ bidAmount, isPayout: true });
+    onMutate: async ({ bidAmount }) => {
+      await onContribute({ bidAmount, isPayout: true });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.group] });

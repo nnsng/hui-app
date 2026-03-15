@@ -15,6 +15,7 @@ export type HuiGroup = {
   minimumBid: number;
   managerFee: number;
   startDate: string;
+  isPayout: boolean;
   payoutDate?: string;
   payoutAmount?: number;
   difference?: number;

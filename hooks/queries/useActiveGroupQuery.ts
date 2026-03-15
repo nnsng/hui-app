@@ -12,10 +12,11 @@ const getActiveGroup = async () => {
         equals: 'active',
       },
     },
+    page_size: 1,
   };
   const url = `/data_sources/${env.EXPO_PUBLIC_NOTION_GROUP_DATA_SOURCE_ID}/query`;
-  const response = await notionApi.post(url, payload);
-  return mapNotionHuiGroup(response);
+  const response: any = await notionApi.post(url, payload);
+  return mapNotionHuiGroup(response.results);
 };
 
 export function useActiveGroupQuery() {

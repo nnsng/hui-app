@@ -22,7 +22,7 @@ export function PayoutModal() {
   const bidAmount = Number(input);
 
   const totalContribution = useMemo(() => {
-    if (!periods || !group) return 0;
+    if (!group || periods.length === 0) return 0;
 
     const { totalMembers, contributionAmount } = group;
 
@@ -33,10 +33,10 @@ export function PayoutModal() {
     const futureContribution = remainingPlayers * contributionAmount;
 
     return pastContribution + futureContribution;
-  }, [periods, group]);
+  }, [group, periods]);
 
   const totalPayout = useMemo(() => {
-    if (!periods || !group) return 0;
+    if (!group || periods.length === 0) return 0;
 
     const { totalMembers, contributionAmount, managerFee } = group;
 
@@ -46,7 +46,7 @@ export function PayoutModal() {
     const futurePayout = remainingPlayers * netContribution;
 
     return pastPayout + futurePayout - managerFee;
-  }, [periods, group, bidAmount]);
+  }, [group, periods, bidAmount]);
 
   const difference = totalPayout - totalContribution;
 

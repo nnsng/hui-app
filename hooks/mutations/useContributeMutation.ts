@@ -37,13 +37,13 @@ const contribute = async ({ period, bidAmount, isPayout, groupId }: ContributePa
 export function useContributeMutation() {
   const queryClient = useQueryClient();
 
-  const { data: periods } = usePeriodsQuery();
+  const { data: periods = [] } = usePeriodsQuery();
   const { data: group } = useActiveGroupQuery();
   const groupId = group?.id || '';
 
   return useMutation({
     mutationFn: async (payload: Pick<ContributePayload, 'bidAmount' | 'isPayout'>) => {
-      const nextPeriod = (periods?.length ?? 0) + 1;
+      const nextPeriod = periods.length + 1;
       await contribute({
         ...payload,
         period: String(nextPeriod),

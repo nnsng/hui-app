@@ -10,7 +10,6 @@ export function InfoModal() {
   const { visible, onClose } = useModal('info');
 
   const { data: group, isLoading } = useActiveGroupQuery();
-  const isPayout = !isLoading && !!group?.payoutDate;
 
   const listData = [
     {
@@ -53,7 +52,7 @@ export function InfoModal() {
       ) : (
         <>
           <List data={listData} style={styles.list} />
-          {isPayout && <List data={payoutData} style={styles.payoutList} />}
+          {group?.isPayout && <List data={payoutData} style={styles.payoutList} />}
         </>
       )}
     </Modal>

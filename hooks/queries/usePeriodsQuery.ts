@@ -21,8 +21,8 @@ const getPeriods = async (groupId: string) => {
       },
     ],
   };
-  const data = await notionApi.post(url, payload);
-  return mapNotionHuiPeriods(data);
+  const response: any = await notionApi.post(url, payload);
+  return mapNotionHuiPeriods(response.results);
 };
 
 export function usePeriodsQuery() {

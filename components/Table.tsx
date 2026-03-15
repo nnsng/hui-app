@@ -10,7 +10,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from '
 export function Table() {
   const { refetch: refetchGroup, isRefetching: isRefetchingGroup } = useActiveGroupQuery();
   const {
-    data: periods,
+    data: periods = [],
     refetch: refetchPeriods,
     isRefetching: isRefetchingPeriods,
   } = usePeriodsQuery();
@@ -60,7 +60,7 @@ export function Table() {
       </View>
 
       <ScrollView style={styles.body}>
-        {periods && periods.length > 0 ? (
+        {periods.length > 0 ? (
           periods.map((row) => <TableRow key={row.id} row={row} />)
         ) : (
           <Text style={[styles.cell, styles.emptyCell]}>chưa đóng hụi</Text>
