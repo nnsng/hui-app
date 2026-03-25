@@ -49,7 +49,7 @@ export function ContributionModal() {
 
   const listData = [
     {
-      label: 'Số tiền kêu',
+      label: 'Số tiền bỏ hụi',
       value: formatCurrency(input),
       enabled: !isPayout,
     },
@@ -74,7 +74,7 @@ export function ContributionModal() {
       {!isPayout && (
         <Input
           inputRef={inputRef}
-          placeholder="Số tiền kêu"
+          placeholder="Số tiền bỏ hụi"
           keyboardType="numeric"
           value={input}
           onChangeText={handleChangeText}

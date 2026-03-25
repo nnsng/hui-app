@@ -38,17 +38,17 @@ export function PayoutModal() {
   const totalPayout = useMemo(() => {
     if (!group || periods.length === 0) return 0;
 
-    const { totalMembers, contributionAmount, managerFee } = group;
+    const { totalMembers, contributionAmount } = group;
 
     const pastPayout = periods.length * contributionAmount;
     const remainingPlayers = totalMembers - periods.length - 1;
     const netContribution = contributionAmount - bidAmount;
     const futurePayout = remainingPlayers * netContribution;
 
-    return pastPayout + futurePayout - managerFee;
+    return pastPayout + futurePayout;
   }, [group, periods, bidAmount]);
 
-  const difference = totalPayout - totalContribution;
+  const difference = totalPayout - totalContribution - group!.managerFee;
 
   useEffect(() => {
     if (visible) {
@@ -78,13 +78,17 @@ export function PayoutModal() {
 
   const listData = [
     {
-      label: 'Số tiền kêu',
+      label: 'Số tiền bỏ hụi',
       value: formatCurrency(input),
       enabled: !isLastPeriod,
     },
     {
       label: 'Số tiền hốt hụi',
       value: formatCurrency(totalPayout),
+    },
+    {
+      label: 'Số tiền nhận được',
+      value: formatCurrency(totalPayout - group!.managerFee),
     },
     {
       label: 'Chênh lệch',
@@ -107,7 +111,7 @@ export function PayoutModal() {
       {!isLastPeriod && (
         <Input
           inputRef={inputRef}
-          placeholder="Số tiền kêu"
+          placeholder="Số tiền bỏ hụi"
           keyboardType="numeric"
           value={input}
           onChangeText={handleChangeText}

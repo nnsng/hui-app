@@ -1,5 +1,6 @@
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
+import type { HuiGroup, HuiPeriod } from '@/types';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,7 +8,11 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function Table() {
-  const { refetch: refetchGroup, isRefetching: isRefetchingGroup } = useActiveGroupQuery();
+  const {
+    data: group,
+    refetch: refetchGroup,
+    isRefetching: isRefetchingGroup,
+  } = useActiveGroupQuery();
   const {
     data: periods = [],
     refetch: refetchPeriods,
@@ -55,29 +60,49 @@ export function Table() {
           </TouchableOpacity>
         </Text>
         <Text style={[styles.headerCell, styles.dateCell]}>Ngày</Text>
-        <Text style={[styles.headerCell, styles.bidCell]}>Tiền kêu</Text>
+        <Text style={[styles.headerCell, styles.bidCell]}>Tiền bỏ hụi</Text>
       </View>
 
       <ScrollView style={styles.body}>
         {periods.length > 0 ? (
-          periods.map((row) => (
-            <View key={row.id} style={[styles.row, row.isPayout ? styles.payout : {}]}>
-              <View style={[styles.cell, styles.idCell]}>
-                <Text style={styles.idCellText}>{row.period}</Text>
-              </View>
-              <View style={[styles.cell, styles.dateCell]}>
-                <Text>DL: {formatDate(row.contributionDate)}</Text>
-                <Text>ÂL: {row.contributionDateLunar}</Text>
-              </View>
-              <View style={[styles.cell, styles.bidCell]}>
-                <Text>{formatCurrency(row.bidAmount)}</Text>
-              </View>
-            </View>
-          ))
+          periods.map((row) => <TableRow key={row.id} row={row} group={group!} />)
         ) : (
           <Text style={[styles.cell, styles.emptyCell]}>chưa đóng hụi</Text>
         )}
       </ScrollView>
+    </View>
+  );
+}
+
+type TableRowProps = {
+  row: HuiPeriod;
+  group: HuiGroup;
+};
+
+function TableRow({ row, group }: TableRowProps) {
+  const isPayoutDate = row.contributionDate === group.payoutDate;
+  const isPayout = !isPayoutDate && row.bidAmount === 0;
+
+  const lunarDateShort = row.contributionDateLunar.split('/').slice(0, 2).join('/');
+
+  return (
+    <View key={row.id} style={[styles.row, isPayout ? styles.payout : {}]}>
+      <View style={[styles.cell, styles.idCell]}>
+        <Text style={styles.idCellText}>
+          {isPayoutDate ? (
+            <MaterialIcons name="star" size={18} color={colors.primary} />
+          ) : (
+            <>{row.period}</>
+          )}
+        </Text>
+      </View>
+      <View style={[styles.cell, styles.dateCell]}>
+        <Text>{formatDate(row.contributionDate)}</Text>
+        <Text>ÂL: {lunarDateShort}</Text>
+      </View>
+      <View style={[styles.cell, styles.bidCell]}>
+        <Text>{formatCurrency(row.bidAmount)}</Text>
+      </View>
     </View>
   );
 }
@@ -113,11 +138,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f1f3f5',
   },
-  rowHighlighted: {
-    backgroundColor: '#f8f9fa',
-  },
   payout: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#fafafa',
   },
   cell: {
     flex: 1,
