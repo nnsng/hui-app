@@ -22,3 +22,5 @@ export type HuiGroup = {
   status?: 'active' | 'finished';
   note?: string;
 };
+
+export type HuiGroupWithoutIsPayout = Omit<HuiGroup, 'isPayout'>;

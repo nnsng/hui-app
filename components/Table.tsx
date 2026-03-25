@@ -1,10 +1,9 @@
 import { colors } from '@/constants/colors';
 import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
-import type { HuiPeriod } from '@/types';
 import { formatCurrency } from '@/utils/currency';
-import { getLunarDate } from '@/utils/date';
+import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function Table() {
@@ -61,37 +60,24 @@ export function Table() {
 
       <ScrollView style={styles.body}>
         {periods.length > 0 ? (
-          periods.map((row) => <TableRow key={row.id} row={row} />)
+          periods.map((row) => (
+            <View key={row.id} style={[styles.row, row.isPayout ? styles.payout : {}]}>
+              <View style={[styles.cell, styles.idCell]}>
+                <Text style={styles.idCellText}>{row.period}</Text>
+              </View>
+              <View style={[styles.cell, styles.dateCell]}>
+                <Text>DL: {formatDate(row.contributionDate)}</Text>
+                <Text>ÂL: {row.contributionDateLunar}</Text>
+              </View>
+              <View style={[styles.cell, styles.bidCell]}>
+                <Text>{formatCurrency(row.bidAmount)}</Text>
+              </View>
+            </View>
+          ))
         ) : (
           <Text style={[styles.cell, styles.emptyCell]}>chưa đóng hụi</Text>
         )}
       </ScrollView>
-    </View>
-  );
-}
-
-function TableRow({ row }: { row: HuiPeriod }) {
-  const [lunarDate, setLunarDate] = useState('');
-
-  useEffect(() => {
-    (async () => {
-      const lunarDate = await getLunarDate(row.contributionDate);
-      setLunarDate(lunarDate);
-    })();
-  }, [row.contributionDate]);
-
-  return (
-    <View style={[styles.row, row.isPayout ? styles.payout : {}]}>
-      <View style={[styles.cell, styles.idCell]}>
-        <Text style={styles.idCellText}>{row.period}</Text>
-      </View>
-      <View style={[styles.cell, styles.dateCell]}>
-        <Text>DL: {row.contributionDate}</Text>
-        <Text>ÂL: {lunarDate}</Text>
-      </View>
-      <View style={[styles.cell, styles.bidCell]}>
-        <Text>{formatCurrency(row.bidAmount)}</Text>
-      </View>
     </View>
   );
 }

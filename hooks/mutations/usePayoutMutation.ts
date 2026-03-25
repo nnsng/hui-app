@@ -1,6 +1,7 @@
 import { queryKeys } from '@/constants/query-keys';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { notionApi } from '@/utils/api';
+import { mapValueToNotionProperty } from '@/utils/notion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useContributeMutation } from './useContributeMutation';
@@ -15,14 +16,15 @@ type PayoutPayload = {
 type PayoutPayloadWithoutGroupId = Omit<PayoutPayload, 'groupId'>;
 
 const payout = async ({ groupId, payoutAmount, difference }: PayoutPayload) => {
-  const url = `/pages/${groupId}`;
+  const today = dayjs().format('YYYY-MM-DD');
   const payload = {
     properties: {
-      payout_date: { date: { start: dayjs().format('YYYY-MM-DD') } },
-      payout_amount: { number: payoutAmount },
-      difference: { number: difference },
+      payoutDate: mapValueToNotionProperty(today, 'date'),
+      payoutAmount: mapValueToNotionProperty(payoutAmount, 'number'),
+      difference: mapValueToNotionProperty(difference, 'number'),
     },
   };
+  const url = `/pages/${groupId}`;
   return notionApi.patch(url, payload);
 };
 

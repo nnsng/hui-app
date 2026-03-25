@@ -9,16 +9,13 @@ type ConvertToLunarResponse = {
 };
 
 export const formatDate = (date: string) => {
-  if (!date) return '';
-  return dayjs(date, { format: 'YYYY-MM-DD' }).format('DD/MM/YYYY');
+  return dayjs(date).format('DD/MM/YYYY');
 };
 
 export const getLunarDate = async (sonarDate: string) => {
-  if (!sonarDate) return '';
-
-  const [day, month, year] = sonarDate.split('/').map(Number);
+  const [year, month, day] = sonarDate.split('-').map(Number);
   const payload = { year, month, day };
   const response: ConvertToLunarResponse = await dateApi.post('/convert-to-lunar', payload);
   const lunarDate = response.date;
-  return formatDate(lunarDate);
+  return dayjs(lunarDate).format('YYYY-MM-DD');
 };

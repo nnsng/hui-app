@@ -4,6 +4,7 @@ import { colors } from '@/constants/colors';
 import { useModal } from '@/contexts/ModalContext';
 import { useActiveGroupQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
+import { formatDate } from '@/utils/date';
 import { StyleSheet } from 'react-native';
 
 export function InfoModal() {
@@ -33,7 +34,7 @@ export function InfoModal() {
   const payoutData = [
     {
       label: 'Ngày hốt hụi',
-      value: group?.payoutDate ?? '',
+      value: formatDate(group?.payoutDate!),
     },
     {
       label: 'Tiền hốt hụi',

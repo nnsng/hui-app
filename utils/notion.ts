@@ -1,66 +1,72 @@
-import type { HuiGroup, HuiPeriod } from '@/types';
-import { formatDate } from '@/utils/date';
+import type { HuiGroup, HuiGroupWithoutIsPayout, HuiPeriod } from '@/types';
 
-export const mapNotionHuiGroup = (data: any[]): HuiGroup => {
-  try {
-    if (!Array.isArray(data) || data.length === 0) return {} as HuiGroup;
+type PropertyType =
+  | 'title'
+  | 'rich_text'
+  | 'number'
+  | 'date'
+  | 'select'
+  | 'relation'
+  | (string & {});
 
-    const { id, properties } = data[0];
-    const {
-      name,
-      total_members,
-      contribution_amount,
-      minimum_bid,
-      manager_fee,
-      start_date,
-      payout_date,
-      payout_amount,
-      difference,
-      status,
-      note,
-    } = properties;
-    const payoutDate = formatDate(payout_date.date?.start ?? '');
-
-    return {
-      id: id,
-      name: name.title?.[0]?.plain_text ?? '',
-      totalMembers: total_members.number ?? 0,
-      contributionAmount: contribution_amount.number ?? 0,
-      minimumBid: minimum_bid.number ?? 0,
-      managerFee: manager_fee.number ?? 0,
-      startDate: start_date.date?.start ?? '',
-      isPayout: !!payoutDate,
-      payoutDate: payoutDate,
-      payoutAmount: payout_amount.number ?? 0,
-      difference: difference.number ?? 0,
-      status: status.select?.name ?? '',
-      note: note.rich_text?.[0]?.plain_text ?? '',
-    };
-  } catch (error) {
-    console.error('Error mapping notion hui group:', error);
-    return {} as HuiGroup;
+export const mapValueToNotionProperty = (value: any, propertyType: PropertyType) => {
+  switch (propertyType) {
+    case 'title':
+      return { title: [{ text: { content: value } }] };
+    case 'rich_text':
+      return { rich_text: [{ text: { content: value } }] };
+    case 'number':
+      return { number: value };
+    case 'date':
+      return { date: { start: value } };
+    case 'select':
+      return { select: { name: value } };
+    case 'checkbox':
+      return { checkbox: value };
+    case 'relation':
+      return { relation: [{ id: value }] };
+    default:
+      return { [value.type]: value };
   }
 };
 
-export const mapNotionHuiPeriods = (data: any[]) => {
-  try {
-    if (!Array.isArray(data) || data.length === 0) return [];
-
-    return data.map((item): HuiPeriod => {
-      const { period, contribution_date, bid_amount, is_payout } = item.properties;
-      const contributionDate = contribution_date.date?.start ?? '';
-
-      return {
-        id: item.id ?? '',
-        period: period.title?.[0]?.plain_text ?? '0',
-        contributionDate: formatDate(contributionDate),
-        contributionDateLunar: '',
-        bidAmount: bid_amount.number ?? 0,
-        isPayout: is_payout.checkbox ?? false,
-      };
-    });
-  } catch (error) {
-    console.error('Error mapping notion hui periods:', error);
-    return [];
+const getNotionPropertyValue = (property: any) => {
+  switch (property.type as PropertyType) {
+    case 'title':
+      return property.title?.[0]?.plain_text ?? '';
+    case 'rich_text':
+      return property.rich_text?.[0]?.plain_text ?? '';
+    case 'number':
+      return property.number ?? 0;
+    case 'date':
+      return property.date?.start;
+    case 'select':
+      return property.select?.name ?? '';
+    case 'checkbox':
+      return property.checkbox ?? false;
+    default:
+      return property[property.type] ?? '';
   }
+};
+
+export const transformNotionPageToObject = <T extends object>(page: any): T => {
+  const pageProperties: Record<string, any> = page.properties;
+  const properties = Object.keys(pageProperties).reduce((data, key) => {
+    const value = pageProperties[key];
+    if (value.type === 'relation') return data;
+    return { ...data, [key]: getNotionPropertyValue(value) };
+  }, {});
+
+  return { id: page.id, ...properties } as T;
+};
+
+export const getHuiGroupFromNotion = (data: any[]): HuiGroup => {
+  if (!Array.isArray(data) || data.length === 0) return {} as HuiGroup;
+  const group = transformNotionPageToObject<HuiGroupWithoutIsPayout>(data[0]);
+  return { ...group, isPayout: !!group.payoutDate };
+};
+
+export const getHuiPeriodsFromNotion = (data: any[]) => {
+  if (!Array.isArray(data) || data.length === 0) return [];
+  return data.map(transformNotionPageToObject<HuiPeriod>);
 };
