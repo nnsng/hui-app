@@ -8,8 +8,8 @@ type ConvertToLunarResponse = {
   date: string;
 };
 
-export const formatDate = (date: string) => {
-  return dayjs(date).format('DD/MM/YYYY');
+export const formatDate = (date: string, template = 'DD/MM/YYYY') => {
+  return dayjs(date).format(template);
 };
 
 export const getLunarDate = async (sonarDate: string) => {
@@ -17,5 +17,5 @@ export const getLunarDate = async (sonarDate: string) => {
   const payload = { year, month, day };
   const response: ConvertToLunarResponse = await dateApi.post('/convert-to-lunar', payload);
   const lunarDate = response.date;
-  return dayjs(lunarDate).format('YYYY-MM-DD');
+  return formatDate(lunarDate, 'YYYY-MM-DD');
 };

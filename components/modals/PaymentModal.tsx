@@ -1,17 +1,17 @@
 import { Input, List, Modal } from '@/components/ui';
 import { useModal } from '@/contexts/ModalContext';
-import { useContributeMutation } from '@/hooks/mutations';
-import { useActiveGroupQuery } from '@/hooks/queries';
+import { useMakePaymentMutation } from '@/hooks/mutations';
+import { useActiveCycleQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, type TextInput } from 'react-native';
 
-export function ContributionModal() {
-  const { visible, onClose } = useModal('contribution');
+export function PaymentModal() {
+  const { visible, onClose } = useModal('payment');
 
-  const { mutateAsync: onContribute, isPending } = useContributeMutation();
-  const { data: group } = useActiveGroupQuery();
-  const isPayout = !!group?.isPayout;
+  const { mutateAsync: onMakePayment, isPending } = useMakePaymentMutation();
+  const { data: cycle } = useActiveCycleQuery();
+  const isReceived = !!cycle!.receivedDate;
 
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
@@ -19,13 +19,13 @@ export function ContributionModal() {
   const inputRef = useRef<TextInput>(null);
 
   const bidAmount = Number(input);
-  const contributedAmount = (group?.contributionAmount ?? 0) - bidAmount;
+  const paymentAmount = (cycle?.totalAmount ?? 0) - bidAmount;
 
   useEffect(() => {
-    if (visible && !isPayout) {
+    if (visible && !isReceived) {
       inputRef.current?.focus();
     }
-  }, [visible, isPayout]);
+  }, [visible, isReceived]);
 
   const handleChangeText = (text: string) => {
     setInput(text);
@@ -42,7 +42,7 @@ export function ContributionModal() {
     if (error) return;
 
     setError(false);
-    await onContribute({ bidAmount, isPayout: bidAmount === 0 });
+    await onMakePayment({ bidAmount, status: bidAmount === 0 ? 'dead' : 'normal' });
     setInput('');
     handleClose();
   };
@@ -51,27 +51,27 @@ export function ContributionModal() {
     {
       label: 'Số tiền bỏ hụi',
       value: formatCurrency(input),
-      enabled: !isPayout,
+      enabled: !isReceived,
     },
     {
       label: 'Số tiền cần đóng',
-      value: formatCurrency(contributedAmount),
+      value: formatCurrency(paymentAmount),
     },
   ];
 
   return (
     <Modal
-      title={isPayout ? 'Đóng hụi chết' : 'Đóng hụi'}
+      title={isReceived ? 'Đóng hụi chết' : 'Đóng hụi'}
       visible={visible}
       onClose={handleClose}
       submitButtonProps={{
         children: 'Đóng hụi',
         loading: isPending,
-        disabled: !isPayout && (!input || error),
+        disabled: !isReceived && (!input || error),
         onPress: handleSubmit,
       }}
     >
-      {!isPayout && (
+      {!isReceived && (
         <Input
           inputRef={inputRef}
           placeholder="Số tiền bỏ hụi"
@@ -83,7 +83,7 @@ export function ContributionModal() {
         />
       )}
 
-      {!error && <List data={listData} style={isPayout ? {} : styles.list} />}
+      {!error && <List data={listData} style={isReceived ? {} : styles.list} />}
     </Modal>
   );
 }

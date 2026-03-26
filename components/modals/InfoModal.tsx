@@ -2,7 +2,7 @@ import { Loading } from '@/components';
 import { List, Modal } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useModal } from '@/contexts/ModalContext';
-import { useActiveGroupQuery } from '@/hooks/queries';
+import { useActiveCycleQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { StyleSheet } from 'react-native';
@@ -10,39 +10,39 @@ import { StyleSheet } from 'react-native';
 export function InfoModal() {
   const { visible, onClose } = useModal('info');
 
-  const { data: group, isLoading } = useActiveGroupQuery();
+  const { data: cycle, isLoading } = useActiveCycleQuery();
 
   const listData = [
     {
       label: 'Số người',
-      value: group?.totalMembers ?? 0,
+      value: cycle?.totalRounds ?? 0,
     },
     {
       label: 'Tiền hụi',
-      value: formatCurrency(group?.contributionAmount),
+      value: formatCurrency(cycle?.totalAmount),
     },
     {
       label: 'Tiền dằn',
-      value: formatCurrency(group?.minimumBid),
+      value: formatCurrency(cycle?.minBidAmount),
     },
     {
       label: 'Tiền cò',
-      value: formatCurrency(group?.managerFee),
+      value: formatCurrency(cycle?.commissionFee),
     },
   ];
 
-  const payoutData = [
+  const receivedData = [
     {
       label: 'Ngày hốt hụi',
-      value: formatDate(group?.payoutDate!),
+      value: formatDate(cycle!.receivedDate!),
     },
     {
       label: 'Tiền hốt hụi',
-      value: formatCurrency(group?.payoutAmount),
+      value: formatCurrency(cycle?.receivedAmount),
     },
     {
       label: 'Chênh lệch',
-      value: formatCurrency(group?.difference),
+      value: formatCurrency(cycle?.netProfit),
     },
   ];
 
@@ -53,7 +53,7 @@ export function InfoModal() {
       ) : (
         <>
           <List data={listData} style={styles.list} />
-          {group?.isPayout && <List data={payoutData} style={styles.payoutList} />}
+          {cycle!.receivedDate && <List data={receivedData} style={styles.receiveList} />}
         </>
       )}
     </Modal>
@@ -62,7 +62,7 @@ export function InfoModal() {
 
 const styles = StyleSheet.create({
   list: {},
-  payoutList: {
+  receiveList: {
     marginTop: 10,
     paddingTop: 10,
     borderTopWidth: 1,

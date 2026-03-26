@@ -1,25 +1,26 @@
 import { Error, Loading, Table } from '@/components';
 import { Footer, Header } from '@/components/layouts';
-import { ContributionModal, InfoModal, PayoutModal } from '@/components/modals';
+import { InfoModal, ReceiveModal } from '@/components/modals';
+import { PaymentModal } from '@/components/modals/PaymentModal';
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useModal } from '@/contexts/ModalContext';
-import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
+import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
-  const { data: group, isLoading: isLoadingGroup } = useActiveGroupQuery();
-  const { data: periods = [], isLoading: isLoadingPeriods, isError, error } = usePeriodsQuery();
+  const { data: cycle, isLoading: isLoadingCycle } = useActiveCycleQuery();
+  const { data: rounds = [], isLoading: isLoadingRounds, isError, error } = useRoundsQuery();
 
   const { onOpen: onOpenInformationModal } = useModal('info');
-  const { onOpen: onOpenContributionModal } = useModal('contribution');
+  const { onOpen: onOpenPaymentModal } = useModal('payment');
 
-  if (isLoadingGroup || isLoadingPeriods) return <Loading />;
+  if (isLoadingCycle || isLoadingRounds) return <Loading />;
 
   if (isError) return <Error message={error.message} />;
 
-  const canContribute = periods.length < Number(group?.totalMembers) - (group?.isPayout ? 0 : 1);
+  const canMakePayment = rounds.length < cycle!.totalRounds - (!!cycle!.receivedDate ? 0 : 1);
 
   return (
     <SafeAreaView style={styles.app}>
@@ -31,7 +32,7 @@ export default function Index() {
             Thông tin
           </Button>
 
-          <Button disabled={!canContribute} style={styles.button} onPress={onOpenContributionModal}>
+          <Button disabled={!canMakePayment} style={styles.button} onPress={onOpenPaymentModal}>
             Đóng hụi
           </Button>
         </View>
@@ -45,8 +46,8 @@ export default function Index() {
 
       {/* Modals */}
       <InfoModal />
-      <ContributionModal />
-      <PayoutModal />
+      <PaymentModal />
+      <ReceiveModal />
     </SafeAreaView>
   );
 }

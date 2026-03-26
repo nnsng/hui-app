@@ -1,26 +1,24 @@
-export type HuiPeriod = {
-  id: string;
-  period: `${number}`;
-  contributionDate: string;
-  contributionDateLunar: string;
-  bidAmount: number;
-  isPayout: boolean;
-};
-
-export type HuiGroup = {
+export type Cycle = {
   id: string;
   name: string;
-  totalMembers: number;
-  contributionAmount: number;
-  minimumBid: number;
-  managerFee: number;
+  totalAmount: number;
+  totalRounds: number;
   startDate: string;
-  isPayout: boolean;
-  payoutDate?: string;
-  payoutAmount?: number;
-  difference?: number;
-  status?: 'active' | 'finished';
-  note?: string;
+  commissionFee: number;
+  minBidAmount: number;
+  receivedDate?: string;
+  receivedAmount?: number;
+  netProfit?: number;
+  status: 'active' | 'finished';
 };
 
-export type HuiGroupWithoutIsPayout = Omit<HuiGroup, 'isPayout'>;
+export type CycleRound = {
+  id: string;
+  cycleId: string;
+  round: string;
+  date: string;
+  lunarDate: string;
+  bidAmount: number;
+  paymentAmount: number;
+  status: 'normal' | 'received' | 'dead';
+};

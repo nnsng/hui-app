@@ -1,6 +1,6 @@
 import { createContext, use, useReducer, type PropsWithChildren } from 'react';
 
-type ModalKey = 'info' | 'contribution' | 'payout';
+type ModalKey = 'info' | 'payment' | 'receive';
 type ModalItemState = {
   visible: boolean;
   onOpen: () => void;
@@ -22,12 +22,12 @@ const initialState: ModalState = {
     onOpen: () => {},
     onClose: () => {},
   },
-  contribution: {
+  payment: {
     visible: false,
     onOpen: () => {},
     onClose: () => {},
   },
-  payout: {
+  receive: {
     visible: false,
     onOpen: () => {},
     onClose: () => {},

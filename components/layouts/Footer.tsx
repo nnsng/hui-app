@@ -1,34 +1,36 @@
 import { Button } from '@/components/ui';
 import { colors } from '@/constants/colors';
 import { useModal } from '@/contexts/ModalContext';
-import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
+import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export function Footer() {
-  const { data: periods = [] } = usePeriodsQuery();
-  const { data: group } = useActiveGroupQuery();
-  const isPayout = !!group?.isPayout;
+  const { data: rounds = [] } = useRoundsQuery();
+  const { data: cycle } = useActiveCycleQuery();
+  const isReceived = !!cycle!.receivedDate;
 
-  const { onOpen: onOpenPayoutModal } = useModal('payout');
+  const { onOpen: onOpenReceiveModal } = useModal('receive');
 
   const totalProfit = useMemo(() => {
-    return periods.reduce((acc, item) => acc + item.bidAmount, 0);
-  }, [periods]);
+    return rounds.reduce((acc, item) => acc + item.bidAmount, 0);
+  }, [rounds]);
 
-  if (isPayout) {
+  if (!cycle) return null;
+
+  if (isReceived) {
     return (
       <View style={styles.footer}>
         <View style={styles.content}>
           <Text style={styles.label}>Đã hốt hụi</Text>
-          <Text style={styles.value}>{formatDate(group.payoutDate!)}</Text>
+          <Text style={styles.value}>{formatDate(cycle.receivedDate!)}</Text>
         </View>
 
         <View style={styles.content}>
           <Text style={styles.label}>Số tiền hốt hụi</Text>
-          <Text style={styles.value}>{formatCurrency(group.payoutAmount ?? 0)}</Text>
+          <Text style={styles.value}>{formatCurrency(cycle.receivedAmount)}</Text>
         </View>
       </View>
     );
@@ -36,12 +38,12 @@ export function Footer() {
 
   return (
     <View style={styles.footer}>
-      <Button disabled={isPayout} onPress={onOpenPayoutModal}>
+      <Button disabled={isReceived} onPress={onOpenReceiveModal}>
         Hốt hụi
       </Button>
 
       <View style={styles.content}>
-        <Text style={styles.label}>Tiền lời ({periods?.length} tháng)</Text>
+        <Text style={styles.label}>Tiền lời ({rounds?.length} tháng)</Text>
         <Text style={styles.value}>{formatCurrency(totalProfit)}</Text>
       </View>
     </View>

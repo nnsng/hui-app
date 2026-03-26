@@ -1,9 +1,9 @@
 import { queryKeys } from '@/constants/query-keys';
 import { notionApi } from '@/utils/api';
-import { getHuiGroupFromNotion } from '@/utils/notion';
+import { getCycleFromNotion } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';
 
-const getActiveGroup = async () => {
+const getActiveCycle = async () => {
   const payload = {
     filter: {
       property: 'status',
@@ -13,14 +13,14 @@ const getActiveGroup = async () => {
     },
     page_size: 1,
   };
-  const url = `/data_sources/${process.env.EXPO_PUBLIC_NOTION_GROUP_DATA_SOURCE_ID}/query`;
+  const url = `/data_sources/${process.env.EXPO_PUBLIC_NOTION_CYCLE_DATA_SOURCE_ID}/query`;
   const response: any = await notionApi.post(url, payload);
-  return getHuiGroupFromNotion(response.results);
+  return getCycleFromNotion(response.results);
 };
 
-export function useActiveGroupQuery() {
+export function useActiveCycleQuery() {
   return useQuery({
-    queryKey: [queryKeys.group],
-    queryFn: getActiveGroup,
+    queryKey: [queryKeys.cycle],
+    queryFn: getActiveCycle,
   });
 }

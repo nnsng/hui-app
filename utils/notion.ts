@@ -1,4 +1,4 @@
-import type { HuiGroup, HuiGroupWithoutIsPayout, HuiPeriod } from '@/types';
+import type { Cycle, CycleRound } from '@/types';
 
 type PropertyType =
   | 'title'
@@ -60,13 +60,12 @@ export const transformNotionPageToObject = <T extends object>(page: any): T => {
   return { id: page.id, ...properties } as T;
 };
 
-export const getHuiGroupFromNotion = (data: any[]): HuiGroup => {
-  if (!Array.isArray(data) || data.length === 0) return {} as HuiGroup;
-  const group = transformNotionPageToObject<HuiGroupWithoutIsPayout>(data[0]);
-  return { ...group, isPayout: !!group.payoutDate };
+export const getCycleFromNotion = (data: any[]): Cycle => {
+  if (!Array.isArray(data) || data.length === 0) return {} as Cycle;
+  return transformNotionPageToObject<Cycle>(data[0]);
 };
 
-export const getHuiPeriodsFromNotion = (data: any[]) => {
+export const getRoundsFromNotion = (data: any[]) => {
   if (!Array.isArray(data) || data.length === 0) return [];
-  return data.map(transformNotionPageToObject<HuiPeriod>);
+  return data.map(transformNotionPageToObject<CycleRound>);
 };

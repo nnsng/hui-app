@@ -1,4 +1,4 @@
 export const queryKeys = {
-  group: 'group',
-  periods: 'periods',
+  cycle: 'cycle',
+  rounds: 'rounds',
 };

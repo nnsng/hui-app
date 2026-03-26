@@ -1,6 +1,6 @@
 import { colors } from '@/constants/colors';
-import { useActiveGroupQuery, usePeriodsQuery } from '@/hooks/queries';
-import type { HuiGroup, HuiPeriod } from '@/types';
+import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
+import type { CycleRound } from '@/types';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,18 +8,14 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function Table() {
+  const { refetch: refetchCycle, isRefetching: isRefetchingCycle } = useActiveCycleQuery();
   const {
-    data: group,
-    refetch: refetchGroup,
-    isRefetching: isRefetchingGroup,
-  } = useActiveGroupQuery();
-  const {
-    data: periods = [],
-    refetch: refetchPeriods,
-    isRefetching: isRefetchingPeriods,
-  } = usePeriodsQuery();
+    data: rounds = [],
+    refetch: refetchRounds,
+    isRefetching: isRefetchingRounds,
+  } = useRoundsQuery();
 
-  const isFetching = isRefetchingGroup || isRefetchingPeriods;
+  const isFetching = isRefetchingCycle || isRefetchingRounds;
 
   const rotateValue = useRef(new Animated.Value(0)).current;
 
@@ -38,8 +34,8 @@ export function Table() {
   }, [isFetching, rotateValue]);
 
   const refetch = async () => {
-    await refetchGroup();
-    await refetchPeriods();
+    await refetchCycle();
+    await refetchRounds();
   };
 
   const spin = rotateValue.interpolate({
@@ -60,12 +56,12 @@ export function Table() {
           </TouchableOpacity>
         </Text>
         <Text style={[styles.headerCell, styles.dateCell]}>Ngày</Text>
-        <Text style={[styles.headerCell, styles.bidCell]}>Tiền bỏ hụi</Text>
+        <Text style={[styles.headerCell, styles.bidCell]}>Tiền đóng</Text>
       </View>
 
       <ScrollView style={styles.body}>
-        {periods.length > 0 ? (
-          periods.map((row) => <TableRow key={row.id} row={row} group={group!} />)
+        {rounds.length > 0 ? (
+          rounds.map((round) => <TableRow key={round.id} row={round} />)
         ) : (
           <Text style={[styles.cell, styles.emptyCell]}>chưa đóng hụi</Text>
         )}
@@ -75,33 +71,32 @@ export function Table() {
 }
 
 type TableRowProps = {
-  row: HuiPeriod;
-  group: HuiGroup;
+  row: CycleRound;
 };
 
-function TableRow({ row, group }: TableRowProps) {
-  const isPayoutDate = row.contributionDate === group.payoutDate;
-  const isPayout = !isPayoutDate && row.bidAmount === 0;
-
-  const lunarDateShort = row.contributionDateLunar.split('/').slice(0, 2).join('/');
-
+function TableRow({ row }: TableRowProps) {
   return (
-    <View key={row.id} style={[styles.row, isPayout ? styles.payout : {}]}>
+    <View style={[styles.row, row.status === 'dead' ? styles.dead : {}]}>
       <View style={[styles.cell, styles.idCell]}>
         <Text style={styles.idCellText}>
-          {isPayoutDate ? (
+          {row.status === 'received' ? (
             <MaterialIcons name="star" size={18} color={colors.primary} />
           ) : (
-            <>{row.period}</>
+            <>{row.round}</>
           )}
         </Text>
       </View>
+
       <View style={[styles.cell, styles.dateCell]}>
-        <Text>{formatDate(row.contributionDate)}</Text>
-        <Text>ÂL: {lunarDateShort}</Text>
+        <Text>{formatDate(row.date)}</Text>
+        <Text style={styles.subText}>ÂL: {formatDate(row.lunarDate, 'DD/MM')}</Text>
       </View>
+
       <View style={[styles.cell, styles.bidCell]}>
-        <Text>{formatCurrency(row.bidAmount)}</Text>
+        <Text>{row.status === 'received' ? 'Hốt hụi' : formatCurrency(row.paymentAmount)}</Text>
+        <Text style={styles.subText}>
+          ({row.bidAmount ? formatCurrency(row.bidAmount) : 'Hụi chết'})
+        </Text>
       </View>
     </View>
   );
@@ -138,7 +133,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f1f3f5',
   },
-  payout: {
+  dead: {
     backgroundColor: '#fafafa',
   },
   cell: {
@@ -156,10 +151,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dateCell: {
-    flex: 5,
+    flex: 4,
   },
   bidCell: {
-    flex: 3,
+    flex: 4,
   },
   emptyCell: {
     padding: 20,
@@ -167,5 +162,8 @@ const styles = StyleSheet.create({
     color: '#868e96',
     fontSize: 14,
     fontStyle: 'italic',
+  },
+  subText: {
+    color: colors.secondary,
   },
 });
