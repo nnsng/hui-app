@@ -1,6 +1,6 @@
 import { colors } from '@/constants/colors';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
-import type { CycleRound } from '@/types';
+import type { Round } from '@/types';
 import { formatCurrency } from '@/utils/currency';
 import { formatDate } from '@/utils/date';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -71,7 +71,7 @@ export function Table() {
 }
 
 type TableRowProps = {
-  row: CycleRound;
+  row: Round;
 };
 
 function TableRow({ row }: TableRowProps) {

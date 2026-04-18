@@ -1,13 +1,12 @@
 import { queryKeys } from '@/constants/query-keys';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
-import type { CycleRound } from '@/types';
+import type { Round } from '@/types';
 import { notionApi } from '@/utils/api';
-import { getLunarDate } from '@/utils/date';
 import { mapValueToNotionProperty } from '@/utils/notion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
-type PaymentPayload = Omit<CycleRound, 'id' | 'date' | 'lunarDate'>;
+type PaymentPayload = Omit<Round, 'id' | 'date' | 'lunarDate'>;
 
 const makePayment = async ({
   cycleId,
@@ -18,7 +17,6 @@ const makePayment = async ({
 }: PaymentPayload) => {
   try {
     const today = dayjs().format('YYYY-MM-DD');
-    const lunarToday = await getLunarDate(today);
 
     const payload = {
       parent: {
@@ -28,7 +26,6 @@ const makePayment = async ({
         cycle: mapValueToNotionProperty(cycleId, 'relation'),
         round: mapValueToNotionProperty(round, 'title'),
         date: mapValueToNotionProperty(today, 'date'),
-        lunarDate: mapValueToNotionProperty(lunarToday, 'rich_text'),
         bidAmount: mapValueToNotionProperty(bidAmount, 'number'),
         paymentAmount: mapValueToNotionProperty(paymentAmount, 'number'),
         status: mapValueToNotionProperty(status, 'select'),

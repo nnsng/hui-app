@@ -12,7 +12,7 @@ export type Cycle = {
   status: 'active' | 'finished';
 };
 
-export type CycleRound = {
+export type Round = {
   id: string;
   cycleId: string;
   round: string;
@@ -20,5 +20,9 @@ export type CycleRound = {
   lunarDate: string;
   bidAmount: number;
   paymentAmount: number;
-  status: 'normal' | 'received' | 'dead';
+  status: RoundStatus;
 };
+
+export type RoundWithoutLunarDate = Omit<Round, 'lunarDate'>;
+
+export type RoundStatus = 'normal' | 'received' | 'dead';

@@ -42,7 +42,11 @@ export function PaymentModal() {
     if (error) return;
 
     setError(false);
-    await onMakePayment({ bidAmount, status: bidAmount === 0 ? 'dead' : 'normal' });
+    await onMakePayment({
+      bidAmount,
+      paymentAmount,
+      status: bidAmount === 0 ? 'dead' : 'normal',
+    });
     setInput('');
     handleClose();
   };

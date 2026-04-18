@@ -1,4 +1,5 @@
-import type { Cycle, CycleRound } from '@/types';
+import type { Cycle, Round, RoundWithoutLunarDate } from '@/types';
+import { convertToLunarDate } from './date';
 
 type PropertyType =
   | 'title'
@@ -65,7 +66,13 @@ export const getCycleFromNotion = (data: any[]): Cycle => {
   return transformNotionPageToObject<Cycle>(data[0]);
 };
 
-export const getRoundsFromNotion = (data: any[]) => {
+export const getRoundsFromNotion = (data: any[]): Round[] => {
   if (!Array.isArray(data) || data.length === 0) return [];
-  return data.map(transformNotionPageToObject<CycleRound>);
+  return data.map((item) => {
+    const round = transformNotionPageToObject<RoundWithoutLunarDate>(item);
+    return {
+      ...round,
+      lunarDate: convertToLunarDate(round.date),
+    };
+  });
 };

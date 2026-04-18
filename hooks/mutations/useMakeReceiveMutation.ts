@@ -1,13 +1,13 @@
 import { queryKeys } from '@/constants/query-keys';
 import { useActiveCycleQuery } from '@/hooks/queries';
-import type { Cycle, CycleRound } from '@/types';
+import type { Cycle, Round } from '@/types';
 import { notionApi } from '@/utils/api';
 import { mapValueToNotionProperty } from '@/utils/notion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useMakePaymentMutation } from './useMakePaymentMutation';
 
-type ReceivePayload = Pick<CycleRound, 'cycleId' | 'bidAmount'> &
+type ReceivePayload = Pick<Round, 'cycleId' | 'bidAmount'> &
   Pick<Cycle, 'receivedAmount' | 'netProfit'>;
 type ReceivePayloadWithoutCycleId = Omit<ReceivePayload, 'cycleId'>;
 
@@ -36,7 +36,11 @@ export function useMakeReceiveMutation() {
       await makeReceive({ ...payload, cycleId });
     },
     onMutate: async ({ bidAmount }) => {
-      await onMakePayment({ bidAmount, status: 'received' });
+      await onMakePayment({
+        bidAmount,
+        paymentAmount: 0,
+        status: 'received',
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.cycle] });
