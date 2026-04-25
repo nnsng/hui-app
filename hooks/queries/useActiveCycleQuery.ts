@@ -1,4 +1,4 @@
-import { queryKeys } from '@/constants/query-keys';
+import { queryKeys } from '@/constants/queryKeys';
 import { notionApi } from '@/utils/api';
 import { getCycleFromNotion } from '@/utils/notion';
 import { useQuery } from '@tanstack/react-query';

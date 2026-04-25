@@ -1,61 +1,33 @@
-import { createContext, use, useReducer, type PropsWithChildren } from 'react';
+import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 
-type ModalKey = 'info' | 'payment' | 'receive';
-type ModalItemState = {
-  visible: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-};
-type ModalState = {
-  [K in ModalKey]: ModalItemState;
-};
+export type ModalKey = 'info' | 'payment' | 'receive' | null;
+
 type ContextValue = {
-  state: ModalState;
-  dispatch: (action: { modal: ModalKey; value: boolean }) => void;
+  modal: ModalKey;
+  onOpenModal: (modal: ModalKey) => void;
+  onCloseModal: () => void;
 };
 
 const ModalContext = createContext<ContextValue | null>(null);
 
-const initialState: ModalState = {
-  info: {
-    visible: false,
-    onOpen: () => {},
-    onClose: () => {},
-  },
-  payment: {
-    visible: false,
-    onOpen: () => {},
-    onClose: () => {},
-  },
-  receive: {
-    visible: false,
-    onOpen: () => {},
-    onClose: () => {},
-  },
-};
+export function ModalProvider(props: PropsWithChildren) {
+  const [modal, setModal] = useState<ModalKey>(null);
 
-const reducer = (state: ModalState, action: { modal: ModalKey; value: boolean }): ModalState => {
-  const { modal, value } = action;
-
-  const newState = Object.assign({}, state);
-  newState[modal].visible = value;
-
-  return newState;
-};
-
-export default function ModalProvider(props: PropsWithChildren) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  return <ModalContext value={{ state, dispatch }}>{props.children}</ModalContext>;
-}
-
-export function useModal(modal: ModalKey): ModalItemState {
-  const context = use(ModalContext);
-  if (!context) throw new Error('useModalContext must be used within a ModalProvider');
-
-  return {
-    ...context.state[modal],
-    onOpen: () => context.dispatch({ modal, value: true }),
-    onClose: () => context.dispatch({ modal, value: false }),
+  const onOpenModal = (modal: ModalKey) => {
+    setModal(modal);
   };
+  const onCloseModal = () => {
+    setModal(null);
+  };
+
+  return <ModalContext value={{ modal, onOpenModal, onCloseModal }}>{props.children}</ModalContext>;
 }
+
+export function useModal() {
+  const context = useContext(ModalContext);
+  if (!context) throw new Error('useNewModal must be used within a ModalProvider');
+
+  return context;
+}
+
+export default ModalContext;

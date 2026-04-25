@@ -6,11 +6,14 @@ export type Cycle = {
   startDate: string;
   commissionFee: number;
   minBidAmount: number;
+  isReceived: boolean;
   receivedDate?: string;
   receivedAmount?: number;
   netProfit?: number;
   status: 'active' | 'finished';
 };
+
+export type CycleWithoutIsReceived = Omit<Cycle, 'isReceived'>;
 
 export type Round = {
   id: string;

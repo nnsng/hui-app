@@ -1,5 +1,7 @@
+import { fontSize } from '@/constants/typography';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Typography } from './Typography';
 
 type ErrorProps = {
   message: string;
@@ -8,7 +10,7 @@ type ErrorProps = {
 export function Error({ message }: ErrorProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.errorText}>{message}</Text>
+      <Typography style={styles.errorText}>{message}</Typography>
     </View>
   );
 }
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#721c24',
-    fontSize: 16,
+    fontSize: fontSize.base,
     fontWeight: 'bold',
   },
 });

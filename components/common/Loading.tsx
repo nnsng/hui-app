@@ -1,4 +1,4 @@
-import { colors } from '@/constants/colors';
+import { palette } from '@/constants/palette';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
@@ -9,7 +9,7 @@ type LoadingProps = {
 export function Loading({ size = 'large' }: LoadingProps) {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={size} color={colors.primary} />
+      <ActivityIndicator size={size} color={palette.primary} />
     </View>
   );
 }
@@ -19,6 +19,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: palette.background,
   },
 });
