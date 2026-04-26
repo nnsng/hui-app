@@ -1,4 +1,4 @@
-import { queryKeys } from '@/constants/query-keys';
+import { queryKeys } from '@/constants/queryKeys';
 import { useActiveCycleQuery } from '@/hooks/queries';
 import type { Cycle, Round } from '@/types';
 import { notionApi } from '@/utils/api';

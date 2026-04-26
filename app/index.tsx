@@ -1,79 +1,53 @@
-import { Error, Loading, Table } from '@/components';
-import { Footer, Header } from '@/components/layouts';
-import { InfoModal, ReceiveModal } from '@/components/modals';
-import { PaymentModal } from '@/components/modals/PaymentModal';
-import { Button } from '@/components/ui';
-import { colors } from '@/constants/colors';
-import { useModal } from '@/contexts/ModalContext';
+import { Error, Loading } from '@/components/common';
+import { ActionButtons, Balance, Header, RecentRounds } from '@/components/home';
+import { InfoModal, PaymentModal, ReceiveModal } from '@/components/home/modals';
+import { palette } from '@/constants/palette';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Index() {
-  const { data: cycle, isLoading: isLoadingCycle } = useActiveCycleQuery();
-  const { data: rounds = [], isLoading: isLoadingRounds, isError, error } = useRoundsQuery();
-
-  const { onOpen: onOpenInformationModal } = useModal('info');
-  const { onOpen: onOpenPaymentModal } = useModal('payment');
+export default function HomeScreen() {
+  const {
+    isLoading: isLoadingCycle,
+    isError: isErrorCycle,
+    error: errorCycle,
+  } = useActiveCycleQuery();
+  const {
+    isLoading: isLoadingRounds,
+    isError: isErrorRounds,
+    error: errorRounds,
+  } = useRoundsQuery();
 
   if (isLoadingCycle || isLoadingRounds) return <Loading />;
-
-  if (isError) return <Error message={error.message} />;
-
-  const canMakePayment = rounds.length < cycle!.totalRounds - (!!cycle!.receivedDate ? 0 : 1);
+  if (isErrorCycle) return <Error message={errorCycle.message} />;
+  if (isErrorRounds) return <Error message={errorRounds.message} />;
 
   return (
-    <SafeAreaView style={styles.app}>
-      <Header />
-
-      <View style={styles.main}>
-        <View style={styles.buttonContainer}>
-          <Button variant="outlined" style={styles.button} onPress={onOpenInformationModal}>
-            Thông tin
-          </Button>
-
-          <Button disabled={!canMakePayment} style={styles.button} onPress={onOpenPaymentModal}>
-            Đóng hụi
-          </Button>
-        </View>
-
-        <View style={styles.tableContainer}>
-          <Table />
-        </View>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
+      <View style={styles.content}>
+        <Header />
+        <Balance />
+        <ActionButtons />
+        <RecentRounds maxItems={3} />
       </View>
 
-      <Footer />
-
       {/* Modals */}
-      <InfoModal />
       <PaymentModal />
       <ReceiveModal />
+      <InfoModal />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  app: {
+  safeArea: {
     flex: 1,
-    backgroundColor: colors.white,
-    gap: 16,
+    backgroundColor: palette.background,
   },
-  main: {
+  content: {
     flex: 1,
-    gap: 16,
-  },
-  buttonContainer: {
-    flexShrink: 0,
-    flexDirection: 'row',
-    gap: 10,
-    paddingHorizontal: 16,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 12,
-  },
-  tableContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
+    paddingBottom: 12,
+    gap: 20,
   },
 });

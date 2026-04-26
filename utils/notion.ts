@@ -1,4 +1,4 @@
-import type { Cycle, Round, RoundWithoutLunarDate } from '@/types';
+import type { Cycle, CycleWithoutIsReceived, Round, RoundWithoutLunarDate } from '@/types';
 import { convertToLunarDate } from './date';
 
 type PropertyType =
@@ -63,7 +63,8 @@ export const transformNotionPageToObject = <T extends object>(page: any): T => {
 
 export const getCycleFromNotion = (data: any[]): Cycle => {
   if (!Array.isArray(data) || data.length === 0) return {} as Cycle;
-  return transformNotionPageToObject<Cycle>(data[0]);
+  const cycle = transformNotionPageToObject<CycleWithoutIsReceived>(data[0]);
+  return { ...cycle, isReceived: !!cycle.receivedDate };
 };
 
 export const getRoundsFromNotion = (data: any[]): Round[] => {
