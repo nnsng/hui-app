@@ -1,50 +1,60 @@
-# Welcome to your Expo app 👋
+# Sổ hụi (hui-app)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An Expo React Native application for managing and tracking "hụi" (rotating savings and credit association) cycles and rounds. This application leverages the Notion API as a backend database.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Active Cycle Tracking:** View current hụi cycle details, balance, and received amounts.
+- **Round Management:** Log new payment rounds, bids, and participant activity.
+- **Notion Backend:** Uses Expo API Routes and the `@notionhq/client` SDK to securely interact with a Notion database as a backend.
+- **Dynamic UI:** Responsive, dynamically scaling user interface utilizing custom UI components and the `expo-router` for file-based navigation.
 
+## Prerequisites
+
+Before running the application, ensure you have:
+- Node.js & npm installed
+- An active Expo account (for EAS builds/deployments)
+- A Notion integration token with access to your `Cycle` and `Round` Notion Data Sources.
+
+## Environment Variables
+
+Copy `.env-template` to `.env` and fill in the required environment variables:
+
+```bash
+cp .env-template .env
+```
+
+Ensure your `.env` contains the required Notion API keys:
+- `NOTION_API_KEY`
+- `NOTION_CYCLE_DATA_SOURCE_ID`
+- `NOTION_ROUND_DATA_SOURCE_ID`
+
+## Getting Started
+
+1. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+2. **Start the development server**
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   This will start both the React Native Metro bundler and the Expo API Routes server.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Scripts & Commands
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- `npm start`: Starts the Expo dev server.
+- `npm run ios`: Starts the app on the iOS Simulator.
+- `npm run android`: Starts the app on the Android Emulator.
+- `npm run build:android`: Triggers an EAS preview build for Android (`eas build -p android --profile preview`).
+- `npm run deploy:web`: Exports and deploys the web version using EAS (`eas export -p web && eas deploy`).
 
-## Get a fresh project
+## Architecture
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is built using:
+- **Expo & React Native:** Cross-platform application framework.
+- **Expo Router:** File-based routing scheme (`app/` directory).
+- **Expo API Routes:** Secure local proxy routes (`app/api/`) communicating with Notion using `@notionhq/client`.
+- **React Query:** For managing data fetching and caching state.
