@@ -3,25 +3,38 @@ import { palette } from '@/constants/palette';
 import { fontSize } from '@/constants/typography';
 import { useRoundsQuery } from '@/hooks/queries';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { RoundItem } from './RoundItem';
 
-type RecentRoundsProps = {
-  maxItems: number;
-};
-
-export function RecentRounds({ maxItems }: RecentRoundsProps) {
+export function RecentRounds() {
   const router = useRouter();
 
   const { data: rounds = [] } = useRoundsQuery();
-  const visible = rounds.slice(0, maxItems);
+
+  const [listHeight, setListHeight] = useState(0);
+  const [itemHeight, setItemHeight] = useState(0);
+
+  const visible = useMemo(() => {
+    if (itemHeight === 0) return rounds;
+    const maxItems = Math.floor(listHeight / itemHeight);
+    return rounds.slice(0, maxItems);
+  }, [rounds, listHeight, itemHeight]);
+
+  const handleListLayout = (e: LayoutChangeEvent) => {
+    setListHeight(e.nativeEvent.layout.height);
+  };
+
+  const handleItemLayout = (e: LayoutChangeEvent) => {
+    setItemHeight(e.nativeEvent.layout.height);
+  };
 
   return (
     <View style={styles.roundSection}>
       <View style={styles.roundHeader}>
         <Typography style={styles.roundTitle}>Kỳ hụi gần đây</Typography>
 
-        {maxItems < rounds.length && (
+        {visible.length < rounds.length && (
           <Button
             variant="ghost"
             label="Xem tất cả"
@@ -33,9 +46,11 @@ export function RecentRounds({ maxItems }: RecentRoundsProps) {
         )}
       </View>
 
-      <View style={styles.roundList}>
-        {visible.map((item) => (
-          <RoundItem key={item.id} item={item} />
+      <View style={styles.roundList} onLayout={handleListLayout}>
+        {visible.map((item, index) => (
+          <View key={item.id} onLayout={index === 0 ? handleItemLayout : undefined}>
+            <RoundItem item={item} />
+          </View>
         ))}
       </View>
     </View>
@@ -43,7 +58,9 @@ export function RecentRounds({ maxItems }: RecentRoundsProps) {
 }
 
 const styles = StyleSheet.create({
-  roundSection: {},
+  roundSection: {
+    flex: 1,
+  },
   roundHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,7 +72,6 @@ const styles = StyleSheet.create({
     color: palette.textPrimary,
   },
   roundList: {
-    paddingTop: 12,
-    gap: 12,
+    flex: 1,
   },
 });

@@ -18,6 +18,7 @@ export default function HomeScreen() {
   } = useRoundsQuery();
 
   if (isLoadingCycle || isLoadingRounds) return <Loading />;
+
   if (isErrorCycle) return <Error message={errorCycle.message} />;
   if (isErrorRounds) return <Error message={errorRounds.message} />;
 
@@ -27,7 +28,7 @@ export default function HomeScreen() {
         <Header />
         <Balance />
         <ActionButtons />
-        <RecentRounds maxItems={3} />
+        <RecentRounds />
       </View>
     </SafeAreaView>
   );
