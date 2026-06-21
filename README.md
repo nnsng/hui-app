@@ -12,6 +12,7 @@ An Expo React Native application for managing and tracking "hụi" (rotating sav
 ## Prerequisites
 
 Before running the application, ensure you have:
+
 - Node.js & npm installed
 - An active Expo account (for EAS builds/deployments)
 - A Notion integration token with access to your `Cycle` and `Round` Notion Data Sources.
@@ -25,6 +26,7 @@ cp .env-template .env
 ```
 
 Ensure your `.env` contains the required Notion API keys:
+
 - `NOTION_API_KEY`
 - `NOTION_CYCLE_DATA_SOURCE_ID`
 - `NOTION_ROUND_DATA_SOURCE_ID`
@@ -32,11 +34,13 @@ Ensure your `.env` contains the required Notion API keys:
 ## Getting Started
 
 1. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 2. **Start the development server**
+
    ```bash
    npx expo start
    ```
@@ -49,11 +53,12 @@ Ensure your `.env` contains the required Notion API keys:
 - `npm run ios`: Starts the app on the iOS Simulator.
 - `npm run android`: Starts the app on the Android Emulator.
 - `npm run build:android`: Triggers an EAS preview build for Android (`eas build -p android --profile preview`).
-- `npm run deploy:web`: Exports and deploys the web version using EAS (`eas export -p web && eas deploy`).
+- `npm run deploy:web`: Exports and deploys the web version using EAS (`expo export -p web && eas deploy`).
 
 ## Architecture
 
 This project is built using:
+
 - **Expo & React Native:** Cross-platform application framework.
 - **Expo Router:** File-based routing scheme (`app/` directory).
 - **Expo API Routes:** Secure local proxy routes (`app/api/`) communicating with Notion using `@notionhq/client`.
