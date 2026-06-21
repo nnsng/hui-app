@@ -1,4 +1,6 @@
 import { notion } from '@/lib/notionClient';
+import { mapNotionPageToRound } from '@/utils/notion';
+import type { PageObjectResponse } from '@notionhq/client';
 
 const roundDataSourceId = process.env.NOTION_ROUND_DATA_SOURCE_ID;
 
@@ -31,7 +33,9 @@ export async function GET(request: Request) {
       ],
     });
 
-    return Response.json(response);
+    const rounds = response.results.map((item) => mapNotionPageToRound(item as PageObjectResponse));
+
+    return Response.json(rounds);
   } catch (error) {
     console.error('Error fetching rounds:', error);
     return Response.json({ error: 'Failed to fetch rounds' }, { status: 500 });
@@ -59,7 +63,10 @@ export async function POST(request: Request) {
         status: { select: { name: payload.status } },
       },
     });
-    return Response.json(response);
+
+    const round = mapNotionPageToRound(response as PageObjectResponse);
+
+    return Response.json(round);
   } catch (error) {
     console.error('Error creating round:', error);
     return Response.json({ error: 'Failed to create round' }, { status: 500 });

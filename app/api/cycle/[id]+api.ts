@@ -1,4 +1,6 @@
 import { notion } from '@/lib/notionClient';
+import { mapNotionPageToCycle } from '@/utils/notion';
+import type { PageObjectResponse } from '@notionhq/client';
 
 export async function PATCH(request: Request, { id }: { id: string }) {
   try {
@@ -13,7 +15,9 @@ export async function PATCH(request: Request, { id }: { id: string }) {
       },
     });
 
-    return Response.json(response);
+    const cycle = mapNotionPageToCycle(response as PageObjectResponse);
+
+    return Response.json(cycle);
   } catch (error) {
     console.error(`Error updating round ${id}:`, error);
     return Response.json({ error: 'Failed to update round' }, { status: 500 });
