@@ -1,8 +1,7 @@
 import { queryKeys } from '@/constants/queryKeys';
 import { useActiveCycleQuery } from '@/hooks/queries';
 import type { Cycle, Round } from '@/types';
-import { notionApi } from '@/utils/api';
-import { mapValueToNotionProperty } from '@/utils/notion';
+import { api } from '@/utils/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useMakePaymentMutation } from './useMakePaymentMutation';
@@ -14,14 +13,11 @@ type ReceivePayloadWithoutCycleId = Omit<ReceivePayload, 'cycleId'>;
 const makeReceive = async ({ cycleId, receivedAmount, netProfit }: ReceivePayload) => {
   const today = dayjs().format('YYYY-MM-DD');
   const payload = {
-    properties: {
-      receivedDate: mapValueToNotionProperty(today, 'date'),
-      receivedAmount: mapValueToNotionProperty(receivedAmount, 'number'),
-      netProfit: mapValueToNotionProperty(netProfit, 'number'),
-    },
+    receivedDate: today,
+    receivedAmount: receivedAmount,
+    netProfit: netProfit,
   };
-  const url = `/pages/${cycleId}`;
-  return notionApi.patch(url, payload);
+  return api.patch(`/api/cycle/${cycleId}`, payload);
 };
 
 export function useMakeReceiveMutation() {

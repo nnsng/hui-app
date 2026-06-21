@@ -1,8 +1,7 @@
 import { queryKeys } from '@/constants/queryKeys';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import type { Round } from '@/types';
-import { notionApi } from '@/utils/api';
-import { mapValueToNotionProperty } from '@/utils/notion';
+import { api } from '@/utils/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
@@ -19,21 +18,15 @@ const makePayment = async ({
     const today = dayjs().format('YYYY-MM-DD');
 
     const payload = {
-      parent: {
-        data_source_id: process.env.EXPO_PUBLIC_NOTION_ROUND_DATA_SOURCE_ID,
-      },
-      properties: {
-        cycle: mapValueToNotionProperty(cycleId, 'relation'),
-        round: mapValueToNotionProperty(round, 'title'),
-        date: mapValueToNotionProperty(today, 'date'),
-        bidAmount: mapValueToNotionProperty(bidAmount, 'number'),
-        paymentAmount: mapValueToNotionProperty(paymentAmount, 'number'),
-        status: mapValueToNotionProperty(status, 'select'),
-      },
+      cycle: cycleId,
+      round: round,
+      date: today,
+      bidAmount: bidAmount,
+      paymentAmount: paymentAmount,
+      status: status,
     };
 
-    const url = '/pages';
-    return notionApi.post(url, payload);
+    return api.post('/api/rounds', payload);
   } catch (error) {
     console.error(error);
   }

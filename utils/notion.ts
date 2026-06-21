@@ -1,38 +1,9 @@
 import type { Cycle, CycleWithoutIsReceived, Round, RoundWithoutLunarDate } from '@/types';
+import type { PageObjectResponse } from '@notionhq/client';
 import { convertToLunarDate } from './date';
 
-type PropertyType =
-  | 'title'
-  | 'rich_text'
-  | 'number'
-  | 'date'
-  | 'select'
-  | 'relation'
-  | (string & {});
-
-export const mapValueToNotionProperty = (value: any, propertyType: PropertyType) => {
-  switch (propertyType) {
-    case 'title':
-      return { title: [{ text: { content: value } }] };
-    case 'rich_text':
-      return { rich_text: [{ text: { content: value } }] };
-    case 'number':
-      return { number: value };
-    case 'date':
-      return { date: { start: value } };
-    case 'select':
-      return { select: { name: value } };
-    case 'checkbox':
-      return { checkbox: value };
-    case 'relation':
-      return { relation: [{ id: value }] };
-    default:
-      return { [value.type]: value };
-  }
-};
-
-const getNotionPropertyValue = (property: any) => {
-  switch (property.type as PropertyType) {
+const getNotionPropertyValue = (property: PageObjectResponse['properties'][string]) => {
+  switch (property.type) {
     case 'title':
       return property.title?.[0]?.plain_text ?? '';
     case 'rich_text':
@@ -40,18 +11,20 @@ const getNotionPropertyValue = (property: any) => {
     case 'number':
       return property.number ?? 0;
     case 'date':
-      return property.date?.start;
+      return property.date?.start ?? '';
     case 'select':
       return property.select?.name ?? '';
     case 'checkbox':
       return property.checkbox ?? false;
+    case 'relation':
+      return property.relation[0].id ?? '';
     default:
-      return property[property.type] ?? '';
+      return '';
   }
 };
 
-export const transformNotionPageToObject = <T extends object>(page: any): T => {
-  const pageProperties: Record<string, any> = page.properties;
+export const transformNotionPageToObject = <T extends object>(page: PageObjectResponse): T => {
+  const pageProperties = page.properties;
   const properties = Object.keys(pageProperties).reduce((data, key) => {
     const value = pageProperties[key];
     if (value.type === 'relation') return data;
@@ -61,13 +34,13 @@ export const transformNotionPageToObject = <T extends object>(page: any): T => {
   return { id: page.id, ...properties } as T;
 };
 
-export const getCycleFromNotion = (data: any[]): Cycle => {
+export const getCycleFromNotion = (data: PageObjectResponse[]): Cycle => {
   if (!Array.isArray(data) || data.length === 0) return {} as Cycle;
   const cycle = transformNotionPageToObject<CycleWithoutIsReceived>(data[0]);
   return { ...cycle, isReceived: !!cycle.receivedDate };
 };
 
-export const getRoundsFromNotion = (data: any[]): Round[] => {
+export const getRoundsFromNotion = (data: PageObjectResponse[]): Round[] => {
   if (!Array.isArray(data) || data.length === 0) return [];
   return data.map((item) => {
     const round = transformNotionPageToObject<RoundWithoutLunarDate>(item);

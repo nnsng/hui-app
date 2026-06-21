@@ -1,12 +1,13 @@
 import { Button, Typography } from '@/components/common';
-import { appName } from '@/constants/app';
 import { palette } from '@/constants/palette';
 import { fontSize } from '@/constants/typography';
-import { useRouter } from 'expo-router';
 import { useTapUnlock } from '@/hooks/useTapUnlock';
 import { renderDate } from '@/utils/date';
 import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
+
+const appName = Constants.expoConfig?.name!;
 
 export function Header() {
   const router = useRouter();

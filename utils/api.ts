@@ -1,14 +1,20 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 
-export const notionApi = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_NOTION_API_URL,
+const getBaseUrl = () => {
+  const debuggerHost = Constants.expoConfig?.hostUri;
+  if (!debuggerHost) return '';
+  const ip = debuggerHost.split(':')[0];
+  return `http://${ip}:8081`; // 8081 is the default Metro bundler port
+};
+
+export const api = axios.create({
+  baseURL: getBaseUrl(),
   headers: {
-    Authorization: `Bearer ${process.env.EXPO_PUBLIC_NOTION_API_KEY}`,
     'Content-Type': 'application/json',
-    'Notion-Version': process.env.EXPO_PUBLIC_NOTION_VERSION,
   },
 });
 
-notionApi.interceptors.response.use((response) => {
+api.interceptors.response.use((response) => {
   return response.data;
 });

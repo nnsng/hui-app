@@ -32,7 +32,7 @@ const config: ExpoConfig = {
   },
   web: {
     bundler: 'metro',
-    output: 'static',
+    output: 'server',
     favicon: './assets/images/favicon.png',
   },
   plugins: [
@@ -44,6 +44,7 @@ const config: ExpoConfig = {
         imageWidth: 200,
         resizeMode: 'contain',
         backgroundColor,
+        origin: process.env.SERVER_URL,
       },
     ],
     'expo-font',

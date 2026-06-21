@@ -1,27 +1,13 @@
 import { queryKeys } from '@/constants/queryKeys';
-import { notionApi } from '@/utils/api';
+import { api } from '@/utils/api';
 import { getRoundsFromNotion } from '@/utils/notion';
+import type { PageObjectResponse, QueryDataSourceResponse } from '@notionhq/client';
 import { useQuery } from '@tanstack/react-query';
 import { useActiveCycleQuery } from './useActiveCycleQuery';
 
 const getRounds = async (cycleId: string) => {
-  const payload = {
-    filter: {
-      property: 'cycle',
-      relation: {
-        contains: cycleId,
-      },
-    },
-    sorts: [
-      {
-        property: 'date',
-        direction: 'descending',
-      },
-    ],
-  };
-  const url = `/data_sources/${process.env.EXPO_PUBLIC_NOTION_ROUND_DATA_SOURCE_ID}/query`;
-  const response: any = await notionApi.post(url, payload);
-  return getRoundsFromNotion(response.results);
+  const response: QueryDataSourceResponse = await api.get(`/api/rounds?cycleId=${cycleId}`);
+  return getRoundsFromNotion(response.results as PageObjectResponse[]);
 };
 
 export function useRoundsQuery() {
