@@ -36,12 +36,7 @@ const config: ExpoConfig = {
     favicon: './assets/images/favicon.png',
   },
   plugins: [
-    [
-      'expo-router',
-      {
-        origin: process.env.SERVER_URL,
-      },
-    ],
+    'expo-router',
     [
       'expo-splash-screen',
       {
