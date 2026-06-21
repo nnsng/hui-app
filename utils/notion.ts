@@ -2,7 +2,9 @@ import type { Cycle, CycleWithoutIsReceived, Round, RoundWithoutLunarDate } from
 import type { PageObjectResponse } from '@notionhq/client';
 import { convertToLunarDate } from './date';
 
-const getNotionPropertyValue = (property: PageObjectResponse['properties'][string]) => {
+type Property = PageObjectResponse['properties'][string];
+
+const getNotionPropertyValue = (property: Property) => {
   switch (property.type) {
     case 'title':
       return property.title?.[0]?.plain_text ?? '';
@@ -23,7 +25,7 @@ const getNotionPropertyValue = (property: PageObjectResponse['properties'][strin
   }
 };
 
-export const transformNotionPageToObject = <T extends object>(page: PageObjectResponse): T => {
+const transformNotionPageToObject = <T extends object>(page: PageObjectResponse): T => {
   const pageProperties = page.properties;
   const properties = Object.keys(pageProperties).reduce((data, key) => {
     const value = pageProperties[key];
@@ -34,19 +36,12 @@ export const transformNotionPageToObject = <T extends object>(page: PageObjectRe
   return { id: page.id, ...properties } as T;
 };
 
-export const getCycleFromNotion = (data: PageObjectResponse[]): Cycle => {
-  if (!Array.isArray(data) || data.length === 0) return {} as Cycle;
-  const cycle = transformNotionPageToObject<CycleWithoutIsReceived>(data[0]);
+export const mapNotionPageToCycle = (page: PageObjectResponse): Cycle => {
+  const cycle = transformNotionPageToObject<CycleWithoutIsReceived>(page);
   return { ...cycle, isReceived: !!cycle.receivedDate };
 };
 
-export const getRoundsFromNotion = (data: PageObjectResponse[]): Round[] => {
-  if (!Array.isArray(data) || data.length === 0) return [];
-  return data.map((item) => {
-    const round = transformNotionPageToObject<RoundWithoutLunarDate>(item);
-    return {
-      ...round,
-      lunarDate: convertToLunarDate(round.date),
-    };
-  });
+export const mapNotionPageToRound = (page: PageObjectResponse): Round => {
+  const round = transformNotionPageToObject<RoundWithoutLunarDate>(page);
+  return { ...round, lunarDate: convertToLunarDate(round.date) };
 };
