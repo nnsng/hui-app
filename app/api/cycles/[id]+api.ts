@@ -1,10 +1,11 @@
 import { notion } from '@/lib/notionClient';
+import type { ReceivePayload } from '@/types';
 import { mapNotionPageToCycle } from '@/utils/notion';
 import type { PageObjectResponse } from '@notionhq/client';
 
 export async function PATCH(request: Request, { id }: { id: string }) {
   try {
-    const payload = await request.json();
+    const payload: ReceivePayload = await request.json();
 
     const response = await notion.pages.update({
       page_id: id,

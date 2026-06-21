@@ -1,6 +1,6 @@
 import { Summary, type SummaryItem } from '@/components/common';
 import { Modal, ModalAmountInput } from '@/components/modal';
-import { useMakePaymentMutation } from '@/hooks/mutations';
+import { usePayRoundMutation } from '@/hooks/mutations';
 import { useActiveCycleQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ export default function PaymentModalScreen() {
   const { data: cycle } = useActiveCycleQuery();
   const { totalAmount, minBidAmount, isReceived } = cycle!;
 
-  const { mutateAsync: onMakePayment, isPending } = useMakePaymentMutation();
+  const { mutateAsync: onPayRound, isPending } = usePayRoundMutation();
 
   const [input, setInput] = useState('');
   const bidAmount = Number(input) || 0;
@@ -21,7 +21,7 @@ export default function PaymentModalScreen() {
   ];
 
   const handleSubmit = async () => {
-    await onMakePayment({
+    await onPayRound({
       bidAmount,
       paymentAmount,
       status: isReceived ? 'dead' : 'normal',

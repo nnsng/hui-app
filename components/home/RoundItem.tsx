@@ -47,7 +47,7 @@ export function RoundItem({ item }: RoundItemProps) {
   return (
     <View style={styles.roundItem}>
       <View style={[styles.avatar, { backgroundColor: data.bg }]}>
-        <Typography style={[styles.avatarText, { color: data.fg }]}>{item.round}</Typography>
+        <Typography style={[styles.avatarText, { color: data.fg }]}>{item.roundNumber}</Typography>
       </View>
 
       <View style={styles.roundInfo}>

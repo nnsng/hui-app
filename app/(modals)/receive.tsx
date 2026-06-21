@@ -1,6 +1,6 @@
 import { Summary, type SummaryItem } from '@/components/common';
 import { Modal, ModalAmountInput } from '@/components/modal';
-import { useMakeReceiveMutation } from '@/hooks/mutations';
+import { usePayRoundMutation, useReceivePayoutMutation } from '@/hooks/mutations';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
@@ -12,7 +12,8 @@ export default function ReceiveModalScreen() {
   const { totalAmount, totalRounds, commissionFee } = cycle!;
   const isLastRound = rounds.length === totalRounds - 1;
 
-  const { mutateAsync: onMakeReceive, isPending } = useMakeReceiveMutation();
+  const { mutateAsync: onReceivePayout, isPending } = useReceivePayoutMutation();
+  const { mutateAsync: onPayRound } = usePayRoundMutation();
 
   const [input, setInput] = useState('');
   const bidAmount = Number(input) || 0;
@@ -44,11 +45,10 @@ export default function ReceiveModalScreen() {
   ];
 
   const handleSubmit = async () => {
-    await onMakeReceive({
-      bidAmount,
-      receivedAmount: totalReceive,
-      netProfit,
-    });
+    await Promise.all([
+      onReceivePayout({ receivedAmount: totalReceive, netProfit }),
+      onPayRound({ bidAmount, paymentAmount: 0, status: 'received' }),
+    ]);
   };
 
   return (

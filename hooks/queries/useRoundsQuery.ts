@@ -4,7 +4,7 @@ import { api } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
 import { useActiveCycleQuery } from './useActiveCycleQuery';
 
-const getRounds = (cycleId: string): Promise<Round[]> => {
+const fetchRounds = async (cycleId: string): Promise<Round[]> => {
   return api.get(`/rounds?cycleId=${cycleId}`);
 };
 
@@ -15,7 +15,7 @@ export function useRoundsQuery() {
 
   return useQuery({
     queryKey: [queryKeys.rounds, cycleId],
-    queryFn: () => getRounds(cycleId),
+    queryFn: () => fetchRounds(cycleId),
     enabled: !!cycleId,
   });
 }

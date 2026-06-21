@@ -1,4 +1,5 @@
 import { notion } from '@/lib/notionClient';
+import type { PaymentPayload } from '@/types';
 import { mapNotionPageToRound } from '@/utils/notion';
 import type { PageObjectResponse } from '@notionhq/client';
 
@@ -48,15 +49,15 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Missing Data Source ID' }, { status: 500 });
     }
 
-    const payload = await request.json();
+    const payload: PaymentPayload = await request.json();
 
     const response = await notion.pages.create({
       parent: {
         data_source_id: roundDataSourceId,
       },
       properties: {
-        cycle: { relation: [{ id: payload.cycle }] },
-        round: { title: [{ text: { content: payload.round } }] },
+        cycle: { relation: [{ id: payload.cycleId }] },
+        round: { title: [{ text: { content: payload.roundNumber } }] },
         date: { date: { start: payload.date } },
         bidAmount: { number: payload.bidAmount },
         paymentAmount: { number: payload.paymentAmount },

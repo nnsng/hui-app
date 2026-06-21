@@ -30,7 +30,9 @@ const transformNotionPageToObject = <T extends object>(page: PageObjectResponse)
   const properties = Object.keys(pageProperties).reduce((data, key) => {
     const value = pageProperties[key];
     if (value.type === 'relation') return data;
-    return { ...data, [key]: getNotionPropertyValue(value) };
+
+    const propertyName = key === 'round' ? 'roundNumber' : key;
+    return { ...data, [propertyName]: getNotionPropertyValue(value) };
   }, {});
 
   return { id: page.id, ...properties } as T;

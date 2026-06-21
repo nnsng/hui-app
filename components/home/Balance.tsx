@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginTop: 6,
+    marginTop: 2,
   },
   balanceValue: {
     fontSize: fontSize.xxxxl,

@@ -8,11 +8,18 @@ import {
 } from '@expo-google-fonts/montserrat';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SplashScreen, Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60, // 1 minute
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function RootLayout() {
-  const [queryClient] = useState(() => new QueryClient());
-
   const [loaded] = useFonts({
     Montserrat_400Regular,
     Montserrat_500Medium,
