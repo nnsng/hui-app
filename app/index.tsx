@@ -1,6 +1,5 @@
 import { Error, Loading } from '@/components/common';
 import { ActionButtons, Balance, Header, RecentRounds } from '@/components/home';
-import { InfoModal, PaymentModal, ReceiveModal } from '@/components/home/modals';
 import { palette } from '@/constants/palette';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { StyleSheet, View } from 'react-native';
@@ -30,11 +29,6 @@ export default function HomeScreen() {
         <ActionButtons />
         <RecentRounds maxItems={3} />
       </View>
-
-      {/* Modals */}
-      <PaymentModal />
-      <ReceiveModal />
-      <InfoModal />
     </SafeAreaView>
   );
 }

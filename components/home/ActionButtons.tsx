@@ -1,12 +1,12 @@
 import { Button } from '@/components/common';
 import { palette } from '@/constants/palette';
-import { useModal } from '@/contexts/ModalContext';
+import { useRouter } from 'expo-router';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 export function ActionButtons() {
-  const { onOpenModal } = useModal();
+  const router = useRouter();
 
   const {
     data: cycle,
@@ -63,7 +63,7 @@ export function ActionButtons() {
         iconColor={palette.secondary}
         iconStyle={styles.payIcon}
         disabled={paymentDisabled}
-        onPress={() => onOpenModal('payment')}
+        onPress={() => router.push('/payment')}
         style={styles.flexOne}
       />
 
@@ -75,7 +75,7 @@ export function ActionButtons() {
         iconSize={18}
         iconColor={palette.primary}
         disabled={receiveDisabled}
-        onPress={() => onOpenModal('receive')}
+        onPress={() => router.push('/receive')}
         style={styles.flexOne}
       />
 

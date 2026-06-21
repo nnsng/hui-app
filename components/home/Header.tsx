@@ -2,14 +2,14 @@ import { Button, Typography } from '@/components/common';
 import { appName } from '@/constants/app';
 import { palette } from '@/constants/palette';
 import { fontSize } from '@/constants/typography';
-import { useModal } from '@/contexts/ModalContext';
+import { useRouter } from 'expo-router';
 import { useTapUnlock } from '@/hooks/useTapUnlock';
 import { renderDate } from '@/utils/date';
 import Constants from 'expo-constants';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 
 export function Header() {
-  const { onOpenModal } = useModal();
+  const router = useRouter();
 
   const onShowVersion = useTapUnlock(() => {
     const version = Constants.expoConfig?.version ?? 'unknown';
@@ -31,7 +31,7 @@ export function Header() {
         icon="information"
         iconSize={22}
         iconColor={palette.primary}
-        onPress={() => onOpenModal('info')}
+        onPress={() => router.push('/info')}
       />
     </View>
   );

@@ -1,21 +1,12 @@
 import { Button, Typography } from '@/components/common';
 import { palette } from '@/constants/palette';
 import { fontSize } from '@/constants/typography';
-import type { ModalKey } from '@/contexts/ModalContext';
-import { useModal } from '@/contexts/ModalContext';
+import { useRouter } from 'expo-router';
 import { type PropsWithChildren } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Modal as RNModal,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type ModalProps = PropsWithChildren<{
-  modalKey: ModalKey;
   title: string;
   subtitle?: string;
   submitLabel?: string;
@@ -27,7 +18,6 @@ type ModalProps = PropsWithChildren<{
 
 export function Modal(props: ModalProps) {
   const {
-    modalKey,
     title,
     // subtitle,
     submitLabel,
@@ -38,79 +28,74 @@ export function Modal(props: ModalProps) {
     scrollable = true,
   } = props;
 
-  const { modal, onCloseModal } = useModal();
-  const visible = modal === modalKey;
+  const router = useRouter();
 
   const handlePrimary = async () => {
     if (submitDisabled || submitLoading) return;
     await onSubmit?.();
-    onCloseModal();
+    handleClose();
+  };
+
+  const handleClose = () => {
+    if (router.canGoBack()) router.back();
   };
 
   return (
-    <RNModal
-      visible={visible}
-      onRequestClose={onCloseModal}
-      animationType="slide"
-      presentationStyle="fullScreen"
-      statusBarTranslucent
-    >
-      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-          <View style={styles.header}>
-            <Button
-              variant="soft"
-              size="xs"
-              icon="chevron-back"
-              iconSize={22}
-              iconColor={palette.primary}
-              onPress={onCloseModal}
-            />
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <View style={styles.header}>
+          <Button
+            variant="soft"
+            size="xs"
+            icon="chevron-back"
+            iconSize={22}
+            iconColor={palette.primary}
+            onPress={handleClose}
+          />
 
-            <View style={styles.headerCenter}>
-              <Typography numberOfLines={1} style={styles.title}>
-                {title}
+          <View style={styles.headerCenter}>
+            <Typography numberOfLines={1} style={styles.title}>
+              {title}
+            </Typography>
+            {/* {subtitle && (
+              <Typography numberOfLines={1} style={styles.subtitle}>
+                {subtitle}
               </Typography>
-              {/* {subtitle && (
-                <Typography numberOfLines={1} style={styles.subtitle}>
-                  {subtitle}
-                </Typography>
-              )} */}
-            </View>
-
-            <View style={styles.headerSpacer} />
+            )} */}
           </View>
 
-          {scrollable ? (
-            <ScrollView
-              style={styles.flex}
-              contentContainerStyle={styles.contentContainer}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-            >
-              {children}
-            </ScrollView>
-          ) : (
-            <View style={[styles.flex, styles.contentContainer]}>{children}</View>
-          )}
+          <View style={styles.headerSpacer} />
+        </View>
 
-          {submitLabel && (
-            <View style={styles.footer}>
-              <Button
-                label={submitLabel}
-                onPress={handlePrimary}
-                disabled={submitDisabled}
-                loading={submitLoading}
-                fullWidth
-              />
-            </View>
-          )}
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </RNModal>
+        {scrollable ? (
+          <ScrollView
+            style={styles.flex}
+            contentContainerStyle={styles.contentContainer}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {children}
+          </ScrollView>
+        ) : (
+          <View style={[styles.flex, styles.contentContainer]}>{children}</View>
+        )}
+
+        {submitLabel && (
+          <View style={styles.footer}>
+            <Button
+              label={submitLabel}
+              onPress={handlePrimary}
+              disabled={submitDisabled}
+              loading={submitLoading}
+              fullWidth
+            />
+          </View>
+        )}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

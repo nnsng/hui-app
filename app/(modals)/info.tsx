@@ -7,7 +7,7 @@ import { formatCurrency } from '@/utils/currency';
 import { convertToLunarDate, formatDate } from '@/utils/date';
 import { StyleSheet } from 'react-native';
 
-export function InfoModal() {
+export default function InfoModalScreen() {
   const { data: cycle } = useActiveCycleQuery();
   const {
     totalRounds,
@@ -39,7 +39,7 @@ export function InfoModal() {
   ];
 
   return (
-    <Modal modalKey="info" title="Thông tin hụi" subtitle="Chi tiết dây hụi hiện tại">
+    <Modal title="Thông tin hụi" subtitle="Chi tiết dây hụi hiện tại">
       <Summary summary={cycleData} />
 
       {isReceived && (

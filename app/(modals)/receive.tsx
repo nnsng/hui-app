@@ -5,9 +5,10 @@ import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useMemo, useState } from 'react';
 
-export function ReceiveModal() {
+export default function ReceiveModalScreen() {
   const { data: rounds = [] } = useRoundsQuery();
   const { data: cycle } = useActiveCycleQuery();
+
   const { totalAmount, totalRounds, commissionFee } = cycle!;
   const isLastRound = rounds.length === totalRounds - 1;
 
@@ -52,7 +53,6 @@ export function ReceiveModal() {
 
   return (
     <Modal
-      modalKey="receive"
       title="Hốt hụi"
       subtitle="Nhận tiền hốt hụi từ dây hụi"
       submitLabel="Hốt hụi"

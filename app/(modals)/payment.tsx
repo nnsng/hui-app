@@ -5,7 +5,7 @@ import { useActiveCycleQuery } from '@/hooks/queries';
 import { formatCurrency } from '@/utils/currency';
 import { useState } from 'react';
 
-export function PaymentModal() {
+export default function PaymentModalScreen() {
   const { data: cycle } = useActiveCycleQuery();
   const { totalAmount, minBidAmount, isReceived } = cycle!;
 
@@ -30,7 +30,6 @@ export function PaymentModal() {
 
   return (
     <Modal
-      modalKey="payment"
       title={isReceived ? 'Đóng hụi chết' : 'Đóng hụi'}
       subtitle="Đóng hụi cho dây hụi hiện tại"
       submitLabel="Đóng hụi"

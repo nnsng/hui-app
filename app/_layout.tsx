@@ -1,5 +1,4 @@
 import { Loading } from '@/components/common';
-import { ModalProvider } from '@/contexts/ModalContext';
 import {
   Montserrat_400Regular,
   Montserrat_500Medium,
@@ -31,15 +30,19 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ModalProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            statusBarStyle: 'dark',
-            // animation: 'fade',
-          }}
-        />
-      </ModalProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          statusBarStyle: 'dark',
+          // animation: 'fade',
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="rounds" />
+        <Stack.Screen name="(modals)/info" options={{ presentation: 'fullScreenModal' }} />
+        <Stack.Screen name="(modals)/payment" options={{ presentation: 'fullScreenModal' }} />
+        <Stack.Screen name="(modals)/receive" options={{ presentation: 'fullScreenModal' }} />
+      </Stack>
     </QueryClientProvider>
   );
 }
