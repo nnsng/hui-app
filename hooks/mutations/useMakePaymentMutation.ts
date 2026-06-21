@@ -26,7 +26,7 @@ const makePayment = async ({
       status: status,
     };
 
-    return api.post('/api/rounds', payload);
+    return api.post('/rounds', payload);
   } catch (error) {
     console.error(error);
   }

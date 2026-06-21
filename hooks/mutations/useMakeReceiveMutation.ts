@@ -17,7 +17,7 @@ const makeReceive = async ({ cycleId, receivedAmount, netProfit }: ReceivePayloa
     receivedAmount: receivedAmount,
     netProfit: netProfit,
   };
-  return api.patch(`/api/cycle/${cycleId}`, payload);
+  return api.patch(`/cycle/${cycleId}`, payload);
 };
 
 export function useMakeReceiveMutation() {

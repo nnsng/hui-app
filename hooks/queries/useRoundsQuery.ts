@@ -1,13 +1,11 @@
 import { queryKeys } from '@/constants/queryKeys';
+import type { Round } from '@/types';
 import { api } from '@/utils/api';
-import { getRoundsFromNotion } from '@/utils/notion';
-import type { PageObjectResponse, QueryDataSourceResponse } from '@notionhq/client';
 import { useQuery } from '@tanstack/react-query';
 import { useActiveCycleQuery } from './useActiveCycleQuery';
 
-const getRounds = async (cycleId: string) => {
-  const response: QueryDataSourceResponse = await api.get(`/api/rounds?cycleId=${cycleId}`);
-  return getRoundsFromNotion(response.results as PageObjectResponse[]);
+const getRounds = (cycleId: string): Promise<Round[]> => {
+  return api.get(`/rounds?cycleId=${cycleId}`);
 };
 
 export function useRoundsQuery() {
