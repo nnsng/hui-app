@@ -23,7 +23,7 @@ export function RoundItem({ item }: RoundItemProps) {
   const router = useRouter();
 
   const { data: cycle } = useActiveCycleQuery();
-  const { receivedAmount = 0 } = cycle!;
+  const { receivedAmount = 0 } = cycle || {};
 
   const DATA: Record<RoundStatus, ItemData> = {
     normal: {

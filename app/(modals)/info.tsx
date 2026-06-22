@@ -10,15 +10,15 @@ import { StyleSheet } from 'react-native';
 export default function InfoModalScreen() {
   const { data: cycle } = useActiveCycleQuery();
   const {
-    totalRounds,
+    totalRounds = 0,
     totalAmount,
     minBidAmount,
-    commissionFee,
+    commissionFee = 0,
     isReceived,
     receivedDate = '',
     receivedAmount = 0,
     netProfit = 0,
-  } = cycle!;
+  } = cycle || {};
 
   const cycleData: SummaryItem[] = [
     { label: 'Số người', value: totalRounds },

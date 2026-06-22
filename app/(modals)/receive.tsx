@@ -9,7 +9,7 @@ export default function ReceiveModalScreen() {
   const { data: rounds = [] } = useRoundsQuery();
   const { data: cycle } = useActiveCycleQuery();
 
-  const { totalAmount, totalRounds, commissionFee } = cycle!;
+  const { totalAmount = 0, totalRounds = 0, commissionFee = 0, minBidAmount = 0 } = cycle || {};
   const isLastRound = rounds.length === totalRounds - 1;
 
   const { mutateAsync: onReceivePayout, isPending } = useReceivePayoutMutation();
@@ -56,7 +56,7 @@ export default function ReceiveModalScreen() {
       title="Hốt hụi"
       subtitle="Nhận tiền hốt hụi từ dây hụi"
       submitLabel="Hốt hụi"
-      submitDisabled={!isLastRound && bidAmount < cycle!.minBidAmount}
+      submitDisabled={!isLastRound && bidAmount < minBidAmount}
       submitLoading={isPending}
       onSubmit={handleSubmit}
     >

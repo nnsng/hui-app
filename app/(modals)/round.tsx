@@ -12,7 +12,7 @@ export default function RoundModalScreen() {
   const { data: rounds = [] } = useRoundsQuery();
 
   const round = rounds.find((r) => r.id === id);
-  const { receivedAmount = 0 } = cycle!;
+  const { receivedAmount = 0 } = cycle || {};
 
   if (!round) return null;
 

@@ -1,7 +1,7 @@
 import { Button } from '@/components/common';
 import { palette } from '@/constants/palette';
-import { useRouter } from 'expo-router';
 import { useActiveCycleQuery, useRoundsQuery } from '@/hooks/queries';
+import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
@@ -20,7 +20,7 @@ export function ActionButtons() {
   } = useRoundsQuery();
   const isFetching = isRefetchingCycle || isRefetchingRounds;
 
-  const { totalRounds, isReceived } = cycle!;
+  const { totalRounds = 0, isReceived } = cycle || {};
   const canMakePayment = rounds.length < totalRounds - (isReceived ? 0 : 1);
 
   const paymentDisabled = !canMakePayment;

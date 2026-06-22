@@ -10,7 +10,13 @@ import { StyleSheet, View } from 'react-native';
 export function Balance() {
   const { data: rounds = [] } = useRoundsQuery();
   const { data: cycle } = useActiveCycleQuery();
-  const { startDate, receivedDate = '', receivedAmount = 0, netProfit = 0, isReceived } = cycle!;
+  const {
+    startDate = '',
+    receivedDate = '',
+    receivedAmount = 0,
+    netProfit = 0,
+    isReceived,
+  } = cycle || {};
 
   const balanceData = useMemo(() => {
     const totalBidAmount = rounds.reduce((sum, round) => sum + round.bidAmount, 0);

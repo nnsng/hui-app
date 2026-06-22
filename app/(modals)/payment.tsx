@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export default function PaymentModalScreen() {
   const { data: cycle } = useActiveCycleQuery();
-  const { totalAmount, minBidAmount, isReceived } = cycle!;
+  const { totalAmount = 0, minBidAmount = 0, isReceived } = cycle || {};
 
   const { mutateAsync: onPayRound, isPending } = usePayRoundMutation();
 
