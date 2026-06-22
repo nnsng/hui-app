@@ -50,7 +50,7 @@ export function RoundItem({ item }: RoundItemProps) {
   return (
     <Pressable
       style={({ pressed }) => [styles.roundItem, pressed && styles.pressed]}
-      onPress={() => router.push({ pathname: '/(modals)/round', params: { id: item.id } })}
+      onPress={() => router.push({ pathname: '/round', params: { id: item.id } })}
     >
       <View style={[styles.avatar, { backgroundColor: data.bg }]}>
         <Typography style={[styles.avatarText, { color: data.fg }]}>{item.roundNumber}</Typography>

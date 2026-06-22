@@ -45,7 +45,7 @@ export default function RoundModalScreen() {
       enabled: round.status !== 'dead',
     },
     {
-      label: 'Tiền phải đóng',
+      label: 'Tiền đã đóng',
       value: formatCurrency(round.paymentAmount),
       enabled: round.status !== 'received',
     },
