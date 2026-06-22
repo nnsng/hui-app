@@ -28,14 +28,26 @@ export default function InfoModalScreen() {
   ];
 
   const receivedData: SummaryItem[] = [
-    { label: 'Ngày hốt hụi', value: formatDate(receivedDate) },
+    {
+      label: 'Ngày hốt hụi',
+      value: formatDate(receivedDate),
+    },
     {
       label: 'Ngày hốt hụi (ÂL)',
       value: convertToLunarDate(receivedDate, 'DD/MM/YYYY'),
     },
-    { label: 'Tiền hốt hụi', value: formatCurrency(receivedAmount) },
-    { label: 'Tiền nhận được', value: formatCurrency(receivedAmount - commissionFee) },
-    { label: 'Chênh lệch', value: formatCurrency(netProfit) },
+    {
+      label: 'Tiền hốt hụi',
+      value: formatCurrency(receivedAmount),
+    },
+    {
+      label: 'Tiền nhận được',
+      value: formatCurrency(receivedAmount - commissionFee),
+    },
+    {
+      label: 'Chênh lệch',
+      value: formatCurrency(netProfit),
+    },
   ];
 
   return (

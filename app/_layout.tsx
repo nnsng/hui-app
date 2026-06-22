@@ -49,6 +49,7 @@ export default function RootLayout() {
         <Stack.Screen name="(modals)/info" options={{ presentation: 'fullScreenModal' }} />
         <Stack.Screen name="(modals)/payment" options={{ presentation: 'fullScreenModal' }} />
         <Stack.Screen name="(modals)/receive" options={{ presentation: 'fullScreenModal' }} />
+        <Stack.Screen name="(modals)/round" options={{ presentation: 'fullScreenModal' }} />
       </Stack>
     </QueryClientProvider>
   );

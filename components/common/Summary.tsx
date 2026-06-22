@@ -16,11 +16,12 @@ type SummaryProps = {
 export function Summary({ summary }: SummaryProps) {
   if (summary.length === 0) return null;
 
+  const filtered = summary.filter((item) => item.enabled !== false);
+
   return (
     <View style={styles.summary}>
-      {summary.map((item, index) => {
-        const isLast = index === summary.length - 1;
-        if (item.enabled === false) return null;
+      {filtered.map((item, index, array) => {
+        const isLast = index === array.length - 1;
         return (
           <View key={item.label} style={[styles.summaryRow, !isLast && styles.summaryRowDivider]}>
             <Typography style={styles.summaryLabel}>{item.label}</Typography>
@@ -34,7 +35,8 @@ export function Summary({ summary }: SummaryProps) {
 
 const styles = StyleSheet.create({
   summary: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: palette.border,

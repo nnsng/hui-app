@@ -5,7 +5,8 @@ import { useActiveCycleQuery } from '@/hooks/queries';
 import type { Round, RoundStatus } from '@/types';
 import { formatCurrency } from '@/utils/currency';
 import { renderDate } from '@/utils/date';
-import { StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 type RoundItemProps = {
   item: Round;
@@ -19,6 +20,8 @@ type ItemData = {
 };
 
 export function RoundItem({ item }: RoundItemProps) {
+  const router = useRouter();
+
   const { data: cycle } = useActiveCycleQuery();
   const { receivedAmount = 0 } = cycle!;
 
@@ -45,7 +48,10 @@ export function RoundItem({ item }: RoundItemProps) {
   const data = DATA[item.status];
 
   return (
-    <View style={styles.roundItem}>
+    <Pressable
+      style={({ pressed }) => [styles.roundItem, pressed && styles.pressed]}
+      onPress={() => router.push({ pathname: '/(modals)/round', params: { id: item.id } })}
+    >
       <View style={[styles.avatar, { backgroundColor: data.bg }]}>
         <Typography style={[styles.avatarText, { color: data.fg }]}>{item.roundNumber}</Typography>
       </View>
@@ -59,7 +65,7 @@ export function RoundItem({ item }: RoundItemProps) {
         <Typography style={[styles.roundAmount]}>{data.amount}</Typography>
         <Typography style={styles.roundType}>{formatCurrency(item.bidAmount)}</Typography>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -69,6 +75,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     gap: 12,
+  },
+  pressed: {
+    opacity: 0.7,
   },
   avatar: {
     width: 44,
