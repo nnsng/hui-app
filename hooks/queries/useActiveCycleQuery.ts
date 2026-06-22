@@ -1,11 +1,27 @@
 import { queryKeys } from '@/constants/queryKeys';
+import { notion } from '@/lib/notionClient';
 import type { Cycle } from '@/types';
-import { api } from '@/utils/api';
+import { env } from '@/utils/env';
+import { mapNotionPageToCycle } from '@/utils/notion';
+import type { PageObjectResponse } from '@notionhq/client';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchActiveCycle = async (): Promise<Cycle> => {
-  const cycles: Cycle[] = await api.get('/cycles?status=active');
-  return cycles[0];
+  const status = 'active';
+
+  const response = await notion.dataSources.query({
+    data_source_id: env.EXPO_PUBLIC_NOTION_CYCLE_DATA_SOURCE_ID,
+    filter: {
+      property: 'status',
+      select: {
+        equals: status,
+      },
+    },
+    page_size: 1,
+  });
+
+  const cycle = mapNotionPageToCycle(response.results[0] as PageObjectResponse);
+  return cycle;
 };
 
 export function useActiveCycleQuery() {

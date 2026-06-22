@@ -6,7 +6,7 @@ An Expo React Native application for managing and tracking "hụi" (rotating sav
 
 - **Active Cycle Tracking:** View current hụi cycle details, balance, and received amounts.
 - **Round Management:** Log new payment rounds, bids, and participant activity.
-- **Notion Backend:** Uses Expo API Routes and the `@notionhq/client` SDK to securely interact with a Notion database as a backend.
+- **Notion Backend:** Uses the `@notionhq/client` SDK to directly interact with a Notion database as a backend.
 - **Dynamic UI:** Responsive, dynamically scaling user interface utilizing custom UI components and the `expo-router` for file-based navigation.
 
 ## Prerequisites
@@ -27,9 +27,9 @@ cp .env-template .env
 
 Ensure your `.env` contains the required Notion API keys:
 
-- `NOTION_API_KEY`
-- `NOTION_CYCLE_DATA_SOURCE_ID`
-- `NOTION_ROUND_DATA_SOURCE_ID`
+- `EXPO_PUBLIC_NOTION_API_KEY`
+- `EXPO_PUBLIC_NOTION_CYCLE_DATA_SOURCE_ID`
+- `EXPO_PUBLIC_NOTION_ROUND_DATA_SOURCE_ID`
 
 ## Getting Started
 
@@ -45,7 +45,7 @@ Ensure your `.env` contains the required Notion API keys:
    npx expo start
    ```
 
-   This will start both the React Native Metro bundler and the Expo API Routes server.
+   This will start the React Native Metro bundler.
 
 ## Scripts & Commands
 
@@ -53,7 +53,6 @@ Ensure your `.env` contains the required Notion API keys:
 - `npm run ios`: Starts the app on the iOS Simulator.
 - `npm run android`: Starts the app on the Android Emulator.
 - `npm run build:android`: Triggers an EAS preview build for Android (`eas build -p android --profile preview`).
-- `npm run deploy:web`: Exports and deploys the web version using EAS (`expo export -p web && eas deploy`).
 
 ## Architecture
 
@@ -61,5 +60,5 @@ This project is built using:
 
 - **Expo & React Native:** Cross-platform application framework.
 - **Expo Router:** File-based routing scheme (`app/` directory).
-- **Expo API Routes:** Secure local proxy routes (`app/api/`) communicating with Notion using `@notionhq/client`.
+- **Notion Client:** Direct client-side fetching to Notion using `@notionhq/client`.
 - **React Query:** For managing data fetching and caching state.

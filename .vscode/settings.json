@@ -1,6 +1,7 @@
 {
   "cSpell.words": ["Pressable"],
   "editor.codeActionsOnSave": {
-    "source.sortImports": "always"
+    "source.sortImports": "always",
+    "source.organizeImports": "always"
   }
 }
