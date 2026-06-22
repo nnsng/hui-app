@@ -7,14 +7,12 @@ import type { PageObjectResponse } from '@notionhq/client';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchActiveCycle = async (): Promise<Cycle> => {
-  const status = 'active';
-
   const response = await notion.dataSources.query({
     data_source_id: env.EXPO_PUBLIC_NOTION_CYCLE_DATA_SOURCE_ID,
     filter: {
       property: 'status',
       select: {
-        equals: status,
+        equals: 'active',
       },
     },
     page_size: 1,
